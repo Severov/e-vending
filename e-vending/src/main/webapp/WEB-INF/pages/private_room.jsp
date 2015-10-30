@@ -26,7 +26,7 @@
     <!-- A link to a jQuery UI ThemeRoller theme, more than 22 built-in and many more custom -->
     <link rel="stylesheet" type="text/css" media="screen" href="resources/css/jq/jquery-ui.css" />
     <!-- The link to the CSS that the grid needs -->
-    <link rel="stylesheet" type="text/css" media="screen" href="resources/css/jq/trirand/ui.jqgrid.css" />   
+    <link rel="stylesheet" type="text/css" media="screen" href="resources/css/jq/trirand/ui.jqgrid-bootstrap-ui.css" />   
   
     
     
@@ -43,8 +43,10 @@
             <img id="settings-icon" title="Настройки" alt="settings" src="resources/images/room/settings.png">               
         </div>
         
-        <table id="jqGrid"></table>
-        <div id="jqGridPager"></div>
+        <div id="jqTable">
+            <table id="jqGrid"></table>
+            <div id="jqGridPager"></div>
+        </div>
         
             <script type="text/javascript"> 
         $(document).ready(function () {
@@ -54,15 +56,15 @@
                 regional : "ru",
                 datatype: "jsonp",
                 colModel: [
-                    { label: 'OrderID', name: 'OrderID', key: true, width: 75 },
+                    { label: 'id', name: 'OrderID', key: true, width: 75 },
                     { label: 'Customer ID', name: 'CustomerID', width: 150 },
                     { label: 'Order Date', name: 'OrderDate', width: 150 },
                     { label: 'Freight', name: 'Freight', width: 150 },
                     { label:'Ship Name', name: 'ShipName', width: 150 }
                 ],
-				viewrecords: true,
-                width: 780,
-                height: 250,
+                
+                width: 800,
+                viewrecords: true,
                 rowNum: 20,
                 pager: "#jqGridPager"
             });
