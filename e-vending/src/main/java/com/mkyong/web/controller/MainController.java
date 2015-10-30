@@ -23,7 +23,7 @@ public class MainController {
 	public String defaultPage() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth instanceof AnonymousAuthenticationToken) {
-			return "redirect:/login";
+			return "redirect:/private_room";
 		} else {
 			return "redirect:/admin";
 		}
