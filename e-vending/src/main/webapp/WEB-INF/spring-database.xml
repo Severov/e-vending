@@ -23,7 +23,7 @@
 
         <property name="packagesToScan">
             <list>
-                <value>com.mkyong.users.model</value>
+                <value>com.model</value>
             </list>
         </property>
 
@@ -37,11 +37,15 @@
         </property>
     </bean>
 
-    <bean id="userDaoImpl" class="com.mkyong.users.dao.UserDaoImpl">
+    <bean id="userDaoImpl" class="com.dao.UserDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="modulDAOimpl" class="com.dao.ModulDAOimpl">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
-    <bean id="myUserDetailsService" class="com.mkyong.users.service.MyUserDetailsService">
+    <bean id="myUserDetailsService" class="com.service.MyUserDetailsService">
         <property name="userDao" ref="userDaoImpl" />
     </bean>
 
@@ -52,8 +56,8 @@
 
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
-            <!-- 	<tx:method name="get*" read-only="true" /> -->
             <tx:method name="find*" read-only="true" />
+            <tx:method name="get"   read-only="true" />
             <tx:method name="*" />
         </tx:attributes>
     </tx:advice>
@@ -62,7 +66,8 @@
 
     <aop:config>
         <aop:pointcut id="userServicePointCut"
-                              expression="execution(* com.mkyong.users.service.*Service.*(..))" />
+                              expression="execution(* com.service.*Service.*(..))" />
+        
         <aop:advisor advice-ref="txAdvice" pointcut-ref="userServicePointCut" />
     </aop:config>
 

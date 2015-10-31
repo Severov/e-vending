@@ -1,4 +1,4 @@
-package com.mkyong.web.controller;
+package com.web.controller;
 
 import javax.annotation.Resource;
 
@@ -10,8 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.mkyong.users.dao.UserDao;
-import com.mkyong.users.model.User;
+import com.dao.UserDao;
+import com.model.User;
 
 @Controller
 public class RegistrationController {

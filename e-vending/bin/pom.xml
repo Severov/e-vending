@@ -3,12 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.mkyong</groupId>
+	<groupId>com.e-vending</groupId>
 	<artifactId>spring-security-hibernate</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>SpringSecurity Hibernate Example</name>
-	<url>http://www.mkyong.com/tutorials/spring-security-tutorials/</url>
+	<name>SpringSecurity Hibernate</name>
 
 	<licenses>
 		<license>
@@ -19,9 +18,9 @@
 	</licenses>
 	<developers>
 		<developer>
-			<id>mkyong</id>
-			<name>Yong Mook Kim</name>
-			<email>mkyong2002@gmail.com</email>
+			<id>e-vending</id>
+			<name>Крячок Михаил Николаевич</name>
+			<email>mishka.baraban@gmail.com</email>
 		</developer>
 	</developers>
 

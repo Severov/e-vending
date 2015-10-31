@@ -1,9 +1,8 @@
-package com.mkyong.users.dao;
+package com.dao;
 
+import com.model.User;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.mkyong.users.model.User;
 
 public interface UserDao {
 

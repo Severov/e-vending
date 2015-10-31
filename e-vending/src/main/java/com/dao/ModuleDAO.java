@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mkyong.web.controller;
+package com.dao;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.model.Modul;
+import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author mishka
  */
-
-@Controller
-public class PrivateRoomController {
-    
-    @RequestMapping(value = "private_room", method = RequestMethod.GET)
-    public String private_room(){
-        
-        return "private_room";
-    }
+public interface ModuleDAO {
+  
+    @Transactional(readOnly = true)
+    List<Modul> getAllModul();
 }

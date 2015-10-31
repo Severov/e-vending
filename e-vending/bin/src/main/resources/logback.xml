@@ -11,7 +11,7 @@
 		</layout>
 	</appender>
 
-	<logger name="com.mkyong" level="debug">
+	<logger name="com" level="debug">
 		<appender-ref ref="STDOUT" />
 	</logger>
 
