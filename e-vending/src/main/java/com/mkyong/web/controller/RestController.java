@@ -15,7 +15,7 @@
  */
 package com.mkyong.web.controller;
 
-import org.springframework.stereotype.Controller;
+import com.mkyong.users.model.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -24,14 +24,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author mishka
  */
 
-@Controller
-public class PrivateRoomController {
+@org.springframework.web.bind.annotation.RestController
+public class RestController {
     
-    @RequestMapping(value = "private_room", method = RequestMethod.GET)
-    public String private_room(){
-        
-        return "private_room";
+    @RequestMapping(value = "/private_room/rest", method = RequestMethod.POST)
+    public User otvet(){      
+        User user = new User("Mishka", "123456", true);
+        return user;
     }
-    
-
 }

@@ -43,12 +43,37 @@
             <img id="settings-icon" title="Настройки" alt="settings" src="resources/images/room/settings.png">               
         </div>
         
+        <div id="test"></div>
+        
         <div id="jqTable">
             <table id="jqGrid"></table>
             <div id="jqGridPager"></div>
         </div>
         
             <script type="text/javascript"> 
+                
+             function send() {
+        $.ajax({
+            type: 'POST',
+            url: 'private_room/rest',
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-Token', $("input[name=_csrf]").val());
+            },       
+            async: true,
+            success: function(result) {
+                document.getElementById("test").innerHTML = result.username;
+                alert(result.username);
+            },
+            error: function(result) {
+                document.getElementById("test").innerHTML = result.responseText;
+                alert('Error');
+            }
+        });
+    }
+
+    setInterval(send(), 200);  
+                
         $(document).ready(function () {
             $("#jqGrid").jqGrid({
                 url: 'http://trirand.com/blog/phpjqgrid/examples/jsonp/getjsonp.php?callback=?&qwery=longorders',
