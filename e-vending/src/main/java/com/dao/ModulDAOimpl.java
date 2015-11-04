@@ -18,36 +18,32 @@ package com.dao;
 import com.model.Modul;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author mishka
  */
-//@Service("ModulDAOimpl")
+@Service("modulDAOimpl")
 public class ModulDAOimpl implements ModuleDAO {
 
-    //@Resource(name = "sessionFactory")
+    @Resource(name = "sessionFactory")
     private SessionFactory sessionFactory;
 
     public List<Modul> getAllModul() {
         List<Modul> modul = new ArrayList<>();
 
-        modul = sessionFactory.getCurrentSession().createQuery("from modul").list();
+        modul = sessionFactory.getCurrentSession().createQuery("from Modul").list();
 
         if (modul.size() > 0) {
             return modul;
         } else {
             return null;
         }
-    }
-
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
     }
 
 }
