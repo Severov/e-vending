@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,8 +44,8 @@ public class User {
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "users")
     private Set<Role> userRole = new HashSet<>();
     
-    @OneToMany(mappedBy = "user")
-    private List<Realization> realization; 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<Realization> realization; 
 
     public User() {
     }
@@ -125,4 +126,12 @@ public class User {
     public Integer getRoot_user() {
         return root_user;
     }
+
+	public Set<Realization> getRealization() {
+		return realization;
+	}
+
+	public void setRealization(Set<Realization> realization) {
+		this.realization = realization;
+	}
 }

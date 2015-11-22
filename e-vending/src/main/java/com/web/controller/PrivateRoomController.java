@@ -21,10 +21,14 @@ import com.dao.RealizationDAO;
 import com.dao.UserDao;
 import com.model.Food;
 import com.model.Realization;
+import com.model.User;
+
+import java.util.Set;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,9 +49,10 @@ public class PrivateRoomController {
     @Resource(name = "realizationDAOimpl")
     private RealizationDAO real;
     
-    @Resource(name = "userDaoImpl")
-    private UserDao user;
+	@Resource(name="userDaoImpl")
+	private UserDao userDao;
     
+	@Transactional
     @RequestMapping(value = "private_room", method = RequestMethod.GET)
     public String private_room() {
     	
@@ -55,15 +60,31 @@ public class PrivateRoomController {
     	nf.setDescription("Борщевая заправка )");
     	nf.setName("Украинский борщ");
     	nf.setPrice(8);
+    	
+    	User u = new User();
+    	u.setEmail("sf@2222");
+    	u.setEnabled(true);
+    	u.setFullname("8787aaa");
+    	u.setPassword("123456");
+    	u.setUsername("Mishka");
 		
     	Realization r = new Realization();
     	r.setFood(nf);
     	r.setPrice(9);
-    	r.setUser(user.findByUserName("admin"));
+    	r.setUser(u);
     	
-    	food.save(nf);
-    	real.save(r);
+    	//userDao.saveUser(u);
+    	//food.save(nf);
+    	//real.save(r);
     	
+    	Food tt = food.findByName("Украинский борщ");
+    	Set<Realization> st = tt.getRealization();
+    	
+    	for( Realization entry : st ){
+    		System.out.print( entry.getUser().getId() );
+    	}
+    	
+    	System.out.println(tt.getDescription());
     	
         return "private_room";
     }

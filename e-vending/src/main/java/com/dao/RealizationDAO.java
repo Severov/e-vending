@@ -8,4 +8,7 @@ public interface RealizationDAO {
 
 	@Transactional(readOnly = false)
 	void save(Realization real);
+	
+	//@Transactional(readOnly = true)
+	//Realization
 }

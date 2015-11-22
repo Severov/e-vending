@@ -1,9 +1,11 @@
 package com.model;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,16 +30,8 @@ public class Food {
     @Column(name = "price", nullable = false)
     private Integer price;
     
-    @OneToMany(mappedBy = "food")
-    private List<Realization> realization; 
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "food")
+    private Set<Realization> realization; 
 
 	public String getName() {
 		return name;
@@ -61,6 +55,22 @@ public class Food {
 
 	public void setPrice(Integer price) {
 		this.price = price;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Set<Realization> getRealization() {
+		return realization;
+	}
+
+	public void setRealization(Set<Realization> realization) {
+		this.realization = realization;
 	}
 
 }
