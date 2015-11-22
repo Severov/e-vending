@@ -18,7 +18,6 @@ public class Realization {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 	
-	@Column(name = "user")
 	@ManyToOne()
 	@JoinColumn(name = "id")
 	private User user;
