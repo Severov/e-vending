@@ -15,8 +15,15 @@
  */
 package com.web.controller;
 
+import com.dao.FoodDAO;
 import com.dao.ModuleDAO;
+import com.dao.RealizationDAO;
+import com.dao.UserDao;
+import com.model.Food;
+import com.model.Realization;
+
 import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,8 +39,30 @@ public class PrivateRoomController {
     @Resource(name = "modulDAOimpl")
     private ModuleDAO module;
     
+    @Resource(name = "foodDAOimpl")
+    private FoodDAO food;
+    
+    @Resource(name = "realizationDAOimpl")
+    private RealizationDAO real;
+    
+    @Resource(name = "userDaoImpl")
+    private UserDao user;
+    
     @RequestMapping(value = "private_room", method = RequestMethod.GET)
     public String private_room() {
+    	
+    	Food nf = new Food();
+    	nf.setDescription("Борщевая заправка )");
+    	nf.setName("Украинский борщ");
+    	nf.setPrice(8);
+		
+    	Realization r = new Realization();
+    	r.setFood(nf);
+    	r.setPrice(9);
+    	r.setUser(user.findByUserName("admin"));
+    	
+    	food.save(nf);
+    	real.save(r);
     	
     	
         return "private_room";
