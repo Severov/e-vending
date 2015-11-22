@@ -34,6 +34,8 @@ public class PrivateRoomController {
     
     @RequestMapping(value = "private_room", method = RequestMethod.GET)
     public String private_room() {
+    	
+    	
         return "private_room";
     }
 

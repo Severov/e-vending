@@ -1,10 +1,13 @@
 package com.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -12,7 +15,7 @@ import javax.persistence.Table;
 public class Food {
 	
     @Id
-    @Column(name = "modul_id", unique = true, nullable = false)
+    @Column(name = "food_id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
@@ -24,6 +27,9 @@ public class Food {
     
     @Column(name = "price", nullable = false)
     private Integer price;
+    
+    @OneToMany(mappedBy = "food")
+    private List<Realization> realization; 
 
 	public Integer getId() {
 		return id;

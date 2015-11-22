@@ -14,13 +14,20 @@ import javax.persistence.Table;
 public class Realization {
 	
 	@Id
-    @Column(name = "modul_id", unique = true, nullable = false)
+    @Column(name = "realization_id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 	
-	@ManyToOne()
-	@JoinColumn(name = "id")
+	@ManyToOne
+	@JoinColumn(name = "user_id")
 	private User user;
+	
+	@ManyToOne
+	@JoinColumn(name = "food_id")
+	private Food food;
+	
+	@Column(name = "price")
+	private Integer price;
 	
 	public Integer getId() {
 		return id;
@@ -52,13 +59,6 @@ public class Realization {
 
 	public void setPrice(Integer price) {
 		this.price = price;
-	}
-
-	@Column(name = "food")
-	private Food food;
-	
-	@Column(name = "price")
-	private Integer price;
-	
+	}	
 
 }
