@@ -1,14 +1,15 @@
 package com.model;
 
-import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -32,6 +33,9 @@ public class Food {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "food")
     private Set<Realization> realization; 
+    
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "food")
+    private Set<MenuWeek> menu_week;
 
 	public String getName() {
 		return name;
@@ -71,6 +75,14 @@ public class Food {
 
 	public void setRealization(Set<Realization> realization) {
 		this.realization = realization;
+	}
+
+	public Set<MenuWeek> getMenu_week() {
+		return menu_week;
+	}
+
+	public void setMenu_week(Set<MenuWeek> menu_week) {
+		this.menu_week = menu_week;
 	}
 
 }

@@ -39,7 +39,7 @@
             <img id="chart-icon" title="Графики" alt="Chart" src="resources/images/room/chart.png">
             <a href="room/module"> <img id="modul-icon" title="Модули" alt="Modul" src="resources/images/room/modul.png"> </a>
             <img id="users-icon" title="Пользователи" alt="Users" src="resources/images/room/users.png">
-            <img id="role-icon" title="Права доступа" alt="Role" src="resources/images/room/role.png">
+            <a href="food"> <img id="role-icon" title="Права доступа" alt="Role" src="resources/images/room/role.png"> </a>
             <img id="settings-icon" title="Настройки" alt="settings" src="resources/images/room/settings.png">               
         </div>
         
