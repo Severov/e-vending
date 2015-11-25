@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.model.Food;
 
-
 @Service("foodDAOimpl")
 public class FoodDAOimpl implements FoodDAO {
 
