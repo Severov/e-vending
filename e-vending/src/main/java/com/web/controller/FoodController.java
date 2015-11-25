@@ -1,10 +1,6 @@
 package com.web.controller;
 
-import java.beans.PropertyEditorSupport;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,7 +19,6 @@ import com.dao.FoodDAO;
 import com.editor.FoodEditor;
 import com.model.Food;
 import com.model.MenuWeek;
-import com.model.Realization;
 
 
 
@@ -62,7 +56,7 @@ public class FoodController {
 	public String foodPost(@ModelAttribute("menu") MenuWeek menu, BindingResult result, ModelMap model){
 		
 		for( Food entry : menu.getFood() ){
-    		System.out.print( entry.getName());
+    		System.out.println( entry.getName());
     	}
 
 		return "food";
