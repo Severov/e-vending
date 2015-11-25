@@ -1,5 +1,6 @@
 package com.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -32,10 +33,10 @@ public class Food {
     private Integer price;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "food")
-    private Set<Realization> realization; 
+    private List<Realization> realization; 
     
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "food")
-    private Set<MenuWeek> menu_week;
+    private List<MenuWeek> menu_week;
 
 	public String getName() {
 		return name;
@@ -69,19 +70,19 @@ public class Food {
 		this.id = id;
 	}
 
-	public Set<Realization> getRealization() {
+	public List<Realization> getRealization() {
 		return realization;
 	}
 
-	public void setRealization(Set<Realization> realization) {
+	public void setRealization(List<Realization> realization) {
 		this.realization = realization;
 	}
 
-	public Set<MenuWeek> getMenu_week() {
+	public List<MenuWeek> getMenu_week() {
 		return menu_week;
 	}
 
-	public void setMenu_week(Set<MenuWeek> menu_week) {
+	public void setMenu_week(List<MenuWeek> menu_week) {
 		this.menu_week = menu_week;
 	}
 

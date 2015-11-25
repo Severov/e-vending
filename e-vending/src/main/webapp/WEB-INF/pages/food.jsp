@@ -25,19 +25,18 @@
             <img id="settings-icon" title="Настройки" alt="settings" src="../resources/images/room/settings.png">               
         </div>
         
-        	<form:form  method="POST" modelAttribute="Menu">
+        	<form:form  method="POST" modelAttribute="menu">
 			<h1>Меню на неделю</h1>
+			
 			<fieldset>
-
 				<form:input path="week" type="text" placeholder="Номер недели" name="week" />
            		
-           		<form:checkboxes delimiter="" element="li" path="food" items="${Menu.food}" itemValue="id" itemLabel="name" />
+           		<form:checkboxes path="food" delimiter="" element="li" items="${listFood}" itemValue="id" itemLabel="name" />	
            		
-           		<input class="button" type="submit" value="Ок" name="Okfood">
-            
+           		<input class="button" type="submit" value="Ок" name="Okfood">         
 			</fieldset>
-			<input type="hidden" name="${_csrf.parameterName}"
-				value="${_csrf.token}" />
+			
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		</form:form>
     </body>
 </html>

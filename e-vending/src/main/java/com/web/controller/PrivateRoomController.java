@@ -23,6 +23,7 @@ import com.model.Food;
 import com.model.Realization;
 import com.model.User;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -78,7 +79,7 @@ public class PrivateRoomController {
     	//real.save(r);
     	
     	Food tt = food.findByName("Украинский борщ");
-    	Set<Realization> st = tt.getRealization();
+    	List<Realization> st = tt.getRealization();
     	
     	for( Realization entry : st ){
     		System.out.print( entry.getUser().getId() );

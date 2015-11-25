@@ -29,7 +29,7 @@ public class FoodDAOimpl implements FoodDAO {
 
 	        List<Food> findFood = new ArrayList<Food>();
 
-	        findFood = sessionFactory.getCurrentSession().createQuery("from Food where name=? and id='1'")
+	        findFood = sessionFactory.getCurrentSession().createQuery("from Food where name=?")
 	                .setParameter(0, food).list();
 
 	        if (findFood.size() > 0) {
@@ -39,6 +39,28 @@ public class FoodDAOimpl implements FoodDAO {
 	        }
 
 	    }
+
+	public Food findById(Integer id) {
+		List<Food> findFood = new ArrayList<Food>();
+
+        findFood = sessionFactory.getCurrentSession().createQuery("from Food where id=?")
+                .setParameter(0, id).list();
+
+        if (findFood.size() > 0) {
+            return findFood.get(0);
+        } else {
+            return null;
+        }
+	}
+
+	@Override
+	public List<Food> getAllFood() {
+		List<Food> findFood = new ArrayList<Food>();
+
+        findFood = sessionFactory.getCurrentSession().createQuery("from Food").list();
+
+        return findFood;
+	}
     
     
 }

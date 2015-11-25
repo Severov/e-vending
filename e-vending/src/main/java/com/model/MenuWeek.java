@@ -1,6 +1,6 @@
 package com.model;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,18 +16,18 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "menu_week")
 public class MenuWeek {
-	
-    @Id
-    @Column(name = "menu_week_id", unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-    
-    @Column(name = "week")
-    private Integer week;
-    
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(joinColumns = @JoinColumn(name = "food_id"), inverseJoinColumns = @JoinColumn(name = "menu_week_id"))
-    private Set<Food> food;
+
+	@Id
+	@Column(name = "menu_week_id", unique = true, nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
+
+	@Column(name = "week")
+	private Integer week;
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(joinColumns = @JoinColumn(name = "food_id") , inverseJoinColumns = @JoinColumn(name = "menu_week_id") )
+	private List<Food> food;
 
 	public Integer getId() {
 		return id;
@@ -45,11 +45,12 @@ public class MenuWeek {
 		this.week = week;
 	}
 
-	public Set<Food> getFood() {
+	public List<Food> getFood() {
 		return food;
 	}
 
-	public void setFood(Set<Food> food) {
+	public void setFood(List<Food> food) {
 		this.food = food;
 	}
+
 }
