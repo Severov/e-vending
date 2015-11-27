@@ -27,8 +27,11 @@ public class Realization {
 	@JoinColumn(name = "food_id")
 	private Food food;
 	
+	@Column(name = "count")
+	private Double count;
+	
 	@Column(name = "price")
-	private Integer price;
+	private Double price;
 
 	public User getUser() {
 		return user;
@@ -46,11 +49,11 @@ public class Realization {
 		this.food = food;
 	}
 
-	public Integer getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Integer price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
@@ -60,6 +63,13 @@ public class Realization {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}	
+	}
 
+	public Double getCount() {
+		return count;
+	}
+
+	public void setCount(Double count) {
+		this.count = count;
+	}	
 }

@@ -1,7 +1,6 @@
 package com.model;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,13 +29,16 @@ public class Food {
     private String description;
     
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private Double price;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "food")
     private List<Realization> realization; 
     
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "food")
     private List<MenuWeek> menu_week;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "food")
+    private List<OrderFood> order; 
 
 	public String getName() {
 		return name;
@@ -54,11 +56,11 @@ public class Food {
 		this.description = description;
 	}
 
-	public Integer getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Integer price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
@@ -85,5 +87,24 @@ public class Food {
 	public void setMenu_week(List<MenuWeek> menu_week) {
 		this.menu_week = menu_week;
 	}
+	
+    public List<OrderFood> getOrder() {
+		return order;
+	}
 
+	public void setOrder(List<OrderFood> order) {
+		this.order = order;
+	}
+
+	public int hashCode() {
+        return new Long(id).hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        if ((obj == null) || !(obj instanceof Food)){
+        	return false;
+        }
+
+        return this.id == ((Food)obj).getId();
+    }
 }

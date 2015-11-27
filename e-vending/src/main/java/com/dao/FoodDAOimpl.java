@@ -32,7 +32,6 @@ public class FoodDAOimpl implements FoodDAO {
 		} else {
 			return null;
 		}
-
 	}
 
 	public Food findById(Integer id) {

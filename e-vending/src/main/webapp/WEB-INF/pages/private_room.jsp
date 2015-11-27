@@ -34,61 +34,10 @@
         <title>Личный кабинет</title>
     </head>
     <body>            
-        <div id="left_menu">
-            <img id="home-icon" title="Домой" alt="Home" src="resources/images/room/home.png">
-            <img id="chart-icon" title="Графики" alt="Chart" src="resources/images/room/chart.png">
-            <a href="room/module"> <img id="modul-icon" title="Модули" alt="Modul" src="resources/images/room/modul.png"> </a>
-            <img id="users-icon" title="Пользователи" alt="Users" src="resources/images/room/users.png">
-            <a href="food"> <img id="role-icon" title="Права доступа" alt="Role" src="resources/images/room/role.png"> </a>
-            <img id="settings-icon" title="Настройки" alt="settings" src="resources/images/room/settings.png">               
-        </div>
+       <%@include file="/WEB-INF/pages/left-menu.jsp" %>
         
         
-        <table id="jqGrid"></table>
-        <div id="jqGridPager"></div>
-       
-
-        <script type="text/javascript">
-
-            function send() {
-                $.ajax({
-                    type: 'POST',
-                    url: 'private_room/rest',
-                    dataType: 'json',
-                    data: '${_csrf.parameterName}=${_csrf.token}',
-                                async: true,
-                                success: function (result) {
-                                   // document.getElementById("test").innerHTML = result.username;
-                                    //alert(result.username);
-                                },
-                                error: function (result) {
-                                    //document.getElementById("test").innerHTML = result.responseText;
-                                    alert('Error');
-                                }
-                            });
-                        }
-
-                        $(document).ready(function () {
-                            $("#jqGrid").jqGrid({
-                                url: 'http://trirand.com/blog/phpjqgrid/examples/jsonp/getjsonp.php?callback=?&qwery=longorders',
-                                mtype: "GET",
-                                regional: "ru",
-                                datatype: "jsonp",
-                                colModel: [
-                                    {label: 'id', name: 'OrderID', key: true, width: 75},
-                                    {label: 'Customer ID', name: 'CustomerID', width: 150},
-                                    {label: 'Order Date', name: 'OrderDate', width: 150},
-                                    {label: 'Freight', name: 'Freight', width: 150},
-                                    {label: 'Ship Name', name: 'ShipName', width: 150}
-                                ],
-                                width: 800,
-                                viewrecords: true,
-                                rowNum: 50,
-                                pager: "#jqGridPager"
-                            });
-                        });
-
-        </script>
+        
 
     </body>
 </html>

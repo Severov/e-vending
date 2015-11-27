@@ -16,22 +16,34 @@
 package com.web.controller;
 
 import com.dao.FoodDAO;
-import com.dao.ModuleDAO;
+import com.dao.MenuWeekDAO;
 import com.dao.RealizationDAO;
 import com.dao.UserDao;
+import com.editor.FoodEditor;
 import com.model.Food;
-import com.model.Realization;
-import com.model.User;
+import com.model.MenuWeek;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
 
 /**
  *
@@ -40,59 +52,87 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class PrivateRoomController {
 
-    @Resource(name = "modulDAOimpl")
-    private ModuleDAO module;
+    @Resource(name = "menuWeekService")
+    private MenuWeekDAO menuWeekService;
     
     @Resource(name = "foodDAOimpl")
-    private FoodDAO food;
+    private FoodDAO foodService;
     
     @Resource(name = "realizationDAOimpl")
     private RealizationDAO real;
     
 	@Resource(name="userDaoImpl")
 	private UserDao userDao;
+	
+    @Resource(name = "foodEditor")
+    private FoodEditor foodEditor;
+	
+	@ModelAttribute("listFood")
+	public List<Food> getlist()
+	{
+		return foodService.getAllFood();
+	}
+	
+	@InitBinder
+    protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) {
+		binder.registerCustomEditor(Food.class, foodEditor);
+    }
+	
+    @RequestMapping(value = "/menu", method = RequestMethod.GET)
+    public String add_module(Model model) {  
+        model.addAttribute("menu",  menuWeekService.getAllmenu());
+        return "/menu";
+    }
     
-	@Transactional
-    @RequestMapping(value = "private_room", method = RequestMethod.GET)
-    public String private_room() {
-    	
-    	Food nf = new Food();
-    	nf.setDescription("Борщевая заправка )");
-    	nf.setName("Украинский борщ");
-    	nf.setPrice(8);
-    	
-    	User u = new User();
-    	u.setEmail("sf@2222");
-    	u.setEnabled(true);
-    	u.setFullname("8787aaa");
-    	u.setPassword("123456");
-    	u.setUsername("Mishka");
+    // Клиент формирует меню
+    @RequestMapping(value = "/food-list", method = RequestMethod.GET)
+    public String foodListGET(Model model) {    
+        model.addAttribute("menu",  menuWeekService.getAllmenu());
+        return "/menu";
+    }
+    
+   // @RequestMapping(value = "/food-list", method = RequestMethod.GET)
+   // public String foodListGet(Model model) {    	
+   //     model.addAttribute("foodList",  menuWeekService.getAllmenu());
+   //     return "/food-list";
+   // }
+      
+    @RequestMapping(value = "/week-list", method = RequestMethod.GET)
+	public ModelAndView weekListFoodGet(@RequestParam(value = "week", required = false) Integer week) {
+		ModelAndView model = new ModelAndView();
+		//System.out.println (new SimpleDateFormat ( "EEEE" ).format ( new Date() )) ;
 		
-    	Realization r = new Realization();
-    	r.setFood(nf);
-    	r.setPrice(9);
-    	r.setUser(u);
-    	
-    	//userDao.saveUser(u);
-    	//food.save(nf);
-    	//real.save(r);
-    	
-    	Food tt = food.findByName("Украинский борщ");
-    	List<Realization> st = tt.getRealization();
-    	
-    	for( Realization entry : st ){
-    		System.out.print( entry.getUser().getId() );
-    	}
-    	
-    	System.out.println(tt.getDescription());
-    	
-        return "private_room";
+		Calendar newCal = new GregorianCalendar();
+		newCal.setTime(newCal.getTime());  
+		//System.out.println(newCal.getW);
+		System.out.println(newCal.get(Calendar.DAY_OF_WEEK));
+		
+		if (week != null) {
+			model.setViewName("/food");
+			model.addObject("menu", menuWeekService.findWeekById(week));
+			model.addObject("admin", true);
+			model.addObject("listFood", foodService.getAllFood());
+		} else {
+			model.setViewName("/week-list");
+			model.addObject("weekList", menuWeekService.getAllmenu());
+		}
+		
+		return model;
+	}
+    
+    @RequestMapping(value = "/week-list", method = RequestMethod.POST)
+    public String weekListPost(@ModelAttribute("menu") MenuWeek menu, BindingResult result, Model model) {    	      
+        menuWeekService.update(menu);
+        model.addAttribute("menu", menuWeekService.getAllmenu());
+        return "redirect:/menu";
     }
-
-    @RequestMapping(value = "room/module", method = RequestMethod.GET)
-    public String add_module(Model model) {
-        model.addAttribute("module_list",  module.getAllModul());
-        return "room/module";
+    
+    @RequestMapping(value = "/order-food", method = RequestMethod.POST)
+    public String orderFoodPost(@ModelAttribute("menu") MenuWeek menu, BindingResult result, Model model) {    	      
+        menuWeekService.update(menu);
+        model.addAttribute("menu", menuWeekService.getAllmenu());
+        return "redirect:/menu";
     }
+    
 
 }

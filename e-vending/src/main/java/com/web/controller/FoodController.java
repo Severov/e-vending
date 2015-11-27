@@ -20,8 +20,6 @@ import com.editor.FoodEditor;
 import com.model.Food;
 import com.model.MenuWeek;
 
-
-
 @Controller
 public class FoodController {
 	

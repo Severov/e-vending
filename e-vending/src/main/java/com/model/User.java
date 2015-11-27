@@ -1,6 +1,7 @@
 package com.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -44,7 +45,10 @@ public class User {
     private Set<Role> userRole = new HashSet<>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private Set<Realization> realization; 
+    private List<Realization> realization; 
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<OrderFood> order; 
 
     public User() {
     }
@@ -126,11 +130,19 @@ public class User {
         return root_user;
     }
 
-	public Set<Realization> getRealization() {
+	public List<Realization> getRealization() {
 		return realization;
 	}
 
-	public void setRealization(Set<Realization> realization) {
+	public void setRealization(List<Realization> realization) {
 		this.realization = realization;
+	}
+
+	public List<OrderFood> getOrder() {
+		return order;
+	}
+
+	public void setOrder(List<OrderFood> order) {
+		this.order = order;
 	}
 }
