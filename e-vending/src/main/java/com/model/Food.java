@@ -38,7 +38,7 @@ public class Food {
     private List<MenuWeek> menu_week;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "food")
-    private List<OrderFood> order; 
+    private List<Order> order; 
 
 	public String getName() {
 		return name;
@@ -87,12 +87,12 @@ public class Food {
 	public void setMenu_week(List<MenuWeek> menu_week) {
 		this.menu_week = menu_week;
 	}
-	
-    public List<OrderFood> getOrder() {
+
+	public List<Order> getOrder() {
 		return order;
 	}
 
-	public void setOrder(List<OrderFood> order) {
+	public void setOrder(List<Order> order) {
 		this.order = order;
 	}
 

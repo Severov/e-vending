@@ -5,6 +5,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,15 +18,18 @@
         <%@include file="/WEB-INF/pages/left-menu.jsp" %>
         
         <div id="block-module">
-            <c:forEach items="${menu}" var="cell">
-                <div id="food-list"><h2><a href="${href}?week=${cell.id}">${cell.description}</a></h2>
-                	<ul>
-                		<c:forEach items="${cell.food}" var="cellFood">	           
-                 			 <li>${cellFood.name}</li>  
-                 		</c:forEach>
-                 	</ul>
-                 </div>
-            </c:forEach>
+           <form:form method="POST"  modelAttribute="user">
+				<form:input path="id"/>
+
+				<c:forEach items="${user.order}" var="cell" varStatus="vs">
+					<form:input path="order[${vs.index}].count"/>
+            	</c:forEach>
+
+					<input class="button" type="submit" value="Ок" name="Okfood">
+
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+			</form:form>
         </div>
     </body>
 </html>

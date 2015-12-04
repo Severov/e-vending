@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page session="false"%>
 
+<!DOCTYPE html>
 <html>
 <head>
 <link rel="stylesheet" type="text/css"
@@ -26,7 +25,7 @@
 						<div class="msg">${msg}</div>
 					</c:if>
 					<input class="loginUsername" type="text" name="username"
-						placeholder="Email" required autofocus> <input
+						placeholder="E-mail" required autofocus> <input
 						class="loginPassword" type="password" name="password"
 						placeholder="Пароль" required> <span
 						class="loginLoginButton"><input type="submit" name="Login"
@@ -36,12 +35,12 @@
 							<span class="info">?</span><a href="[[~8]]">Забыли пароль?</a>
 						</p>
 						<p>
-							<span class="info">!</span><a href="[[~7]]">Регистрация</a>
+							<span class="info">!</span><a href="registration">Регистрация</a>
 						</p>
 					</footer>
 				</fieldset>
 				<input type="hidden" name="${_csrf.parameterName}"
-					value="${_csrf.token}" />
+                                       value="${_csrf.token}" />
 			</form>
 		</div>
 	</div>

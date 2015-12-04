@@ -258,40 +258,6 @@ input#UID.input[name="keyModule"] {
 	-webkit-animation: slideOutLeft 0.5s ease-in-out 0.3s backwards;
 }
 
-@
--webkit-keyframes slideOut { 0%{
-	top: -30px;
-	opacity: 0;
-}
-
-100%{
-top
-:
-0px;
- 
-opacity
-:
- 
-1;
-}
-}
-@
--webkit-keyframes slideOutLeft { 0%{
-	left: -30px;
-	opacity: 0;
-}
-
-100%{
-left
-:
-0px;
- 
-opacity
-:
- 
-1;
-}
-}
 .MainPanel {
 	margin-left: 200px;
 	margin-top: 25px;
@@ -442,5 +408,5 @@ ul, li {
 #UID {
 	border: none;
 	background: none;
-	padding: none
+	padding: none;
 }

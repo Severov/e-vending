@@ -3,6 +3,8 @@
     Created on : 31.10.2015, 21:47:26
     Author     : mishka
 --%>
+
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
@@ -18,7 +20,7 @@
         
         <div id="block-module">
             <c:forEach items="${menu}" var="cell">
-                <div id="food-list"><h2><a href="${href}?week=${cell.id}">${cell.description}</a></h2>
+                <div id="mmm"><h2>${cell.description}</h2>
                 	<ul>
                 		<c:forEach items="${cell.food}" var="cellFood">	           
                  			 <li>${cellFood.name}</li>  
