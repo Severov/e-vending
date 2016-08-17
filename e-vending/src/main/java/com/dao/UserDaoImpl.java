@@ -7,10 +7,11 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.hibernate.SessionFactory;
+import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
 @Service("userDaoImpl")
-public class UserDaoImpl implements UserDao {
+public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 
 	@Resource(name = "sessionFactory")
     private SessionFactory sessionFactory;
@@ -19,6 +20,8 @@ public class UserDaoImpl implements UserDao {
     public User findByUserName(String username) {
 
         List<User> users = new ArrayList<User>();
+        
+       // getHibernateTemplate().find(queryString, values)
 
         users = sessionFactory.getCurrentSession().createQuery("from User where username=?")
                 .setParameter(0, username).list();
@@ -31,8 +34,8 @@ public class UserDaoImpl implements UserDao {
 
     }
 
-    public void saveUser(User user) {
-    	sessionFactory.getCurrentSession().save(user);
+    public void save(User user) {
+    	getHibernateTemplate().save(user);
     }
 
 }

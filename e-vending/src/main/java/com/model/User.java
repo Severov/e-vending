@@ -1,17 +1,14 @@
 package com.model;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -43,12 +40,6 @@ public class User {
 
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "users")
     private Set<Role> userRole = new HashSet<>();
-    
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Realization> realization; 
-    
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<OrderFood> order; 
 
     public User() {
     }
@@ -130,19 +121,4 @@ public class User {
         return root_user;
     }
 
-	public List<Realization> getRealization() {
-		return realization;
-	}
-
-	public void setRealization(List<Realization> realization) {
-		this.realization = realization;
-	}
-
-	public List<OrderFood> getOrder() {
-		return order;
-	}
-
-	public void setOrder(List<OrderFood> order) {
-		this.order = order;
-	}
 }

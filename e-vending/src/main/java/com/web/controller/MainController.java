@@ -28,6 +28,15 @@ public class MainController {
 			return "redirect:/admin";
 		}
 	}
+	 
+	@RequestMapping(value = "/hello", method = RequestMethod.GET)
+	public ModelAndView pageHello() {
+		ModelAndView model = new ModelAndView();
+		model.addObject("title", "This is title hello");
+		model.setViewName("hello");
+		String g = "";
+		return model;
+	}
 
 	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
 	public ModelAndView adminPage() {

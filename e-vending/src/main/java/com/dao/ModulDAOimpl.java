@@ -22,6 +22,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.hibernate.SessionFactory;
+import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,21 +30,17 @@ import org.springframework.stereotype.Service;
  * @author mishka
  */
 @Service("modulDAOimpl")
-public class ModulDAOimpl implements ModuleDAO {
+public class ModulDAOimpl extends HibernateDaoSupport implements ModuleDAO {
 
     @Resource(name = "sessionFactory")
     private SessionFactory sessionFactory;
 
     public List<Modul> getAllModul() {
-        List<Modul> modul = new ArrayList<>();
-
-        modul = sessionFactory.getCurrentSession().createQuery("from Modul").list();
-
-        if (modul.size() > 0) {
-            return modul;
-        } else {
-            return null;
-        }
+    	return (List<Modul>) getHibernateTemplate().find("from Modul");
+    }
+    
+    private void THISH_DELETE(){
+    	
     }
 
 }

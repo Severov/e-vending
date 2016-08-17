@@ -10,9 +10,6 @@ public interface UserDao {
 	User findByUserName(String username);
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	void saveUser(User user);
-	
-	
-	//@Transactional(readOnly = true)
-	//User
+	void save(User user);
+
 }

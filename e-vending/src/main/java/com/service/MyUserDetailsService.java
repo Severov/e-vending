@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service("myUserDetailsService")
@@ -26,19 +25,6 @@ public class MyUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-
-		// Programmatic transaction management
-		/*
-		return transactionTemplate.execute(new TransactionCallback<UserDetails>() {
-
-			public UserDetails doInTransaction(TransactionStatus status) {
-				com.model.User user = userDao.findByUserName(username);
-				List<GrantedAuthority> authorities = buildUserAuthority(user.getUserRole());
-
-				return buildUserForAuthentication(user, authorities);
-			}
-
-		});*/
 		
 		com.model.User user = userDao.findByUserName(username);
 		List<GrantedAuthority> authorities = buildUserAuthority(user.getUserRole());
