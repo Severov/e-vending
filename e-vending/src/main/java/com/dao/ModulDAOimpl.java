@@ -38,9 +38,5 @@ public class ModulDAOimpl extends HibernateDaoSupport implements ModuleDAO {
     public List<Modul> getAllModul() {
     	return (List<Modul>) getHibernateTemplate().find("from Modul");
     }
-    
-    private void THISH_DELETE(){
-    	
-    }
 
 }
