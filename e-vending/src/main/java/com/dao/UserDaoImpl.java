@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,11 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 
 	@Resource(name = "sessionFactory")
     private SessionFactory sessionFactory;
+	
+	@Autowired
+	public void init() {
+	    setSessionFactory(sessionFactory);
+	}
 
     @SuppressWarnings("unchecked")
     public User findByUserName(String username) {
@@ -34,6 +40,7 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 
     }
 
+    
     public void save(User user) {
     	getHibernateTemplate().save(user);
     }

@@ -2,11 +2,13 @@ package com.web.controller;
 
 import javax.annotation.Resource;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -19,17 +21,18 @@ public class RegistrationController {
 	@Resource(name="userDaoImpl")
 	private UserDao userDao;
 	
+	
 	@RequestMapping(value="/registration", method = RequestMethod.GET)
 	public String registration(Model model){
-	    model.addAttribute("user", new User("", "", false));
+	    model.addAttribute("user", new User());
 		return "registration";
 	}
 	
 	@RequestMapping(value="/registration", method = RequestMethod.POST)
-	public String registrationsdaf(@Validated User user, BindingResult result, String password_confirm, ModelMap model){
+	public String registrationsdaf(@ModelAttribute("user") @Validated User user, BindingResult result, String password_confirm, ModelMap model){
  
         if(result.hasErrors()) {
-                return "enroll";
+            return "enroll";
         }
         
         if (user.getUsername().isEmpty() || user.getFullname().isEmpty()){
@@ -42,7 +45,9 @@ public class RegistrationController {
         	return "registration";
         }
         
-        userDao.saveUser(user);
-		return "redirect:/admin";
+        user.setEnabled(true);
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        userDao.save(user);
+		return "redirect:/login";
 	}
 }

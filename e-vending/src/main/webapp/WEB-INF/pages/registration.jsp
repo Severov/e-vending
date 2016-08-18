@@ -26,7 +26,8 @@
 					name="fullname" />
 				<form:input path="email" type="email" placeholder="E-mail"
 					name="email" />
-				<form:password path="password" placeholder="Пароль" name="password" />
+				<form:input path="password" type="password" placeholder="Пароль"
+					name="password" />
 				<input type="password" value="${password_confirm}"
 					placeholder="Повторите пароль" name="password_confirm" />
 				<footer class="clearfix">
@@ -36,8 +37,6 @@
 					</p>
 				</footer>
 			</fieldset>
-			<input type="hidden" name="${_csrf.parameterName}"
-				value="${_csrf.token}" />
 		</form:form>
 	</div>
 </body>

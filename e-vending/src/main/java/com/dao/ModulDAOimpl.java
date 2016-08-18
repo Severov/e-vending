@@ -16,12 +16,10 @@
 package com.dao;
 
 import com.model.Modul;
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +30,13 @@ import org.springframework.stereotype.Service;
 @Service("modulDAOimpl")
 public class ModulDAOimpl extends HibernateDaoSupport implements ModuleDAO {
 
-    @Resource(name = "sessionFactory")
+	@Resource(name = "sessionFactory")
     private SessionFactory sessionFactory;
+	
+	@Autowired
+	public void init() {
+	    setSessionFactory(sessionFactory);
+	}
 
     public List<Modul> getAllModul() {
     	return (List<Modul>) getHibernateTemplate().find("from Modul");
