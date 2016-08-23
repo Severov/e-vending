@@ -3,9 +3,6 @@ package com.dao;
 import com.model.User;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Resource;
-
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -13,12 +10,9 @@ import org.springframework.stereotype.Service;
 
 @Service("userDaoImpl")
 public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
-
-	@Resource(name = "sessionFactory")
-    private SessionFactory sessionFactory;
 	
 	@Autowired
-	public void init() {
+	public void init(SessionFactory sessionFactory) {
 	    setSessionFactory(sessionFactory);
 	}
 
@@ -27,10 +21,7 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 
         List<User> users = new ArrayList<User>();
         
-       // getHibernateTemplate().find(queryString, values)
-
-        users = sessionFactory.getCurrentSession().createQuery("from User where username=?")
-                .setParameter(0, username).list();
+        users = (List<User>) getHibernateTemplate().findByNamedParam("from User where username = :username", "username", username);
 
         if (users.size() > 0) {
             return users.get(0);
@@ -40,9 +31,8 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 
     }
 
-    
     public void save(User user) {
-    	getHibernateTemplate().save(user);
+    	getHibernateTemplate().saveOrUpdate(user);
     }
 
 }

@@ -15,31 +15,44 @@
  */
 package com.dao;
 
-import com.model.Modul;
 import java.util.List;
-import javax.annotation.Resource;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
+import com.model.Modul;
+
 /**
  *
  * @author mishka
  */
-@Service("modulDAOimpl")
+@Service("modulDAO")
+@SuppressWarnings("unchecked")
 public class ModulDAOimpl extends HibernateDaoSupport implements ModuleDAO {
 
-	@Resource(name = "sessionFactory")
-    private SessionFactory sessionFactory;
-	
 	@Autowired
-	public void init() {
-	    setSessionFactory(sessionFactory);
+	public void init(SessionFactory sessionFactory) {
+		setSessionFactory(sessionFactory);
 	}
 
-    public List<Modul> getAllModul() {
-    	return (List<Modul>) getHibernateTemplate().find("from Modul");
-    }
+	public List<Modul> getAllModul() {
+		return (List<Modul>) getHibernateTemplate().find("from Modul");
+	}
+
+	public void saveOrUpdate(Modul entity) {
+		getHibernateTemplate().saveOrUpdate(entity);
+	}
+
+	public Modul getModul(String idDevice) {
+		List<Modul> modul = (List<Modul>) getHibernateTemplate().findByNamedParam("from Modul where id_device = :id", "id", idDevice);
+
+		if (modul.size() > 0) {
+			return modul.get(0);
+		} else {
+			return null;
+		}
+	}
 
 }

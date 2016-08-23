@@ -18,7 +18,7 @@ public class MainController {
 	public String defaultPage() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth instanceof AnonymousAuthenticationToken) {
-			return "redirect:/private_room";
+			return "redirect:/private/main";
 		} else {
 			return "redirect:/login";
 		}
@@ -30,6 +30,11 @@ public class MainController {
 		model.addObject("title", "This is title hello");
 		model.setViewName("private/hello");
 		return model;
+	}
+	
+	@RequestMapping(value = "/private/main", method = RequestMethod.GET)
+	public String privateMain() {
+		return "private/main";
 	}
 
 	@RequestMapping(value = "/private/admin", method = RequestMethod.GET)

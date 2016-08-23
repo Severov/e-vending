@@ -15,16 +15,30 @@
  */
 package com.dao;
 
-import com.model.Modul;
 import java.util.List;
+
 import org.springframework.transaction.annotation.Transactional;
+
+import com.model.Modul;
 
 /**
  *
  * @author mishka
  */
 public interface ModuleDAO {
-  
-    @Transactional(readOnly = true)
-    List<Modul> getAllModul();
+
+	@Transactional(readOnly = true)
+	List<Modul> getAllModul();
+
+	/**
+	 * Возвращает модуль по его id_device
+	 * 
+	 * @param idDevice
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	Modul getModul(String idDevice);
+
+	@Transactional(readOnly = false)
+	void saveOrUpdate(Modul entity);
 }
