@@ -6,11 +6,16 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "users")
@@ -38,6 +43,11 @@ public class User {
 
 	@Column(name = "email")
 	private String		email;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "company_id")
+	@JsonIgnore
+	private Company		company;
 
 	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "users")
 	private Set<Role>	userRole	= new HashSet<>();
@@ -120,6 +130,14 @@ public class User {
 
 	public Integer getRoot_user() {
 		return root_user;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 
 }

@@ -15,6 +15,7 @@
  */
 package com.dao;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
+import com.model.CollectionModule;
 import com.model.Modul;
 
 /**
@@ -53,6 +55,15 @@ public class ModulDAOimpl extends HibernateDaoSupport implements ModuleDAO {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * установка факта инкассации в указанное время
+	 */
+	@Override
+	public void setCollection(Calendar timeStamp, double plan, double fakt) {
+		CollectionModule collection = new CollectionModule(timeStamp, plan, fakt);
+		getHibernateTemplate().save(collection);
 	}
 
 }

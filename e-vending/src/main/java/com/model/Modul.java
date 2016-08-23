@@ -31,37 +31,48 @@ public class Modul {
 	@Id
 	@Column(name = "modul_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long			id;
+	private Long					id;
 
 	@Column(name = "imai", nullable = false, length = 50)
-	private String			imai;
+	private String					imai;
 
 	@Column(name = "serial_number", nullable = false, length = 50)
-	private String			serialNumber;
+	private String					serialNumber;
 
 	@Column(name = "version", nullable = false, length = 50)
-	private String			version;
+	private String					version;
 
 	@Column(name = "telephon", nullable = false, length = 50)
-	private String			telephon;
+	private String					telephon;
 
 	@Column(name = "activenum", nullable = false, length = 50)
-	private String			activenum;
+	private String					activenum;
 
 	@Column(name = "uin", nullable = false, length = 50)
-	private String			uin;
+	private String					uin;
 
 	@Column(name = "id_device", nullable = false, length = 50)
-	private String			idDevice;
+	private String					idDevice;
+
+	@Column(name = "active", nullable = false, length = 50)
+	private boolean					active;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id")
 	@JsonIgnore
-	private Company			company;
+	private Company					company;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private List<DataDoor>	dataDoor;
+	private List<DataDoor>			dataDoor;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
+	@JsonIgnore
+	private List<CollectionModule>	collection;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
+	@JsonIgnore
+	private List<CashModule>		cashModule;
 
 	public Long getId() {
 		return id;
@@ -141,5 +152,29 @@ public class Modul {
 
 	public void setActivenum(String activenum) {
 		this.activenum = activenum;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public List<CollectionModule> getCollection() {
+		return collection;
+	}
+
+	public void setCollection(List<CollectionModule> collection) {
+		this.collection = collection;
+	}
+
+	public List<CashModule> getCashModule() {
+		return cashModule;
+	}
+
+	public void setCashModule(List<CashModule> cashModule) {
+		this.cashModule = cashModule;
 	}
 }

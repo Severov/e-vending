@@ -15,6 +15,7 @@
  */
 package com.dao;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -41,4 +42,7 @@ public interface ModuleDAO {
 
 	@Transactional(readOnly = false)
 	void saveOrUpdate(Modul entity);
+
+	@Transactional(readOnly = false)
+	void setCollection(Calendar calendar, double plan, double fakt);
 }

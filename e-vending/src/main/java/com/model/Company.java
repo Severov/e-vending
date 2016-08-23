@@ -1,6 +1,7 @@
 package com.model;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,21 +17,27 @@ import javax.persistence.Table;
 public class Company {
 
 	@Id
-	@Column(name = "compani_id", unique = true, nullable = false)
+	@Column(name = "company_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long		id;
+	private Long				id;
 
 	@Column(name = "name")
-	private Integer		name;
+	private Integer				name;
 
 	@Column(name = "description")
-	private String		description;
+	private String				description;
 
 	@Column(name = "fax")
-	private String		fax;
+	private String				fax;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
-	private List<Modul>	modul;
+	private List<Modul>			modul;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+	private List<TempRegModule>	tempRegModul;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
+	private Set<User>			user;
 
 	public Long getId() {
 		return id;
@@ -72,4 +79,19 @@ public class Company {
 		this.modul = modul;
 	}
 
+	public List<TempRegModule> getTempRegModul() {
+		return tempRegModul;
+	}
+
+	public void setTempRegModul(List<TempRegModule> tempRegModul) {
+		this.tempRegModul = tempRegModul;
+	}
+
+	public Set<User> getUser() {
+		return user;
+	}
+
+	public void setUser(Set<User> user) {
+		this.user = user;
+	}
 }

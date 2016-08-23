@@ -14,33 +14,34 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+/**
+ * Содержит временные данные для регистрации модуля за владельцем
+ * 
+ * @author mishka
+ *
+ */
 @Entity
-@Table(name = "dataDoor")
-public class DataDoor {
+@Table(name = "tempRegModul")
+public class TempRegModule {
+
 	@Id
-	@Column(name = "dataDoor_id", unique = true, nullable = false)
+	@Column(name = "tempReg_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long		id;
 
-	@Column(name = "k", nullable = false, length = 50)
-	private Integer		k;
+	@Column(name = "secret", nullable = false, length = 50)
+	private String		secret;
 
 	@Column(name = "timeStamp", columnDefinition = "DATETIME")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar	timeStamp;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "modul_id")
-	private Modul		modul;
-
-	public DataDoor() {
-	};
-
-	public DataDoor(Integer k, Calendar timeStamp, Modul modul) {
-		this.k = k;
-		this.modul = modul;
-		this.timeStamp = timeStamp;
-	}
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "company_id")
+	@JsonIgnore
+	private Company		company;
 
 	public Long getId() {
 		return id;
@@ -50,12 +51,12 @@ public class DataDoor {
 		this.id = id;
 	}
 
-	public Integer getK() {
-		return k;
+	public String getSecret() {
+		return secret;
 	}
 
-	public void setK(Integer k) {
-		this.k = k;
+	public void setSecret(String secret) {
+		this.secret = secret;
 	}
 
 	public Calendar getTimeStamp() {
@@ -66,11 +67,11 @@ public class DataDoor {
 		this.timeStamp = timeStamp;
 	}
 
-	public Modul getModul() {
-		return modul;
+	public Company getCompany() {
+		return company;
 	}
 
-	public void setModul(Modul modul) {
-		this.modul = modul;
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 }

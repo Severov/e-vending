@@ -14,32 +14,51 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
-@Table(name = "dataDoor")
-public class DataDoor {
+@Table(name = "collectionModule")
+public class CollectionModule {
+
 	@Id
-	@Column(name = "dataDoor_id", unique = true, nullable = false)
+	@Column(name = "collection_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long		id;
-
-	@Column(name = "k", nullable = false, length = 50)
-	private Integer		k;
 
 	@Column(name = "timeStamp", columnDefinition = "DATETIME")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar	timeStamp;
 
+	@Column(name = "plan")
+	private double		plan;
+
+	@Column(name = "fakt")
+	private double		fakt;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "modul_id")
+	@JsonIgnore
 	private Modul		modul;
 
-	public DataDoor() {
-	};
+	public CollectionModule() {
+	}
 
-	public DataDoor(Integer k, Calendar timeStamp, Modul modul) {
-		this.k = k;
-		this.modul = modul;
+	public CollectionModule(Calendar timeStamp, double plan, double fakt) {
+		this.plan = plan;
+		this.fakt = fakt;
 		this.timeStamp = timeStamp;
+	}
+
+	public CollectionModule(double plan, double fakt) {
+		this.plan = plan;
+		this.fakt = fakt;
+		this.timeStamp = Calendar.getInstance();
+	}
+
+	public CollectionModule(double fakt) {
+		this.plan = fakt;
+		this.fakt = fakt;
+		this.timeStamp = Calendar.getInstance();
 	}
 
 	public Long getId() {
@@ -50,20 +69,28 @@ public class DataDoor {
 		this.id = id;
 	}
 
-	public Integer getK() {
-		return k;
-	}
-
-	public void setK(Integer k) {
-		this.k = k;
-	}
-
 	public Calendar getTimeStamp() {
 		return timeStamp;
 	}
 
 	public void setTimeStamp(Calendar timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+
+	public double getPlan() {
+		return plan;
+	}
+
+	public void setPlan(double plan) {
+		this.plan = plan;
+	}
+
+	public double getFakt() {
+		return fakt;
+	}
+
+	public void setFakt(double fakt) {
+		this.fakt = fakt;
 	}
 
 	public Modul getModul() {
@@ -73,4 +100,5 @@ public class DataDoor {
 	public void setModul(Modul modul) {
 		this.modul = modul;
 	}
+
 }

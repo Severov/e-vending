@@ -23,7 +23,7 @@ public class DataDoorDAOimpl extends HibernateDaoSupport implements DataDoorDAO 
 	}
 
 	@Override
-	public void saveOrUpdate(DataDoor entity) {
+	public void save(DataDoor entity) {
 		getHibernateTemplate().save(entity);
 
 	}
