@@ -1,7 +1,5 @@
 package com.service;
 
-import com.dao.UserDao;
-import com.model.Role;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,16 +15,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.dao.UserDao;
+import com.model.Role;
+
 @Service("myUserDetailsService")
 public class MyUserDetailsService implements UserDetailsService {
 
-	@Resource(name = "userDaoImpl")
-	private UserDao userDao;
+	@Resource(name = "userService")
+	private UserDao userService;
 
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-		
-		com.model.User user = userDao.findByUserName(username);
+
+		com.model.User user = userService.findByUserName(username);
 		List<GrantedAuthority> authorities = buildUserAuthority(user.getUserRole());
 
 		return buildUserForAuthentication(user, authorities);

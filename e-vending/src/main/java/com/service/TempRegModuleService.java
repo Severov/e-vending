@@ -1,4 +1,4 @@
-package com.dao;
+package com.service;
 
 import java.util.Calendar;
 import java.util.List;
@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
+import com.dao.TempRegModulDAO;
 import com.model.TempRegModule;
 
-@Service("tempRegModuleDAO")
-public class TempRegModuleDAOimpl extends HibernateDaoSupport implements TempRegModulDAO {
+@Service("tempRegModuleService")
+public class TempRegModuleService extends HibernateDaoSupport implements TempRegModulDAO {
 
 	@Autowired
 	public void init(SessionFactory sessionFactory) {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dao;
+package com.service;
 
 import java.util.Calendar;
 import java.util.List;
@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
+import com.dao.ModuleDAO;
 import com.model.CollectionModule;
 import com.model.Modul;
 
@@ -30,9 +31,9 @@ import com.model.Modul;
  *
  * @author mishka
  */
-@Service("modulDAO")
+@Service("modulService")
 @SuppressWarnings("unchecked")
-public class ModulDAOimpl extends HibernateDaoSupport implements ModuleDAO {
+public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 
 	@Autowired
 	public void init(SessionFactory sessionFactory) {

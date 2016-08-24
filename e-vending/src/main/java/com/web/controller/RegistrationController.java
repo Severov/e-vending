@@ -17,37 +17,36 @@ import com.model.User;
 
 @Controller
 public class RegistrationController {
-	
-	@Resource(name="userDaoImpl")
-	private UserDao userDao;
-	
-	
-	@RequestMapping(value="/registration", method = RequestMethod.GET)
-	public String registration(Model model){
-	    model.addAttribute("user", new User());
+
+	@Resource(name = "userService")
+	private UserDao userService;
+
+	@RequestMapping(value = "/registration", method = RequestMethod.GET)
+	public String registration(Model model) {
+		model.addAttribute("user", new User());
 		return "registration";
 	}
-	
-	@RequestMapping(value="/registration", method = RequestMethod.POST)
-	public String registrationsdaf(@ModelAttribute("user") @Validated User user, BindingResult result, String password_confirm, ModelMap model){
- 
-        if(result.hasErrors()) {
-            return "enroll";
-        }
-        
-        if (user.getUsername().isEmpty() || user.getFullname().isEmpty()){
-        	model.addAttribute("error", "Заполните все поля!");
-        	return "registration";
-        }
-        
-        if (!user.getPassword().equals(password_confirm)){
-        	model.addAttribute("error", "Пароли не совпадают!");
-        	return "registration";
-        }
-        
-        user.setEnabled(true);
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        userDao.save(user);
+
+	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+	public String registrationsdaf(@ModelAttribute("user") @Validated User user, BindingResult result, String password_confirm, ModelMap model) {
+
+		if (result.hasErrors()) {
+			return "enroll";
+		}
+
+		if (user.getUsername().isEmpty() || user.getFullname().isEmpty()) {
+			model.addAttribute("error", "Заполните все поля!");
+			return "registration";
+		}
+
+		if (!user.getPassword().equals(password_confirm)) {
+			model.addAttribute("error", "Пароли не совпадают!");
+			return "registration";
+		}
+
+		user.setEnabled(true);
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+		userService.save(user);
 		return "redirect:/login";
 	}
 }

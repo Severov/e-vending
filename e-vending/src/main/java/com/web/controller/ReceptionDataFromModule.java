@@ -35,20 +35,20 @@ public class ReceptionDataFromModule {
 	// private static final Logger logger =
 	// Logger.getLogger(WelcomReceptionDataFromModuleeController.class);
 
-	@Resource(name = "companyDAO")
-	private CompanyDAO		company;
+	@Resource(name = "companyService")
+	private CompanyDAO		companyService;
 
-	@Resource(name = "modulDAO")
-	private ModuleDAO		modulDAO;
+	@Resource(name = "modulService")
+	private ModuleDAO		modulService;
 
-	@Resource(name = "dataDoorDAO")
-	private DataDoorDAO		dataDoorDAO;
+	@Resource(name = "dataDoorService")
+	private DataDoorDAO		dataDoorService;
 
-	@Resource(name = "tempRegModuleDAO")
-	private TempRegModulDAO	tempRegModuleDAO;
+	@Resource(name = "tempRegModuleService")
+	private TempRegModulDAO	tempRegModuleService;
 
-	@Resource(name = "cashModuleDAO")
-	private CashModuleDAO	cashModuleDAO;
+	@Resource(name = "cashModuleService")
+	private CashModuleDAO	cashModuleService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/company")
 	public String receptionData(@RequestParam(value = "d", required = false) String d, @RequestParam(value = "r", required = false) String r,
@@ -62,7 +62,11 @@ public class ReceptionDataFromModule {
 			return null;
 		}
 
-		Modul modul = modulDAO.getModul(d);
+		Modul modul = modulService.getModul(d);
+		if (modul == null) {
+			return null;
+		}
+
 		saveDataDoor(modul, k);
 		updateVersionAndTelephon(modul, version, mnum, f01);
 		saveCashModule(modul, cash, bond, sell, bs);
@@ -87,14 +91,14 @@ public class ReceptionDataFromModule {
 			return;
 		}
 
-		dataDoorDAO.save(new DataDoor(k, Calendar.getInstance(), modul));
+		dataDoorService.save(new DataDoor(k, Calendar.getInstance(), modul));
 	}
 
 	/**
 	 * Обновляет данные про версию прошивки и номера телефонов
 	 * 
 	 * @param modul
-	 *            - модуль прислвший данные
+	 *            - модуль прислaвший данные
 	 * @param version
 	 *            - версия прошивки
 	 * @param mnum
@@ -111,7 +115,7 @@ public class ReceptionDataFromModule {
 		modul.setTelephon(mnum);
 		modul.setVersion(version);
 
-		modulDAO.saveOrUpdate(modul);
+		modulService.saveOrUpdate(modul);
 
 		return "RDM";
 	}
@@ -130,7 +134,7 @@ public class ReceptionDataFromModule {
 			return "";
 		}
 
-		TempRegModule tmp = tempRegModuleDAO.findBySecretCode(code);
+		TempRegModule tmp = tempRegModuleService.findBySecretCode(code);
 		if (tmp == null) {
 			// отобразим, что время регистрации истекло 5-ть мин, или
 			// предоставленный код не найден
@@ -144,7 +148,7 @@ public class ReceptionDataFromModule {
 
 		modul.setCompany(tmp.getCompany());
 		modul.setActive(true);
-		modulDAO.saveOrUpdate(modul);
+		modulService.saveOrUpdate(modul);
 		return "RDM";
 
 	}
@@ -190,7 +194,7 @@ public class ReceptionDataFromModule {
 			return "";
 		}
 
-		cashModuleDAO.saveCashModule(modul, Calendar.getInstance(), c, b, s, bs);
+		cashModuleService.saveCashModule(modul, Calendar.getInstance(), c, b, s, bs);
 
 		return "RDM";
 	}

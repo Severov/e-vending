@@ -16,6 +16,12 @@ import javax.persistence.TemporalType;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+/**
+ * Содержит подтвержденные инкассации модуля
+ * 
+ * @author mishka
+ *
+ */
 @Entity
 @Table(name = "collectionModule")
 public class CollectionModule {
