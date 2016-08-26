@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.dao.UserDao;
+import com.dao.UserDAO;
 import com.model.User;
 
 @Controller
 public class RegistrationController {
 
 	@Resource(name = "userService")
-	private UserDao userService;
+	private UserDAO userService;
 
 	@RequestMapping(value = "/registration", method = RequestMethod.GET)
 	public String registration(Model model) {

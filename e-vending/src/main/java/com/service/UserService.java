@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
-import com.dao.UserDao;
+import com.dao.UserDAO;
 import com.model.User;
 
 @Service("userService")
-public class UserService extends HibernateDaoSupport implements UserDao {
+public class UserService extends HibernateDaoSupport implements UserDAO {
 
 	@Autowired
 	public void init(SessionFactory sessionFactory) {

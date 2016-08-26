@@ -4,7 +4,7 @@ import com.model.User;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface UserDao {
+public interface UserDAO {
 
 	@Transactional(readOnly = true)
 	User findByUserName(String username);

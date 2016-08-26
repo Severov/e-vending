@@ -15,14 +15,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.dao.UserDao;
+import com.dao.UserDAO;
 import com.model.Role;
 
 @Service("myUserDetailsService")
 public class MyUserDetailsService implements UserDetailsService {
 
 	@Resource(name = "userService")
-	private UserDao userService;
+	private UserDAO userService;
 
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
