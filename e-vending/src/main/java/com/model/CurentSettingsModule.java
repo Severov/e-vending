@@ -37,6 +37,12 @@ public class CurentSettingsModule {
 		setValue(value);
 	}
 
+	public CurentSettingsModule(Modul modul, String settings, String value) {
+		setSettings(settings);
+		setValue(value);
+		setModul(modul);
+	}
+
 	public Long getId() {
 		return id;
 	}

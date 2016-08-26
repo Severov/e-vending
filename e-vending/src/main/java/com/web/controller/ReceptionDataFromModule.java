@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dao.CashModuleDAO;
 import com.dao.CompanyDAO;
+import com.dao.CurentSettingsModuleDAO;
 import com.dao.DataDoorDAO;
 import com.dao.ModuleDAO;
 import com.dao.TempRegModulDAO;
+import com.model.CurentSettingsModule;
 import com.model.DataDoor;
 import com.model.Modul;
 import com.model.TempRegModule;
@@ -36,27 +38,30 @@ public class ReceptionDataFromModule {
 	// Logger.getLogger(WelcomReceptionDataFromModuleeController.class);
 
 	@Resource(name = "companyService")
-	private CompanyDAO		companyService;
+	private CompanyDAO				companyService;
 
 	@Resource(name = "modulService")
-	private ModuleDAO		modulService;
+	private ModuleDAO				modulService;
 
 	@Resource(name = "dataDoorService")
-	private DataDoorDAO		dataDoorService;
+	private DataDoorDAO				dataDoorService;
 
 	@Resource(name = "tempRegModuleService")
-	private TempRegModulDAO	tempRegModuleService;
+	private TempRegModulDAO			tempRegModuleService;
 
 	@Resource(name = "cashModuleService")
-	private CashModuleDAO	cashModuleService;
+	private CashModuleDAO			cashModuleService;
+
+	@Resource(name = "curentSettingsService")
+	private CurentSettingsModuleDAO	curentSettingsService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/company")
 	public String receptionData(@RequestParam(value = "d", required = false) String d, @RequestParam(value = "r", required = false) String r,
-			@RequestParam(value = "version", required = false) String version, @RequestParam(value = "MNUM", required = false) String mnum,
-			@RequestParam(value = "F01", required = false) String f01, @RequestParam(value = "k", required = false) Integer k,
-			@RequestParam(value = "code", required = false) String code, @RequestParam(value = "cash", required = false) Integer cash,
-			@RequestParam(value = "bond", required = false) Integer bond, @RequestParam(value = "sell", required = false) Integer sell,
-			@RequestParam(value = "bs", required = false) Integer bs) {
+		@RequestParam(value = "version", required = false) String version, @RequestParam(value = "MNUM", required = false) String mnum,
+		@RequestParam(value = "F01", required = false) String f01, @RequestParam(value = "k", required = false) Integer k,
+		@RequestParam(value = "sett", required = false) String sett, @RequestParam(value = "code", required = false) String code,
+		@RequestParam(value = "cash", required = false) Integer cash, @RequestParam(value = "bond", required = false) Integer bond,
+		@RequestParam(value = "sell", required = false) Integer sell, @RequestParam(value = "bs", required = false) Integer bs) {
 
 		if (d == null) {
 			return null;
@@ -67,6 +72,7 @@ public class ReceptionDataFromModule {
 			return null;
 		}
 
+		saveCurentSettingsModule(modul, sett);
 		saveDataDoor(modul, k);
 		updateVersionAndTelephon(modul, version, mnum, f01);
 		saveCashModule(modul, cash, bond, sell, bs);
@@ -118,6 +124,36 @@ public class ReceptionDataFromModule {
 		modulService.saveOrUpdate(modul);
 
 		return "RDM";
+	}
+
+	private void saveCurentSettingsModule(Modul modul, String settings) {
+		if (settings == null) {
+			return;
+		}
+
+		settings += "igprs1"; // всегда 1
+
+		String[] allSettings = { "time", "profile", "balance", "request", "silent", "voice", "igprs" };
+
+		curentSettingsService.deleteAll(modul.getCurentSettings());
+		modul.getCurentSettings().clear();
+
+		for (String stn : allSettings) {
+			if (settings.indexOf(stn) == -1) {
+				continue;
+			}
+
+			int len = settings.indexOf(stn) + stn.length();
+			int lenEnd = len + 1;
+
+			if (stn == "time") {
+				lenEnd = len + 4;
+			}
+
+			modul.getCurentSettings().add(new CurentSettingsModule(modul, stn, settings.substring(len, lenEnd)));
+		}
+
+		modulService.saveOrUpdate(modul);
 	}
 
 	/**
