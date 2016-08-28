@@ -110,12 +110,11 @@ public class ReceptionDataFromModule {
 	 * @param bond
 	 */
 	private void saveCashNotReception(Modul modul, Integer bond) {
-		if (!(bond != null && bond < 0)) {
+		if (bond == null || bond > 0) {
 			return;
 		}
 
 		cashNotReceptionService.save(new CashNotReception(modul, Calendar.getInstance()));
-
 	}
 
 	/**
