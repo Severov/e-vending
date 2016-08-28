@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,28 +19,36 @@ public class CurentSettingsModule {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long	id;
 
-	@Column(name = "settings", nullable = false, length = 10)
-	private String	settings;
+	@Column(name = "time", length = 10)
+	private String	time;
 
-	@Column(name = "value", nullable = false, length = 10)
-	private String	value;
+	@Column(name = "profile", length = 10)
+	private String	profile;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@Column(name = "balance", length = 10)
+	private String	balance;
+
+	@Column(name = "request", length = 10)
+	private String	request;
+
+	@Column(name = "silent", length = 10)
+	private String	silent;
+
+	@Column(name = "voice", length = 10)
+	private String	voice;
+
+	@Column(name = "igprs", length = 10)
+	private String	igprs;
+
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "modul_id")
 	private Modul	modul;
 
 	public CurentSettingsModule() {
 	}
 
-	public CurentSettingsModule(String settings, String value) {
-		setSettings(settings);
-		setValue(value);
-	}
-
-	public CurentSettingsModule(Modul modul, String settings, String value) {
-		setSettings(settings);
-		setValue(value);
-		setModul(modul);
+	public CurentSettingsModule(Modul modul) {
+		this.modul = modul;
 	}
 
 	public Long getId() {
@@ -51,28 +59,68 @@ public class CurentSettingsModule {
 		this.id = id;
 	}
 
-	public String getSettings() {
-		return settings;
-	}
-
-	public void setSettings(String settings) {
-		this.settings = settings;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
 	public Modul getModul() {
 		return modul;
 	}
 
 	public void setModul(Modul modul) {
 		this.modul = modul;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	public String getBalance() {
+		return balance;
+	}
+
+	public void setBalance(String balance) {
+		this.balance = balance;
+	}
+
+	public String getRequest() {
+		return request;
+	}
+
+	public void setRequest(String request) {
+		this.request = request;
+	}
+
+	public String getSilent() {
+		return silent;
+	}
+
+	public void setSilent(String silent) {
+		this.silent = silent;
+	}
+
+	public String getVoice() {
+		return voice;
+	}
+
+	public void setVoice(String voice) {
+		this.voice = voice;
+	}
+
+	public String getIgprs() {
+		return igprs;
+	}
+
+	public void setIgprs(String igprs) {
+		this.igprs = igprs;
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.model;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -34,53 +34,53 @@ public class Modul {
 	@Id
 	@Column(name = "modul_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long						id;
+	private Long					id;
 
 	@Column(name = "imai", nullable = false, length = 50)
-	private String						imai;
+	private String					imai;
 
 	@Column(name = "serial_number", nullable = false, length = 50)
-	private String						serialNumber;
+	private String					serialNumber;
 
 	@Column(name = "version", nullable = false, length = 50)
-	private String						version;
+	private String					version;
 
 	@Column(name = "telephon", nullable = false, length = 50)
-	private String						telephon;
+	private String					telephon;
 
 	@Column(name = "activenum", nullable = false, length = 50)
-	private String						activenum;
+	private String					activenum;
 
 	@Column(name = "uin", nullable = false, length = 50)
-	private String						uin;
+	private String					uin;
 
 	@Column(name = "id_device", nullable = false, length = 50)
-	private String						idDevice;
+	private String					idDevice;
 
 	@Column(name = "active", nullable = false, length = 50)
-	private boolean						active;
+	private boolean					active;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "company_id")
 	@JsonIgnore
-	private Company						company;
+	private Company					company;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private List<DataDoor>				dataDoor;
+	private List<DataDoor>			dataDoor;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "modul")
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "modul")
 	@Cascade({ CascadeType.ALL })
 	@JsonIgnore
-	private Set<CurentSettingsModule>	curentSettings;
+	private CurentSettingsModule	curentSettings;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private List<CollectionModule>		collection;
+	private List<CollectionModule>	collection;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private List<CashModule>			cashModule;
+	private List<CashModule>		cashModule;
 
 	public Long getId() {
 		return id;
@@ -186,11 +186,11 @@ public class Modul {
 		this.cashModule = cashModule;
 	}
 
-	public Set<CurentSettingsModule> getCurentSettings() {
+	public CurentSettingsModule getCurentSettings() {
 		return curentSettings;
 	}
 
-	public void setCurentSettings(Set<CurentSettingsModule> curentSettings) {
+	public void setCurentSettings(CurentSettingsModule curentSettings) {
 		this.curentSettings = curentSettings;
 	}
 }

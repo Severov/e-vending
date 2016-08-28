@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.dao.CurentSettingsModuleDAO;
 import com.model.CurentSettingsModule;
+import com.model.Modul;
 
 @Service("curentSettingsService")
 public class CurentSettingsService extends HibernateDaoSupport implements CurentSettingsModuleDAO {
@@ -19,8 +20,8 @@ public class CurentSettingsService extends HibernateDaoSupport implements Curent
 	}
 
 	@Override
-	public void deleteAll(Set<CurentSettingsModule> settings) {
-		getHibernateTemplate().deleteAll(settings);
+	public void delete(Modul entity) {
+		getHibernateTemplate().delete(entity);
 	}
 
 	@Override

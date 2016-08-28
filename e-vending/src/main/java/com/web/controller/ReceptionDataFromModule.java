@@ -3,6 +3,7 @@
  */
 package com.web.controller;
 
+import java.lang.reflect.Field;
 import java.util.Calendar;
 
 import javax.annotation.Resource;
@@ -131,26 +132,39 @@ public class ReceptionDataFromModule {
 			return;
 		}
 
-		settings += "igprs1"; // всегда 1
+		Class classSettings = new CurentSettingsModule().getClass();
 
-		String[] allSettings = { "time", "profile", "balance", "request", "silent", "voice", "igprs" };
+		for (Field field : classSettings.getDeclaredFields()) {
+			String stn = field.getName();
 
-		curentSettingsService.deleteAll(modul.getCurentSettings());
-		modul.getCurentSettings().clear();
-
-		for (String stn : allSettings) {
-			if (settings.indexOf(stn) == -1) {
+			// поле id пропускаем
+			if (field.getName() == "id") {
 				continue;
 			}
 
-			int len = settings.indexOf(stn) + stn.length();
-			int lenEnd = len + 1;
+			// значение настройки по умолчанию
+			String value = "1";
 
-			if (stn == "time") {
-				lenEnd = len + 4;
+			// если к нам пришла настройка с другим значением
+			if (settings.indexOf(stn) != -1) {
+
+				int len = settings.indexOf(stn) + stn.length();
+				int lenEnd = len + 1;
+
+				if (stn == "time") {
+					lenEnd = len + 4;
+				}
+
+				value = settings.substring(len, lenEnd);
 			}
 
-			modul.getCurentSettings().add(new CurentSettingsModule(modul, stn, settings.substring(len, lenEnd)));
+			try {
+				field.setAccessible(true);
+				field.set(modul.getCurentSettings(), value);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+
 		}
 
 		modulService.saveOrUpdate(modul);
@@ -181,6 +195,9 @@ public class ReceptionDataFromModule {
 		if (modul.isActive()) {
 			return "Модуль занят";
 		}
+
+		// Установим пустые настройки для модуля
+		modul.setCurentSettings(new CurentSettingsModule(modul));
 
 		modul.setCompany(tmp.getCompany());
 		modul.setActive(true);
