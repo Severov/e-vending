@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dao.CashModuleDAO;
+import com.dao.CashNotReceptionDAO;
 import com.dao.CompanyDAO;
-import com.dao.CurentSettingsModuleDAO;
 import com.dao.DataDoorDAO;
 import com.dao.ModuleDAO;
 import com.dao.TempRegModulDAO;
+import com.model.CashNotReception;
 import com.model.CurentSettingsModule;
 import com.model.DataDoor;
 import com.model.Modul;
@@ -39,22 +40,22 @@ public class ReceptionDataFromModule {
 	// Logger.getLogger(WelcomReceptionDataFromModuleeController.class);
 
 	@Resource(name = "companyService")
-	private CompanyDAO				companyService;
+	private CompanyDAO			companyService;
 
 	@Resource(name = "modulService")
-	private ModuleDAO				modulService;
+	private ModuleDAO			modulService;
 
 	@Resource(name = "dataDoorService")
-	private DataDoorDAO				dataDoorService;
+	private DataDoorDAO			dataDoorService;
 
 	@Resource(name = "tempRegModuleService")
-	private TempRegModulDAO			tempRegModuleService;
+	private TempRegModulDAO		tempRegModuleService;
 
 	@Resource(name = "cashModuleService")
-	private CashModuleDAO			cashModuleService;
+	private CashModuleDAO		cashModuleService;
 
-	@Resource(name = "curentSettingsService")
-	private CurentSettingsModuleDAO	curentSettingsService;
+	@Resource(name = "cashNotReceptionService")
+	private CashNotReceptionDAO	cashNotReceptionService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/company")
 	public String receptionData(@RequestParam(value = "d", required = false) String d, @RequestParam(value = "r", required = false) String r,
@@ -73,6 +74,7 @@ public class ReceptionDataFromModule {
 			return null;
 		}
 
+		saveCashNotReception(modul, bond);
 		saveCurentSettingsModule(modul, sett);
 		saveDataDoor(modul, k);
 		updateVersionAndTelephon(modul, version, mnum, f01);
@@ -102,6 +104,21 @@ public class ReceptionDataFromModule {
 	}
 
 	/**
+	 * Фиксация отказа купюрника от купюры
+	 * 
+	 * @param modul
+	 * @param bond
+	 */
+	private void saveCashNotReception(Modul modul, Integer bond) {
+		if (!(bond != null && bond < 0)) {
+			return;
+		}
+
+		cashNotReceptionService.save(new CashNotReception(modul, Calendar.getInstance()));
+
+	}
+
+	/**
 	 * Обновляет данные про версию прошивки и номера телефонов
 	 * 
 	 * @param modul
@@ -127,6 +144,14 @@ public class ReceptionDataFromModule {
 		return "RDM";
 	}
 
+	/**
+	 * Установка параметров настройки, которые модуль прислал
+	 * 
+	 * @param modul
+	 *            - модуль которому предназначаются настройки
+	 * @param settings
+	 *            - строка настроек
+	 */
 	private void saveCurentSettingsModule(Modul modul, String settings) {
 		if (settings == null) {
 			return;

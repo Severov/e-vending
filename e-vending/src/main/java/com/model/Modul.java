@@ -82,6 +82,10 @@ public class Modul {
 	@JsonIgnore
 	private List<CashModule>		cashModule;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
+	@JsonIgnore
+	private List<CashNotReception>	cashNotReception;
+
 	public Long getId() {
 		return id;
 	}
@@ -192,5 +196,13 @@ public class Modul {
 
 	public void setCurentSettings(CurentSettingsModule curentSettings) {
 		this.curentSettings = curentSettings;
+	}
+
+	public List<CashNotReception> getCashNotReception() {
+		return cashNotReception;
+	}
+
+	public void setCashNotReception(List<CashNotReception> cashNotReception) {
+		this.cashNotReception = cashNotReception;
 	}
 }
