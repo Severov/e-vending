@@ -86,6 +86,10 @@ public class Modul {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
+	private List<ErrorModule>		error;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
+	@JsonIgnore
 	private List<CashNotReception>	cashNotReception;
 
 	public Long getId() {

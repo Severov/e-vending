@@ -16,19 +16,12 @@ import javax.persistence.TemporalType;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-/**
- * Модель монетника
- * 
- * @author mishka
- *
- */
-
 @Entity
-@Table(name = "cashCoin")
-public class CashCoin {
+@Table(name = "errorModule")
+public class ErrorModule {
 
 	@Id
-	@Column(name = "cashCoin_id", unique = true, nullable = false)
+	@Column(name = "error_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long		id;
 
@@ -36,29 +29,21 @@ public class CashCoin {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar	timeStamp;
 
-	@Column(name = "key_", length = 10)
-	private String		key;
-
-	@Column(name = "count_", length = 10)
-	private String		count;
-
-	@Column(name = "movementType", length = 10)
-	private String		movementType;
+	@Column(name = "error", length = 100)
+	private String		error;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "modul_id")
 	@JsonIgnore
 	private Modul		modul;
 
-	public CashCoin() {
+	public ErrorModule() {
 	}
 
-	public CashCoin(Modul modul, String type, String key, String count, Calendar calendar) {
+	public ErrorModule(Modul modul, String error, Calendar timeStamp) {
 		setModul(modul);
-		setKey(key);
-		setMovementType(type);
-		setCount(count);
-		setTimeStamp(calendar);
+		setError(error);
+		setTimeStamp(timeStamp);
 	}
 
 	public Long getId() {
@@ -77,20 +62,12 @@ public class CashCoin {
 		this.timeStamp = timeStamp;
 	}
 
-	public String getKey() {
-		return key;
+	public String getError() {
+		return error;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
-	}
-
-	public String getCount() {
-		return count;
-	}
-
-	public void setCount(String count) {
-		this.count = count;
+	public void setError(String error) {
+		this.error = error;
 	}
 
 	public Modul getModul() {
@@ -99,14 +76,6 @@ public class CashCoin {
 
 	public void setModul(Modul modul) {
 		this.modul = modul;
-	}
-
-	public String getMovementType() {
-		return movementType;
-	}
-
-	public void setMovementType(String movementType) {
-		this.movementType = movementType;
 	}
 
 }

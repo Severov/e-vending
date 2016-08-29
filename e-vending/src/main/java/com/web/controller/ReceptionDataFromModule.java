@@ -18,12 +18,15 @@ import com.dao.CashModuleDAO;
 import com.dao.CashNotReceptionDAO;
 import com.dao.CompanyDAO;
 import com.dao.DataDoorDAO;
+import com.dao.ErrorModuleDAO;
 import com.dao.ModuleDAO;
 import com.dao.TempRegModulDAO;
+import com.model.CashCoin;
 import com.model.CashModule;
 import com.model.CashNotReception;
 import com.model.CurentSettingsModule;
 import com.model.DataDoor;
+import com.model.ErrorModule;
 import com.model.Modul;
 import com.model.TempRegModule;
 
@@ -62,13 +65,45 @@ public class ReceptionDataFromModule {
 	@Resource(name = "cashCoinService")
 	private CashCoinDAO			cashCoinService;
 
+	@Resource(name = "errorModuleService")
+	private ErrorModuleDAO		errorModuleService;
+
+	/**
+	 * Обработчик всех входящих данных от модуля Все входящие параметры являются
+	 * не обязательными
+	 * 
+	 * @param d
+	 *            - идентификатор модуля
+	 * @param r
+	 * @param version
+	 *            - версия прошивки
+	 * @param mnum
+	 * @param f01
+	 * @param k
+	 *            - состояние положения дверей
+	 * @param sett
+	 *            - строка настроек модуля
+	 * @param code
+	 *            - секретный код при регистрации модуля
+	 * @param cash
+	 *            - сумма в купюрнике
+	 * @param bond
+	 *            - номинал поступившей купюры
+	 * @param sell
+	 *            - событие продажи
+	 * @param bs
+	 *            - количество купюр в купюроприёмнике
+	 * @return
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/company")
 	public String receptionData(@RequestParam(value = "d", required = false) String d, @RequestParam(value = "r", required = false) String r,
 		@RequestParam(value = "version", required = false) String version, @RequestParam(value = "MNUM", required = false) String mnum,
 		@RequestParam(value = "F01", required = false) String f01, @RequestParam(value = "k", required = false) Integer k,
 		@RequestParam(value = "sett", required = false) String sett, @RequestParam(value = "code", required = false) String code,
-		@RequestParam(value = "cash", required = false) Integer cash, @RequestParam(value = "bond", required = false) Integer bond,
-		@RequestParam(value = "sell", required = false) Integer sell, @RequestParam(value = "bs", required = false) Integer bs) {
+		@RequestParam(value = "incoin", required = false) String incoin, @RequestParam(value = "outcoin", required = false) String outcoin,
+		@RequestParam(value = "ALARM", required = false) String ALARM, @RequestParam(value = "cash", required = false) Integer cash,
+		@RequestParam(value = "bond", required = false) Integer bond, @RequestParam(value = "sell", required = false) Integer sell,
+		@RequestParam(value = "bs", required = false) Integer bs) {
 
 		if (d == null) {
 			return null;
@@ -79,13 +114,16 @@ public class ReceptionDataFromModule {
 			return null;
 		}
 
+		// return saveErrorModule(modul, ALARM);
+		// saveCashCoin(modul, incoin, outcoin);
 		// saveCashNotReception(modul, bond);
-		// saveCurentSettingsModule(modul, sett);
+		saveCurentSettingsModule(modul, sett);
+		return "sadfsf";
 		// saveDataDoor(modul, k);
 		// updateVersionAndTelephon(modul, version, mnum, f01);
 		// saveCashModule(modul, cash, bond, sell, bs);
 
-		return cashModuleService.getSumm(modul).toString();
+		// return cashModuleService.getSumm(modul).toString();
 
 		// return registrationModule(modul, code);
 
@@ -108,6 +146,39 @@ public class ReceptionDataFromModule {
 		}
 
 		dataDoorService.save(new DataDoor(k, Calendar.getInstance(), modul));
+	}
+
+	private String saveErrorModule(Modul modul, String alarm) {
+		if (alarm == null) {
+			return "";
+		}
+
+		errorModuleService.save(new ErrorModule(modul, alarm, Calendar.getInstance()));
+		return "RDM";
+	}
+
+	/**
+	 * Обрабатывает денежные операции по монетам
+	 * 
+	 * @param modul
+	 * @param in
+	 * @param out
+	 */
+	private void saveCashCoin(Modul modul, String in, String out) {
+		String type = "0";
+		String[] buf;
+
+		if (in != null) { // к нам пришли монеты
+			buf = in.split(";");
+		} else if (out != null) { // от нас ушли монеты
+			buf = out.split(";");
+			type = "1";
+		} else { // к нам ничего не пришло
+			return;
+		}
+
+		cashCoinService.save(new CashCoin(modul, type, buf[0], buf[1], Calendar.getInstance()));
+
 	}
 
 	/**
