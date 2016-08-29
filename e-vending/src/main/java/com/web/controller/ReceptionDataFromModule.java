@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dao.CashCoinDAO;
 import com.dao.CashModuleDAO;
 import com.dao.CashNotReceptionDAO;
 import com.dao.CompanyDAO;
 import com.dao.DataDoorDAO;
 import com.dao.ModuleDAO;
 import com.dao.TempRegModulDAO;
+import com.model.CashModule;
 import com.model.CashNotReception;
 import com.model.CurentSettingsModule;
 import com.model.DataDoor;
@@ -57,6 +59,9 @@ public class ReceptionDataFromModule {
 	@Resource(name = "cashNotReceptionService")
 	private CashNotReceptionDAO	cashNotReceptionService;
 
+	@Resource(name = "cashCoinService")
+	private CashCoinDAO			cashCoinService;
+
 	@RequestMapping(method = RequestMethod.GET, value = "/company")
 	public String receptionData(@RequestParam(value = "d", required = false) String d, @RequestParam(value = "r", required = false) String r,
 		@RequestParam(value = "version", required = false) String version, @RequestParam(value = "MNUM", required = false) String mnum,
@@ -74,13 +79,15 @@ public class ReceptionDataFromModule {
 			return null;
 		}
 
-		saveCashNotReception(modul, bond);
-		saveCurentSettingsModule(modul, sett);
-		saveDataDoor(modul, k);
-		updateVersionAndTelephon(modul, version, mnum, f01);
-		saveCashModule(modul, cash, bond, sell, bs);
+		// saveCashNotReception(modul, bond);
+		// saveCurentSettingsModule(modul, sett);
+		// saveDataDoor(modul, k);
+		// updateVersionAndTelephon(modul, version, mnum, f01);
+		// saveCashModule(modul, cash, bond, sell, bs);
 
-		return registrationModule(modul, code);
+		return cashModuleService.getSumm(modul).toString();
+
+		// return registrationModule(modul, code);
 
 		// return TempRegModulDAO.generateSecretCode(5);//
 		// tempRegModuleDAO.findBySecretCode("777");
@@ -161,8 +168,8 @@ public class ReceptionDataFromModule {
 		for (Field field : classSettings.getDeclaredFields()) {
 			String stn = field.getName();
 
-			// поле id пропускаем
-			if (field.getName() == "id") {
+			// поле id и modul пропускаем
+			if (field.getName() == "id" || (field.getName() == "modul")) {
 				continue;
 			}
 
@@ -271,7 +278,7 @@ public class ReceptionDataFromModule {
 			return "";
 		}
 
-		cashModuleService.saveCashModule(modul, Calendar.getInstance(), c, b, s, bs);
+		cashModuleService.saveCashModule(new CashModule(modul, Calendar.getInstance(), c, b, s, bs));
 
 		return "RDM";
 	}

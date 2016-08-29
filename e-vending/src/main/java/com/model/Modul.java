@@ -1,6 +1,7 @@
 package com.model;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,9 +29,6 @@ import org.hibernate.annotations.CascadeType;
 @Table(name = "modul")
 public class Modul {
 
-	/**
-	 * id модуля
-	 */
 	@Id
 	@Column(name = "modul_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -77,6 +75,10 @@ public class Modul {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
 	private List<CollectionModule>	collection;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
+	@JsonIgnore
+	private Set<CashCoin>			cashCoin;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
@@ -204,5 +206,13 @@ public class Modul {
 
 	public void setCashNotReception(List<CashNotReception> cashNotReception) {
 		this.cashNotReception = cashNotReception;
+	}
+
+	public Set<CashCoin> getCashCoin() {
+		return cashCoin;
+	}
+
+	public void setCashCoin(Set<CashCoin> cashCoin) {
+		this.cashCoin = cashCoin;
 	}
 }
