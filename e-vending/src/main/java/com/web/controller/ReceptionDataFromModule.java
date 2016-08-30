@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dao.CashCoinDAO;
 import com.dao.CashModuleDAO;
 import com.dao.CashNotReceptionDAO;
+import com.dao.CommandToModuleDAO;
 import com.dao.CompanyDAO;
 import com.dao.DataDoorDAO;
+import com.dao.DataModuleDAO;
 import com.dao.ErrorModuleDAO;
 import com.dao.ModuleDAO;
 import com.dao.TempRegModulDAO;
@@ -26,6 +28,7 @@ import com.model.CashModule;
 import com.model.CashNotReception;
 import com.model.CurentSettingsModule;
 import com.model.DataDoor;
+import com.model.DataModule;
 import com.model.ErrorModule;
 import com.model.Modul;
 import com.model.TempRegModule;
@@ -65,8 +68,14 @@ public class ReceptionDataFromModule {
 	@Resource(name = "cashCoinService")
 	private CashCoinDAO			cashCoinService;
 
+	@Resource(name = "commandToModuleService")
+	private CommandToModuleDAO	commandToModuleService;
+
 	@Resource(name = "errorModuleService")
 	private ErrorModuleDAO		errorModuleService;
+
+	@Resource(name = "dataModuleService")
+	private DataModuleDAO		dataModuleService;
 
 	/**
 	 * Обработчик всех входящих данных от модуля Все входящие параметры являются
@@ -101,8 +110,11 @@ public class ReceptionDataFromModule {
 		@RequestParam(value = "F01", required = false) String f01, @RequestParam(value = "k", required = false) Integer k,
 		@RequestParam(value = "sett", required = false) String sett, @RequestParam(value = "code", required = false) String code,
 		@RequestParam(value = "incoin", required = false) String incoin, @RequestParam(value = "outcoin", required = false) String outcoin,
-		@RequestParam(value = "ALARM", required = false) String ALARM, @RequestParam(value = "cash", required = false) Integer cash,
-		@RequestParam(value = "bond", required = false) Integer bond, @RequestParam(value = "sell", required = false) Integer sell,
+		@RequestParam(value = "l", defaultValue = "0", required = false) Integer l, @RequestParam(value = "u", defaultValue = "0", required = false) Integer u,
+		@RequestParam(value = "t", defaultValue = "-1000", required = false) Integer temp,
+		@RequestParam(value = "t2", defaultValue = "-1000", required = false) Integer temp2, @RequestParam(value = "ALARM", required = false) String ALARM,
+		@RequestParam(value = "cash", defaultValue = "0", required = false) Integer cash,
+		@RequestParam(value = "bond", defaultValue = "0", required = false) Integer bond, @RequestParam(value = "sell", required = false) Integer sell,
 		@RequestParam(value = "bs", required = false) Integer bs) {
 
 		if (d == null) {
@@ -114,13 +126,15 @@ public class ReceptionDataFromModule {
 			return null;
 		}
 
+		return saveDataModule(modul, u, l, temp, temp2);
+
 		// return saveErrorModule(modul, ALARM);
 		// saveCashCoin(modul, incoin, outcoin);
 		// saveCashNotReception(modul, bond);
-		saveCurentSettingsModule(modul, sett);
-		return "sadfsf";
+		// saveCurentSettingsModule(modul, sett);
+		// return "sadfsf";
 		// saveDataDoor(modul, k);
-		// updateVersionAndTelephon(modul, version, mnum, f01);
+		// return updateVersionAndTelephon(modul, version, mnum, f01);
 		// saveCashModule(modul, cash, bond, sell, bs);
 
 		// return cashModuleService.getSumm(modul).toString();
@@ -132,6 +146,20 @@ public class ReceptionDataFromModule {
 		// return "Ok";
 
 		// return d + r;
+	}
+
+	private String saveDataModule(Modul modul, Integer u, Integer l, Integer temp, Integer temp2) {
+		if (l != 0 || u != 0 || temp != -1000 || temp2 != -1000) {
+			dataModuleService.save(new DataModule(modul, Calendar.getInstance(), u, l, temp, temp2));
+			String returnVal = "RDM" + modul.getCommandString();
+
+			// очистим накопившиеся команды
+			commandToModuleService.deleteAll(modul.getCommand());
+
+			return returnVal;
+		}
+
+		return "";
 	}
 
 	/**
@@ -188,7 +216,7 @@ public class ReceptionDataFromModule {
 	 * @param bond
 	 */
 	private void saveCashNotReception(Modul modul, Integer bond) {
-		if (bond == null || bond > 0) {
+		if (bond > 0) {
 			return;
 		}
 
@@ -218,7 +246,12 @@ public class ReceptionDataFromModule {
 
 		modulService.saveOrUpdate(modul);
 
-		return "RDM";
+		String returnVal = "RDM" + modul.getCommandString();
+
+		// Удалим отправленные команды
+		commandToModuleService.deleteAll(modul.getCommand());
+
+		return returnVal;
 	}
 
 	/**
@@ -325,31 +358,15 @@ public class ReceptionDataFromModule {
 	 */
 	private String saveCashModule(Modul modul, Integer cash, Integer bond, Integer sell, Integer bs) {
 
-		Integer c = 0;
-		Integer b = 0;
-		Integer s = null;
-
-		if (cash != null) {
-			c = cash;
-		}
-
-		if (bond != null) {
-			b = bond;
-
-			if (bond < 0) {
-				return "";
-			}
-		}
-
-		if (sell != null) {
-			s = sell;
-		}
-
-		if (c == 0 && b == 0 && s == null) { // к нам ничего не пришло
+		if (bond < 0) {
 			return "";
 		}
 
-		cashModuleService.saveCashModule(new CashModule(modul, Calendar.getInstance(), c, b, s, bs));
+		if (cash == 0 && bond == 0 && sell == null) { // к нам ничего не пришло
+			return "";
+		}
+
+		cashModuleService.saveCashModule(new CashModule(modul, Calendar.getInstance(), cash, bond, sell, bs));
 
 		return "RDM";
 	}

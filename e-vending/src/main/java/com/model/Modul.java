@@ -80,6 +80,10 @@ public class Modul {
 	@JsonIgnore
 	private Set<CashCoin>			cashCoin;
 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "modul")
+	@JsonIgnore
+	private Set<CommandToModule>	command;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
 	private List<CashModule>		cashModule;
@@ -87,6 +91,10 @@ public class Modul {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
 	private List<ErrorModule>		error;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
+	@JsonIgnore
+	private Set<DataModule>			dataModul;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
@@ -218,5 +226,39 @@ public class Modul {
 
 	public void setCashCoin(Set<CashCoin> cashCoin) {
 		this.cashCoin = cashCoin;
+	}
+
+	public Set<CommandToModule> getCommand() {
+		return command;
+	}
+
+	/**
+	 * Возвращает собранную строку с командами вида [command[param1][param2]]
+	 * 
+	 * @return
+	 */
+	public String getCommandString() {
+		if (getCommand() == null || getCommand().size() == 0) {
+			return "";
+		}
+
+		String buf = "";
+		for (CommandToModule command : getCommand()) {
+			buf += " " + command.getCommand() + command.getParam1() + command.getParam2();
+		}
+
+		return buf;
+	}
+
+	public void setCommand(Set<CommandToModule> command) {
+		this.command = command;
+	}
+
+	public List<ErrorModule> getError() {
+		return error;
+	}
+
+	public void setError(List<ErrorModule> error) {
+		this.error = error;
 	}
 }
