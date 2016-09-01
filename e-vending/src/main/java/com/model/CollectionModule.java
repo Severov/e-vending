@@ -49,19 +49,27 @@ public class CollectionModule {
 	public CollectionModule() {
 	}
 
-	public CollectionModule(Calendar timeStamp, double plan, double fakt) {
+	public CollectionModule(Modul modul, Calendar timeStamp, double plan, double fakt) {
+		this.modul = modul;
 		this.plan = plan;
 		this.fakt = fakt;
 		this.timeStamp = timeStamp;
 	}
 
-	public CollectionModule(double plan, double fakt) {
+	public CollectionModule(Modul modul, double plan, double fakt) {
+		this.modul = modul;
 		this.plan = plan;
 		this.fakt = fakt;
 		this.timeStamp = Calendar.getInstance();
 	}
 
-	public CollectionModule(double fakt) {
+	public CollectionModule(Modul modul, Calendar timeStamp) {
+		this.modul = modul;
+		this.timeStamp = timeStamp;
+	}
+
+	public CollectionModule(Modul modul, double fakt) {
+		this.modul = modul;
 		this.plan = fakt;
 		this.fakt = fakt;
 		this.timeStamp = Calendar.getInstance();

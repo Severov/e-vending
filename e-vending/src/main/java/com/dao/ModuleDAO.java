@@ -15,12 +15,12 @@
  */
 package com.dao;
 
-import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
 import com.model.Modul;
+import com.model.TempCollection;
 
 /**
  *
@@ -44,5 +44,20 @@ public interface ModuleDAO {
 	void saveOrUpdate(Modul entity);
 
 	@Transactional(readOnly = false)
-	void setCollection(Calendar calendar, double plan, double fakt);
+	void setCollection(Modul modul, Double plan, Double fakt);
+
+	@Transactional(readOnly = false)
+	void setCollection(Modul modul);
+
+	@Transactional(readOnly = false)
+	void setTempCollection(Modul modul, Double plan, Double fakt);
+
+	@Transactional(readOnly = true)
+	TempCollection getLastTempCollection(Modul modul);
+
+	@Transactional(readOnly = true)
+	public Double getSumm(Modul modul);
+
+	@Transactional(readOnly = false)
+	public void deleteAllTempCollection(Modul modul);
 }

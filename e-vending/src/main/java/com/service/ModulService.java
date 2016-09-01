@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import com.dao.ModuleDAO;
 import com.model.CollectionModule;
 import com.model.Modul;
+import com.model.TempCollection;
 
 /**
  *
@@ -58,13 +59,61 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 		}
 	}
 
+	public void setTempCollection(Modul modul, Double plan, Double fakt) {
+		getHibernateTemplate().save(new TempCollection(plan, fakt));
+	}
+
 	/**
-	 * установка факта инкассации в указанное время
+	 * установка факта инкассации
 	 */
 	@Override
-	public void setCollection(Calendar timeStamp, double plan, double fakt) {
-		CollectionModule collection = new CollectionModule(timeStamp, plan, fakt);
+	public void setCollection(Modul modul, Double plan, Double fakt) {
+		CollectionModule collection = new CollectionModule(modul, Calendar.getInstance(), plan, fakt);
 		getHibernateTemplate().save(collection);
+	}
+
+	@Override
+	public void setCollection(Modul modul) {
+		TempCollection buf = getLastTempCollection(modul);
+		Double plan = 0.0;
+		Double fakt = 0.0;
+
+		if (buf == null) {
+			plan = getSumm(modul);
+			fakt = plan;
+		} else {
+			plan = buf.getPlan();
+			fakt = buf.getFakt();
+			deleteAllTempCollection(modul);
+		}
+
+		setCollection(modul, plan, fakt);
+	}
+
+	@Override
+	public TempCollection getLastTempCollection(Modul modul) {
+		SessionFactory session = getHibernateTemplate().getSessionFactory();
+		List<TempCollection> buf = session.getCurrentSession().createQuery("from TempCollection where modul_id = :id order by temp_id DESC")
+			.setParameter("id", modul.getId()).setMaxResults(1).list();
+
+		if (!buf.isEmpty()) {
+			return buf.get(0);
+		}
+
+		return null;
+	}
+
+	@Override
+	public Double getSumm(Modul modul) {
+		// TODO Обязательно реализовать данный метод
+		return 777.0;
+	}
+
+	@Override
+	public void deleteAllTempCollection(Modul modul) {
+		SessionFactory session = getHibernateTemplate().getSessionFactory();
+		String deleteQuery = "delete from TempCollection where modul_id= :id";
+		session.getCurrentSession().createQuery(deleteQuery).setParameter("id", modul.getId()).executeUpdate();
 	}
 
 }

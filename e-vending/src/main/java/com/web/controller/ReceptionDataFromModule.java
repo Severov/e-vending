@@ -114,6 +114,7 @@ public class ReceptionDataFromModule {
 		@RequestParam(value = "t", defaultValue = "-1000", required = false) Integer temp,
 		@RequestParam(value = "t2", defaultValue = "-1000", required = false) Integer temp2, @RequestParam(value = "ALARM", required = false) String ALARM,
 		@RequestParam(value = "cash", defaultValue = "0", required = false) Integer cash,
+		@RequestParam(value = "collect", defaultValue = "0", required = false) Integer collect,
 		@RequestParam(value = "bond", defaultValue = "0", required = false) Integer bond, @RequestParam(value = "sell", required = false) Integer sell,
 		@RequestParam(value = "bs", required = false) Integer bs) {
 
@@ -126,7 +127,11 @@ public class ReceptionDataFromModule {
 			return null;
 		}
 
-		return saveDataModule(modul, u, l, temp, temp2);
+		modulService.setCollection(modul);
+		return "YES";
+		// saveDataModule(modul,
+		// u, l, temp,
+		// temp2);
 
 		// return saveErrorModule(modul, ALARM);
 		// saveCashCoin(modul, incoin, outcoin);
@@ -146,6 +151,14 @@ public class ReceptionDataFromModule {
 		// return "Ok";
 
 		// return d + r;
+	}
+
+	private void setCollect(Modul modul, Integer collect) {
+		if (collect == null) {
+			return;
+		}
+
+		modulService.setCollection(modul);
 	}
 
 	private String saveDataModule(Modul modul, Integer u, Integer l, Integer temp, Integer temp2) {
@@ -367,6 +380,12 @@ public class ReceptionDataFromModule {
 		}
 
 		cashModuleService.saveCashModule(new CashModule(modul, Calendar.getInstance(), cash, bond, sell, bs));
+
+		// TODO для совместимости со старой версией
+		// инкассация прошла через веб
+		if (cash != 0 && sell != 0 && bs != 0) {
+			modulService.setCollection(modul);
+		}
 
 		return "RDM";
 	}

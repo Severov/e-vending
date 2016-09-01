@@ -78,6 +78,10 @@ public class Modul {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
+	private List<TempCollection>		tempCollection;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
+	@JsonIgnore
 	private Set<CashCoin>			cashCoin;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "modul")
@@ -260,5 +264,21 @@ public class Modul {
 
 	public void setError(List<ErrorModule> error) {
 		this.error = error;
+	}
+
+	public List<TempCollection> getTempCollection() {
+		return tempCollection;
+	}
+
+	public void setTempCollection(List<TempCollection> tempCollection) {
+		this.tempCollection = tempCollection;
+	}
+
+	public Set<DataModule> getDataModul() {
+		return dataModul;
+	}
+
+	public void setDataModul(Set<DataModule> dataModul) {
+		this.dataModul = dataModul;
 	}
 }

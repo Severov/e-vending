@@ -1,7 +1,5 @@
 package com.service;
 
-import java.util.List;
-
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -31,10 +29,18 @@ public class CashModuleService extends HibernateDaoSupport implements CashModule
 	@Override
 	public Integer getSumm(Modul modul) {
 		SessionFactory session = getHibernateTemplate().getSessionFactory();
+		// TODO реализовать данный функционал
 
-		String sql = "SELECT MAX(IFNULL(cash, 0)) AS `max_cash`, cashModule.modul_id	FROM cashModule	INNER JOIN ( SELECT MAX(timeStamp) AS `t1`, modul_id FROM collectionModule WHERE modul_id = :modul_id GROUP BY modul_id ) AS `tmp` ON cashModule.modul_id = tmp.modul_id AND tmp.t1 <= cashModule.timeStamp GROUP BY cashModule.modul_id";
-		List<Object> rez = session.getCurrentSession().createSQLQuery(sql).setLong("modul_id", modul.getId()).list();
-		return rez.size();
+		// String sql = "SELECT MAX(IFNULL(cash, 0)) AS `max_cash`,
+		// cashModule.modul_id FROM cashModule INNER JOIN ( SELECT
+		// MAX(timeStamp) AS `t1`, modul_id FROM collectionModule WHERE modul_id
+		// = :modul_id GROUP BY modul_id ) AS `tmp` ON cashModule.modul_id =
+		// tmp.modul_id AND tmp.t1 <= cashModule.timeStamp GROUP BY
+		// cashModule.modul_id";
+		// List<Object> rez =
+		// session.getCurrentSession().createSQLQuery(sql).setLong("modul_id",
+		// modul.getId()).list();
+		return 777;
 	}
 
 }
