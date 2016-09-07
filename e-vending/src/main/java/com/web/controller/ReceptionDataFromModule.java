@@ -5,6 +5,8 @@ package com.web.controller;
 
 import java.lang.reflect.Field;
 import java.util.Calendar;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
@@ -13,14 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dao.CashCoinDAO;
 import com.dao.CashModuleDAO;
-import com.dao.CashNotReceptionDAO;
-import com.dao.CommandToModuleDAO;
 import com.dao.CompanyDAO;
-import com.dao.DataDoorDAO;
-import com.dao.DataModuleDAO;
-import com.dao.ErrorModuleDAO;
 import com.dao.ModuleDAO;
 import com.dao.TempRegModulDAO;
 import com.model.CashCoin;
@@ -47,35 +43,19 @@ public class ReceptionDataFromModule {
 	// private static final Logger logger =
 	// Logger.getLogger(WelcomReceptionDataFromModuleeController.class);
 
+	private Modul			modul;
+
 	@Resource(name = "companyService")
-	private CompanyDAO			companyService;
+	private CompanyDAO		companyService;
 
 	@Resource(name = "modulService")
-	private ModuleDAO			modulService;
-
-	@Resource(name = "dataDoorService")
-	private DataDoorDAO			dataDoorService;
+	private ModuleDAO		modulService;
 
 	@Resource(name = "tempRegModuleService")
-	private TempRegModulDAO		tempRegModuleService;
+	private TempRegModulDAO	tempRegModuleService;
 
 	@Resource(name = "cashModuleService")
-	private CashModuleDAO		cashModuleService;
-
-	@Resource(name = "cashNotReceptionService")
-	private CashNotReceptionDAO	cashNotReceptionService;
-
-	@Resource(name = "cashCoinService")
-	private CashCoinDAO			cashCoinService;
-
-	@Resource(name = "commandToModuleService")
-	private CommandToModuleDAO	commandToModuleService;
-
-	@Resource(name = "errorModuleService")
-	private ErrorModuleDAO		errorModuleService;
-
-	@Resource(name = "dataModuleService")
-	private DataModuleDAO		dataModuleService;
+	private CashModuleDAO	cashModuleService;
 
 	/**
 	 * Обработчик всех входящих данных от модуля Все входящие параметры являются
@@ -122,29 +102,30 @@ public class ReceptionDataFromModule {
 			return null;
 		}
 
-		Modul modul = modulService.getModul(d);
+		modul = modulService.getModul(d);
 		if (modul == null) {
 			return null;
 		}
 
 		modulService.setCollection(modul);
-		return "YES";
+
 		// saveDataModule(modul,
 		// u, l, temp,
 		// temp2);
 
-		// return saveErrorModule(modul, ALARM);
-		// saveCashCoin(modul, incoin, outcoin);
-		// saveCashNotReception(modul, bond);
-		// saveCurentSettingsModule(modul, sett);
+		// return saveErrorModule( ALARM);
+		// saveCashCoin(incoin, outcoin);
+		// saveCashNotReception(bond);
+		saveCurentSettingsModule(sett);
+		return "sdfsdf";
 		// return "sadfsf";
-		// saveDataDoor(modul, k);
-		// return updateVersionAndTelephon(modul, version, mnum, f01);
-		// saveCashModule(modul, cash, bond, sell, bs);
+		// saveDataDoor(k);
+		// return updateVersionAndTelephon(version, mnum, f01);
+		// saveCashModule(cash, bond, sell, bs);
 
 		// return cashModuleService.getSumm(modul).toString();
 
-		// return registrationModule(modul, code);
+		// return registrationModule( code);
 
 		// return TempRegModulDAO.generateSecretCode(5);//
 		// tempRegModuleDAO.findBySecretCode("777");
@@ -153,7 +134,7 @@ public class ReceptionDataFromModule {
 		// return d + r;
 	}
 
-	private void setCollect(Modul modul, Integer collect) {
+	private void setCollect(Integer collect) {
 		if (collect == null) {
 			return;
 		}
@@ -161,13 +142,13 @@ public class ReceptionDataFromModule {
 		modulService.setCollection(modul);
 	}
 
-	private String saveDataModule(Modul modul, Integer u, Integer l, Integer temp, Integer temp2) {
+	private String saveDataModule(Integer u, Integer l, Integer temp, Integer temp2) {
 		if (l != 0 || u != 0 || temp != -1000 || temp2 != -1000) {
-			dataModuleService.save(new DataModule(modul, Calendar.getInstance(), u, l, temp, temp2));
+			modulService.save(new DataModule(modul, Calendar.getInstance(), u, l, temp, temp2));
 			String returnVal = "RDM" + modul.getCommandString();
 
 			// очистим накопившиеся команды
-			commandToModuleService.deleteAll(modul.getCommand());
+			modulService.deleteAll(modul.getCommand());
 
 			return returnVal;
 		}
@@ -181,20 +162,20 @@ public class ReceptionDataFromModule {
 	 * @param modul
 	 * @param k
 	 */
-	private void saveDataDoor(Modul modul, Integer k) {
+	private void saveDataDoor(Integer k) {
 		if (k == null) {
 			return;
 		}
 
-		dataDoorService.save(new DataDoor(k, Calendar.getInstance(), modul));
+		modulService.save(new DataDoor(k, Calendar.getInstance(), modul));
 	}
 
-	private String saveErrorModule(Modul modul, String alarm) {
+	private String saveErrorModule(String alarm) {
 		if (alarm == null) {
 			return "";
 		}
 
-		errorModuleService.save(new ErrorModule(modul, alarm, Calendar.getInstance()));
+		modulService.save(new ErrorModule(modul, alarm, Calendar.getInstance()));
 		return "RDM";
 	}
 
@@ -205,7 +186,7 @@ public class ReceptionDataFromModule {
 	 * @param in
 	 * @param out
 	 */
-	private void saveCashCoin(Modul modul, String in, String out) {
+	private void saveCashCoin(String in, String out) {
 		String type = "0";
 		String[] buf;
 
@@ -218,8 +199,7 @@ public class ReceptionDataFromModule {
 			return;
 		}
 
-		cashCoinService.save(new CashCoin(modul, type, buf[0], buf[1], Calendar.getInstance()));
-
+		modulService.save(new CashCoin(modul, type, buf[0], buf[1], Calendar.getInstance()));
 	}
 
 	/**
@@ -228,12 +208,12 @@ public class ReceptionDataFromModule {
 	 * @param modul
 	 * @param bond
 	 */
-	private void saveCashNotReception(Modul modul, Integer bond) {
+	private void saveCashNotReception(Integer bond) {
 		if (bond > 0) {
 			return;
 		}
 
-		cashNotReceptionService.save(new CashNotReception(modul, Calendar.getInstance()));
+		modulService.save(new CashNotReception(modul, Calendar.getInstance()));
 	}
 
 	/**
@@ -248,7 +228,7 @@ public class ReceptionDataFromModule {
 	 * @param f01
 	 *            - номер владельца модуля
 	 */
-	private String updateVersionAndTelephon(Modul modul, String version, String mnum, String f01) {
+	private String updateVersionAndTelephon(String version, String mnum, String f01) {
 		if (version == null || mnum == null || f01 == null) {
 			return "";
 		}
@@ -262,7 +242,7 @@ public class ReceptionDataFromModule {
 		String returnVal = "RDM" + modul.getCommandString();
 
 		// Удалим отправленные команды
-		commandToModuleService.deleteAll(modul.getCommand());
+		modulService.deleteAll(modul.getCommand());
 
 		return returnVal;
 	}
@@ -275,18 +255,33 @@ public class ReceptionDataFromModule {
 	 * @param settings
 	 *            - строка настроек
 	 */
-	private void saveCurentSettingsModule(Modul modul, String settings) {
+	private void saveCurentSettingsModule(String settings) {
 		if (settings == null) {
 			return;
 		}
 
+		// Время установим сразу
+		if (settings.indexOf("time") != -1) {
+			int len = settings.indexOf("time") + "time".length();
+			String value = settings.substring(len, len + 4);
+
+			modul.getCurentSettings().setHours(value.substring(0, 2));
+			modul.getCurentSettings().setMinutes(value.substring(2, 4));
+		}
+
 		Class classSettings = new CurentSettingsModule().getClass();
+
+		SortedSet<String> continuesSet = new TreeSet<String>();
+		continuesSet.add("id");
+		continuesSet.add("modul");
+		continuesSet.add("minutes");
+		continuesSet.add("hours");
 
 		for (Field field : classSettings.getDeclaredFields()) {
 			String stn = field.getName();
 
-			// поле id и modul пропускаем
-			if (field.getName() == "id" || (field.getName() == "modul")) {
+			// служебные поля пропускаем
+			if (continuesSet.contains(stn)) {
 				continue;
 			}
 
@@ -295,15 +290,8 @@ public class ReceptionDataFromModule {
 
 			// если к нам пришла настройка с другим значением
 			if (settings.indexOf(stn) != -1) {
-
 				int len = settings.indexOf(stn) + stn.length();
-				int lenEnd = len + 1;
-
-				if (stn == "time") {
-					lenEnd = len + 4;
-				}
-
-				value = settings.substring(len, lenEnd);
+				value = settings.substring(len, len + 1);
 			}
 
 			try {
@@ -312,7 +300,6 @@ public class ReceptionDataFromModule {
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
-
 		}
 
 		modulService.saveOrUpdate(modul);
@@ -327,7 +314,7 @@ public class ReceptionDataFromModule {
 	 *            - секретный код, полученный при регистрации через сайт
 	 * @return - результат регистрации
 	 */
-	private String registrationModule(Modul modul, String code) {
+	private String registrationModule(String code) {
 		if (code == null) {
 			return "";
 		}
@@ -369,7 +356,7 @@ public class ReceptionDataFromModule {
 	 *            - количество купюр
 	 * @return
 	 */
-	private String saveCashModule(Modul modul, Integer cash, Integer bond, Integer sell, Integer bs) {
+	private String saveCashModule(Integer cash, Integer bond, Integer sell, Integer bs) {
 
 		if (bond < 0) {
 			return "";

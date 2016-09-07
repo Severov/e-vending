@@ -49,11 +49,17 @@ public class Modul {
 	@Column(name = "activenum", nullable = false, length = 50)
 	private String					activenum;
 
-	@Column(name = "uin", nullable = false, length = 50)
+	@Column(name = "uin", unique = true, nullable = false, length = 50)
 	private String					uin;
 
 	@Column(name = "id_device", nullable = false, length = 50)
 	private String					idDevice;
+
+	@Column(name = "trademark", length = 50)
+	private String					trademark;
+
+	@Column(name = "place", length = 50)
+	private String					place;
 
 	@Column(name = "active", nullable = false, length = 50)
 	private boolean					active;
@@ -78,13 +84,14 @@ public class Modul {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private List<TempCollection>		tempCollection;
+	private List<TempCollection>	tempCollection;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
 	private Set<CashCoin>			cashCoin;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "modul")
+	@Cascade({ CascadeType.ALL })
 	@JsonIgnore
 	private Set<CommandToModule>	command;
 
@@ -241,6 +248,7 @@ public class Modul {
 	 * 
 	 * @return
 	 */
+	@JsonIgnore
 	public String getCommandString() {
 		if (getCommand() == null || getCommand().size() == 0) {
 			return "";
@@ -280,5 +288,21 @@ public class Modul {
 
 	public void setDataModul(Set<DataModule> dataModul) {
 		this.dataModul = dataModul;
+	}
+
+	public String getTrademark() {
+		return trademark;
+	}
+
+	public String getPlace() {
+		return place;
+	}
+
+	public void setTrademark(String trademark) {
+		this.trademark = trademark;
+	}
+
+	public void setPlace(String place) {
+		this.place = place;
 	}
 }

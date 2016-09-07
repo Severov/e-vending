@@ -15,16 +15,19 @@
  */
 package com.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.model.Company;
 import com.model.Modul;
 import com.model.TempCollection;
 
 /**
  *
  * @author mishka
+ * @param <T>
  */
 public interface ModuleDAO {
 
@@ -40,8 +43,26 @@ public interface ModuleDAO {
 	@Transactional(readOnly = true)
 	Modul getModul(String idDevice);
 
+	@Transactional(readOnly = true)
+	Modul getModulByUin(String uin);
+
+	@Transactional(readOnly = true)
+	Modul findModul(String uin, Company company);
+
 	@Transactional(readOnly = false)
-	void saveOrUpdate(Modul entity);
+	void saveOrUpdate(Object entity);
+
+	@Transactional(readOnly = false)
+	void save(Object entity);
+
+	@Transactional(readOnly = false)
+	void delete(Object entity);
+
+	@Transactional(readOnly = false)
+	void deleteAll(Collection<?> collection);
+
+	@Transactional(readOnly = false)
+	void saveAll(Collection<?> collection);
 
 	@Transactional(readOnly = false)
 	void setCollection(Modul modul, Double plan, Double fakt);

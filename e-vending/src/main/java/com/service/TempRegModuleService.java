@@ -19,6 +19,10 @@ public class TempRegModuleService extends HibernateDaoSupport implements TempReg
 		setSessionFactory(sessionFactory);
 	}
 
+	public String getRandomUid() {
+		return "xi-xi"; // думаю, это достаточно случайно
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public TempRegModule findBySecretCode(String secret) {
@@ -31,7 +35,7 @@ public class TempRegModuleService extends HibernateDaoSupport implements TempReg
 		Object[] value = { secret, calendar };
 
 		List<TempRegModule> tmp = (List<TempRegModule>) getHibernateTemplate()
-				.findByNamedParam("from TempRegModule where secret = :secret AND timeStamp > :timeStamp", param, value);
+			.findByNamedParam("from TempRegModule where secret = :secret AND timeStamp > :timeStamp", param, value);
 
 		if (tmp.size() > 0) {
 			return tmp.get(0);

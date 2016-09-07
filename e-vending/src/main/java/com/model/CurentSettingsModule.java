@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "curentSettingsModule")
 public class CurentSettingsModule {
@@ -19,8 +21,11 @@ public class CurentSettingsModule {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long	id;
 
-	@Column(name = "time", length = 10)
-	private String	time;
+	@Column(name = "minutes", length = 10)
+	private String	minutes;
+
+	@Column(name = "hours", length = 10)
+	private String	hours;
 
 	@Column(name = "profile", length = 10)
 	private String	profile;
@@ -42,6 +47,7 @@ public class CurentSettingsModule {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "modul_id")
+	@JsonIgnore
 	private Modul	modul;
 
 	public CurentSettingsModule() {
@@ -65,14 +71,6 @@ public class CurentSettingsModule {
 
 	public void setModul(Modul modul) {
 		this.modul = modul;
-	}
-
-	public String getTime() {
-		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
 	}
 
 	public String getProfile() {
@@ -121,6 +119,22 @@ public class CurentSettingsModule {
 
 	public void setIgprs(String igprs) {
 		this.igprs = igprs;
+	}
+
+	public String getMinutes() {
+		return minutes;
+	}
+
+	public void setMinutes(String minutes) {
+		this.minutes = minutes;
+	}
+
+	public String getHours() {
+		return hours;
+	}
+
+	public void setHours(String hours) {
+		this.hours = hours;
 	}
 
 }

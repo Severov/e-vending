@@ -43,6 +43,15 @@ public class TempRegModule {
 	@JsonIgnore
 	private Company		company;
 
+	public TempRegModule() {
+	}
+
+	public TempRegModule(Company company, String secret) {
+		setCompany(company);
+		setSecret(secret);
+		setTimeStamp(Calendar.getInstance());
+	}
+
 	public Long getId() {
 		return id;
 	}

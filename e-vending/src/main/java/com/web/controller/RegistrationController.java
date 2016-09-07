@@ -44,7 +44,9 @@ public class RegistrationController {
 			return "registration";
 		}
 
-		user.setEnabled(true);
+		user.setAccountNonExpired(true);
+		user.setAccountNonLocked(true);
+		user.setCredentialsNonExpired(true);
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 		userService.save(user);
 		return "redirect:/login";

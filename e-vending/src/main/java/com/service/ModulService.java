@@ -16,6 +16,7 @@
 package com.service;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import com.dao.ModuleDAO;
 import com.model.CollectionModule;
+import com.model.Company;
 import com.model.Modul;
 import com.model.TempCollection;
 
@@ -45,7 +47,43 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 		return (List<Modul>) getHibernateTemplate().find("from Modul");
 	}
 
-	public void saveOrUpdate(Modul entity) {
+	@Override
+	public Modul findModul(String uin, Company company) {
+		String[] param = { "company", "uin" };
+		Object[] value = { company.getId(), uin };
+
+		List<Modul> modul = (List<Modul>) getHibernateTemplate().findByNamedParam("from Modul where company_id = :company AND uin = :uin", param, value);
+		if (modul.isEmpty()) {
+			return null;
+		}
+
+		return modul.get(0);
+	}
+
+	@Override
+	public void save(Object entity) {
+		getHibernateTemplate().saveOrUpdate(entity);
+	}
+
+	@Override
+	public void delete(Object entity) {
+		getHibernateTemplate().delete(entity);
+	}
+
+	@Override
+	public void deleteAll(Collection<?> collection) {
+		getHibernateTemplate().deleteAll(collection);
+	}
+
+	@Override
+	public void saveAll(Collection<?> collection) {
+		for (Object entity : collection) {
+			getHibernateTemplate().save(entity);
+		}
+	}
+
+	@Override
+	public void saveOrUpdate(Object entity) {
 		getHibernateTemplate().saveOrUpdate(entity);
 	}
 
@@ -114,6 +152,17 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 		SessionFactory session = getHibernateTemplate().getSessionFactory();
 		String deleteQuery = "delete from TempCollection where modul_id= :id";
 		session.getCurrentSession().createQuery(deleteQuery).setParameter("id", modul.getId()).executeUpdate();
+	}
+
+	@Override
+	public Modul getModulByUin(String uin) {
+		List<Modul> modul = (List<Modul>) getHibernateTemplate().findByNamedParam("from Modul where uin = :id", "id", uin);
+
+		if (modul.size() > 0) {
+			return modul.get(0);
+		} else {
+			return null;
+		}
 	}
 
 }
