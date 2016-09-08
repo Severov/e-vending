@@ -146,9 +146,7 @@ public class RestController {
 
 		if (allSettings.containsKey("minutes") && allSettings.containsKey("hours")) {
 			CommandToModule entity = new CommandToModule(modul);
-			entity.setCommand("time");
-			entity.setParam1(allSettings.get("hours"));
-			entity.setParam2(allSettings.get("minutes"));
+			entity.setCommand("time" + allSettings.get("hours") + allSettings.get("minutes"));
 			modul.getCommand().add(entity);
 		}
 
@@ -158,8 +156,7 @@ public class RestController {
 			}
 
 			CommandToModule entity = new CommandToModule(modul);
-			entity.setCommand(key);
-			entity.setParam1(allSettings.get(key));
+			entity.setCommand(key + allSettings.get(key));
 			modul.getCommand().add(entity);
 		}
 

@@ -109,18 +109,16 @@ public class ReceptionDataFromModule {
 
 		modulService.setCollection(modul);
 
-		// saveDataModule(modul,
-		// u, l, temp,
-		// temp2);
+		// saveDataModule(u, l, temp, temp2);
 
 		// return saveErrorModule( ALARM);
 		// saveCashCoin(incoin, outcoin);
 		// saveCashNotReception(bond);
-		saveCurentSettingsModule(sett);
-		return "sdfsdf";
+		// saveCurentSettingsModule(sett);
+		// return "sdfsdf";
 		// return "sadfsf";
 		// saveDataDoor(k);
-		// return updateVersionAndTelephon(version, mnum, f01);
+		return updateVersionAndTelephon(version, mnum, f01);
 		// saveCashModule(cash, bond, sell, bs);
 
 		// return cashModuleService.getSumm(modul).toString();

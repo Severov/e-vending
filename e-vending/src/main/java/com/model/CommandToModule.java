@@ -21,14 +21,8 @@ public class CommandToModule {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long	id;
 
-	@Column(name = "command", length = 20)
+	@Column(name = "command", length = 80)
 	private String	command;
-
-	@Column(name = "param1", length = 20)
-	private String	param1	= "";
-
-	@Column(name = "param2", length = 20)
-	private String	param2	= "";
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "modul_id")
@@ -42,10 +36,9 @@ public class CommandToModule {
 		setModul(modul);
 	}
 
-	public CommandToModule(Modul modul, String param1, String param2) {
-		setModul(modul);
-		setParam1(param1);
-		setParam2(param2);
+	public CommandToModule(Modul modul, String command) {
+		this.modul = modul;
+		this.command = command;
 	}
 
 	public Long getId() {
@@ -62,22 +55,6 @@ public class CommandToModule {
 
 	public void setCommand(String command) {
 		this.command = command;
-	}
-
-	public String getParam1() {
-		return param1;
-	}
-
-	public void setParam1(String param1) {
-		this.param1 = param1;
-	}
-
-	public String getParam2() {
-		return param2;
-	}
-
-	public void setParam2(String param2) {
-		this.param2 = param2;
 	}
 
 	public Modul getModul() {

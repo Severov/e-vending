@@ -256,7 +256,7 @@ public class Modul {
 
 		String buf = "";
 		for (CommandToModule command : getCommand()) {
-			buf += " " + command.getCommand() + command.getParam1() + command.getParam2();
+			buf += " " + command.getCommand();
 		}
 
 		return buf;
