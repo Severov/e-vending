@@ -90,6 +90,20 @@ public class RestController {
 		return modul.getCurentSettings();
 	}
 
+	@RequestMapping(value = "/saveUserCommand")
+	public String saveUserCommand(@PathVariable("uin") String uin, @RequestParam(value = "userCommand") String userCommand) {
+		if (userCommand == null) {
+			return null;
+		}
+
+		if (!isAccess(uin)) {
+			return null;
+		}
+
+		modulService.save(new CommandToModule(modul, userCommand));
+		return "Успешно";
+	}
+
 	@RequestMapping(value = "/getRandomUid")
 	public String getRandomUid() {
 		if (!isAccess()) {

@@ -4,7 +4,10 @@
 package com.web.controller;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -130,6 +133,43 @@ public class ReceptionDataFromModule {
 		// return "Ok";
 
 		// return d + r;
+	}
+
+	@RequestMapping(value = "/table", method = RequestMethod.GET)
+	private Map<Object, Object> getTable() {
+		ArrayList<Object> arr = new ArrayList<>();
+		for (int i = 0; i < 500; i++) {
+			arr.add(new HashMap<String, String>() {
+				{
+					put("uin", "777");
+					put("place", "Moscow");
+					put("pc", "666");
+					put("Volt", "777");
+					put("trademark", "Moscow");
+					put("day_summ", "666");
+				}
+			});
+		}
+
+		Map<Object, Object> map = new HashMap<Object, Object>();
+
+		map.put("rows", arr);
+		map.put("total", 5);
+
+		ArrayList<Object> arr1 = new ArrayList<>();
+		arr1.add(new HashMap<String, String>() {
+			{
+				put("uin", "<b>777</b>");
+				put("place", "Moscow");
+				put("pc", "666");
+				put("Volt", "777");
+				put("trademark", "Moscow");
+				put("day_summ", "666");
+			}
+		});
+		map.put("footer", arr1);
+
+		return map;
 	}
 
 	private void setCollect(Integer collect) {
