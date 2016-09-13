@@ -47,6 +47,11 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 		return (List<Modul>) getHibernateTemplate().find("from Modul");
 	}
 
+	public Modul test(String id) {
+		// return context.getContextPath().toString();
+		return (Modul) getHibernateTemplate().getSessionFactory().getCurrentSession().getNamedQuery("test").setParameter("uin", id).list().get(0);
+	}
+
 	@Override
 	public Modul findModul(String uin, Company company) {
 		String[] param = { "company", "uin" };

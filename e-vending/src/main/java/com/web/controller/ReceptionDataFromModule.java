@@ -12,7 +12,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,6 +47,9 @@ public class ReceptionDataFromModule {
 	// TODO обязательно настроить логи
 	// private static final Logger logger =
 	// Logger.getLogger(WelcomReceptionDataFromModuleeController.class);
+
+	@Autowired
+	ServletContext			context;
 
 	private Modul			modul;
 
@@ -135,8 +140,15 @@ public class ReceptionDataFromModule {
 		// return d + r;
 	}
 
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	private String getTest() {
+		return context.getRealPath("/META-INF/");
+		// context.getResourcePaths("classpath:META-INF/testScript.sql").toString();
+	}
+
 	@RequestMapping(value = "/table", method = RequestMethod.GET)
 	private Map<Object, Object> getTable() {
+
 		ArrayList<Object> arr = new ArrayList<>();
 		for (int i = 0; i < 500; i++) {
 			arr.add(new HashMap<String, String>() {
@@ -166,6 +178,7 @@ public class ReceptionDataFromModule {
 				put("trademark", "Moscow");
 				put("day_summ", "666");
 			}
+
 		});
 		map.put("footer", arr1);
 
