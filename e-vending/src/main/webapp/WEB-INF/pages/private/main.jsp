@@ -6,20 +6,20 @@
 
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="context" value="${pageContext.request.contextPath}" />
 
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css"
-              href="<c:url value='../resources/css/main.css'/>" />
+        <link rel="stylesheet" type="text/css" href="${context}/resources/css/main.css" />
 
         <!-- The jQuery library is a prerequisite for all jqSuite products -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-        <script type="text/javascript" src="../resources/easyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="${context}/resources/easyui/jquery.easyui.min.js"></script>
         
-        <link rel="stylesheet" type="text/css" href="../resources/easyui/themes/icon.css">
-    	<link rel="stylesheet" type="text/css" href="../resources/easyui/demo/demo.css">
-		<link rel="stylesheet" type="text/css" href="../resources/easyui/themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="${context}/resources/easyui/themes/icon.css">
+    	<link rel="stylesheet" type="text/css" href="${context}/resources/easyui/demo/demo.css">
+		<link rel="stylesheet" type="text/css" href="${context}/resources/easyui/themes/default/easyui.css">
 		
    
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
