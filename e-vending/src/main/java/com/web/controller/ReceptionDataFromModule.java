@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -145,11 +146,8 @@ public class ReceptionDataFromModule {
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	private Modul getTest() {
+	private List<?> getTest() {
 		return modulService.test("5");
-		// mySQLQuery.beep();
-		// return context.getRealPath("/META-INF/sql/");
-		// context.getResourcePaths("classpath:META-INF/testScript.sql").toString();
 	}
 
 	@RequestMapping(value = "/table", method = RequestMethod.GET)

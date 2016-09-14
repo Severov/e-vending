@@ -19,6 +19,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -50,9 +52,12 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 		return (List<Modul>) getHibernateTemplate().find("from Modul");
 	}
 
-	public Modul test(String id) {
-		// return context.getContextPath().toString();
-		return (Modul) getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(mySQLQuery.getSQL("testScript.sql")).list().get(0);
+	public List<?> test(String id) {
+		SQLQuery result = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(mySQLQuery.getSQL("testScript.sql"));
+		System.out.println("**************************************************************************");
+		result.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return result.list();
+		// return list;
 	}
 
 	@Override
