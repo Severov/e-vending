@@ -18,6 +18,18 @@
 			<param-value>true</param-value>
 		</init-param>
 	</filter>
+	
+	<!-- HTTP-error -->
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404</location>
+	</error-page>
+
+	<!-- Exception
+	<error-page>
+	<exception-type>java.lang.Exception</exception-type>
+	<location>uncaught-error.jsp</location>
+	</error-page> -->
 
 	<filter-mapping>
 		<filter-name>characterEncodingFilter</filter-name>
