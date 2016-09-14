@@ -24,6 +24,12 @@
 		<error-code>404</error-code>
 		<location>/404</location>
 	</error-page>
+	
+	<!-- HTTP-error -->
+	<error-page>
+		<error-code>403</error-code>
+		<location>/403</location>
+	</error-page>
 
 	<!-- Exception
 	<error-page>
