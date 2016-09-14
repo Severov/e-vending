@@ -33,6 +33,7 @@ import com.model.DataModule;
 import com.model.ErrorModule;
 import com.model.Modul;
 import com.model.TempRegModule;
+import com.service.MySQLQuery;
 
 /**
  * @author mishka
@@ -64,6 +65,9 @@ public class ReceptionDataFromModule {
 
 	@Resource(name = "cashModuleService")
 	private CashModuleDAO	cashModuleService;
+
+	@Autowired
+	private MySQLQuery		mySQLQuery;
 
 	/**
 	 * Обработчик всех входящих данных от модуля Все входящие параметры являются
@@ -141,8 +145,10 @@ public class ReceptionDataFromModule {
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	private String getTest() {
-		return context.getRealPath("/META-INF/");
+	private Modul getTest() {
+		return modulService.test("5");
+		// mySQLQuery.beep();
+		// return context.getRealPath("/META-INF/sql/");
 		// context.getResourcePaths("classpath:META-INF/testScript.sql").toString();
 	}
 

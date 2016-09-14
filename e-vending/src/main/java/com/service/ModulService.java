@@ -39,6 +39,9 @@ import com.model.TempCollection;
 public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 
 	@Autowired
+	private MySQLQuery mySQLQuery;
+
+	@Autowired
 	public void init(SessionFactory sessionFactory) {
 		setSessionFactory(sessionFactory);
 	}
@@ -49,7 +52,7 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 
 	public Modul test(String id) {
 		// return context.getContextPath().toString();
-		return (Modul) getHibernateTemplate().getSessionFactory().getCurrentSession().getNamedQuery("test").setParameter("uin", id).list().get(0);
+		return (Modul) getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(mySQLQuery.getSQL("testScript.sql")).list().get(0);
 	}
 
 	@Override

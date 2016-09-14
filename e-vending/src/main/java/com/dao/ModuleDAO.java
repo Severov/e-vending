@@ -52,6 +52,7 @@ public interface ModuleDAO {
 	@Transactional(readOnly = false)
 	void saveOrUpdate(Object entity);
 
+	@Transactional(readOnly = true)
 	Modul test(String id);
 
 	@Transactional(readOnly = false)
