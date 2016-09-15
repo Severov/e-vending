@@ -53,7 +53,7 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 	}
 
 	public List<?> test(String id) {
-		SQLQuery result = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(mySQLQuery.getSQL("testScript.sql"));
+		SQLQuery result = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(mySQLQuery.getSQL("tableRoom.sql"));
 		System.out.println("**************************************************************************");
 		result.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return result.list();

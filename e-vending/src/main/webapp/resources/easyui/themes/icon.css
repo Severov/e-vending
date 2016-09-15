@@ -1,3 +1,22 @@
+.icon-settings{
+	background:url('icons/settings.png') no-repeat center center;
+}
+.icon-control{
+	background:url('icons/control.png') no-repeat center center;
+}
+.icon-inkasso{
+	background:url('icons/inkasso.png') no-repeat center center;
+}
+.icon-modules{
+	background:url('icons/modules.png') no-repeat center center;
+}
+.icon-charts{
+	background:url('icons/charts.png') no-repeat center center;
+}
+.icon-valid{
+	background:url('icons/valid1.png') no-repeat center center;
+}
+
 .icon-blank{
 	background:url('icons/blank.gif') no-repeat center center;
 }
