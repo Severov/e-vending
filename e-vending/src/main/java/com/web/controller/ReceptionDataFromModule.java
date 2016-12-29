@@ -4,17 +4,15 @@
 package com.web.controller;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
+import org.apache.log4j.Logger;
+import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +32,6 @@ import com.model.DataModule;
 import com.model.ErrorModule;
 import com.model.Modul;
 import com.model.TempRegModule;
-import com.service.MySQLQuery;
 
 /**
  * @author mishka
@@ -46,14 +43,10 @@ import com.service.MySQLQuery;
 @RequestMapping(value = "/ws")
 public class ReceptionDataFromModule {
 
-	// TODO обязательно настроить логи
-	// private static final Logger logger =
-	// Logger.getLogger(WelcomReceptionDataFromModuleeController.class);
+	private static final Logger logger = Logger.getLogger(ReceptionDataFromModule.class);
 
 	@Autowired
 	ServletContext			context;
-
-	private Modul			modul;
 
 	@Resource(name = "companyService")
 	private CompanyDAO		companyService;
@@ -66,9 +59,8 @@ public class ReceptionDataFromModule {
 
 	@Resource(name = "cashModuleService")
 	private CashModuleDAO	cashModuleService;
-
-	@Autowired
-	private MySQLQuery		mySQLQuery;
+	
+	private Modul			modul;
 
 	/**
 	 * Обработчик всех входящих данных от модуля Все входящие параметры являются
@@ -107,10 +99,10 @@ public class ReceptionDataFromModule {
 		@RequestParam(value = "t", defaultValue = "-1000", required = false) Integer temp,
 		@RequestParam(value = "t2", defaultValue = "-1000", required = false) Integer temp2, @RequestParam(value = "ALARM", required = false) String ALARM,
 		@RequestParam(value = "cash", defaultValue = "0", required = false) Integer cash,
-		@RequestParam(value = "collect", defaultValue = "0", required = false) Integer collect,
+		@RequestParam(value = "collect", required = false) Integer collect,
 		@RequestParam(value = "bond", defaultValue = "0", required = false) Integer bond, @RequestParam(value = "sell", required = false) Integer sell,
 		@RequestParam(value = "bs", required = false) Integer bs) {
-
+		
 		if (d == null) {
 			return null;
 		}
@@ -120,73 +112,26 @@ public class ReceptionDataFromModule {
 			return null;
 		}
 
-		modulService.setCollection(modul);
+		saveCashCoin(incoin, outcoin);
+		saveCashNotReception(bond);
+		saveCurentSettingsModule(sett);
+		saveDataDoor(k);
+		setCollect(collect);
 
-		// saveDataModule(u, l, temp, temp2);
+		String returnVal = "";
+		if (saveCashModule(cash, bond, sell, bs) ||
+			registrationModule(code) ||	
+		    updateVersionAndTelephon(version, mnum, f01) ||
+		    saveErrorModule(ALARM) ||
+		    saveDataModule(u, l, temp, temp2)){
+	
+			returnVal = "RDM" + modul.getCommandString();
 
-		// return saveErrorModule( ALARM);
-		// saveCashCoin(incoin, outcoin);
-		// saveCashNotReception(bond);
-		// saveCurentSettingsModule(sett);
-		// return "sdfsdf";
-		// return "sadfsf";
-		// saveDataDoor(k);
-		return updateVersionAndTelephon(version, mnum, f01);
-		// saveCashModule(cash, bond, sell, bs);
-
-		// return cashModuleService.getSumm(modul).toString();
-
-		// return registrationModule( code);
-
-		// return TempRegModulDAO.generateSecretCode(5);//
-		// tempRegModuleDAO.findBySecretCode("777");
-		// return "Ok";
-
-		// return d + r;
-	}
-
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	private List<?> getTest() {
-		return modulService.test("5");
-	}
-
-	@RequestMapping(value = "/table", method = RequestMethod.GET)
-	private Map<Object, Object> getTable() {
-
-		ArrayList<Object> arr = new ArrayList<>();
-		for (int i = 0; i < 500; i++) {
-			arr.add(new HashMap<String, String>() {
-				{
-					put("uin", "777");
-					put("place", "Moscow");
-					put("pc", "666");
-					put("Volt", "777");
-					put("trademark", "Moscow");
-					put("day_summ", "666");
-				}
-			});
+			// Удалим отправленные команды
+			modulService.deleteAll(modul.getCommand());
 		}
-
-		Map<Object, Object> map = new HashMap<Object, Object>();
-
-		map.put("rows", arr);
-		map.put("total", 5);
-
-		ArrayList<Object> arr1 = new ArrayList<>();
-		arr1.add(new HashMap<String, String>() {
-			{
-				put("uin", "<b>777</b>");
-				put("place", "Moscow");
-				put("pc", "666");
-				put("Volt", "777");
-				put("trademark", "Moscow");
-				put("day_summ", "666");
-			}
-
-		});
-		map.put("footer", arr1);
-
-		return map;
+		
+		return returnVal;
 	}
 
 	private void setCollect(Integer collect) {
@@ -197,24 +142,18 @@ public class ReceptionDataFromModule {
 		modulService.setCollection(modul);
 	}
 
-	private String saveDataModule(Integer u, Integer l, Integer temp, Integer temp2) {
+	private boolean saveDataModule(Integer u, Integer l, Integer temp, Integer temp2) {
 		if (l != 0 || u != 0 || temp != -1000 || temp2 != -1000) {
 			modulService.save(new DataModule(modul, Calendar.getInstance(), u, l, temp, temp2));
-			String returnVal = "RDM" + modul.getCommandString();
-
-			// очистим накопившиеся команды
-			modulService.deleteAll(modul.getCommand());
-
-			return returnVal;
+			return true;
 		}
 
-		return "";
+		return false;
 	}
 
 	/**
 	 * Сохраняет данные положения дверей
 	 * 
-	 * @param modul
 	 * @param k
 	 */
 	private void saveDataDoor(Integer k) {
@@ -225,19 +164,18 @@ public class ReceptionDataFromModule {
 		modulService.save(new DataDoor(k, Calendar.getInstance(), modul));
 	}
 
-	private String saveErrorModule(String alarm) {
+	private boolean saveErrorModule(String alarm) {
 		if (alarm == null) {
-			return "";
+			return false;
 		}
 
 		modulService.save(new ErrorModule(modul, alarm, Calendar.getInstance()));
-		return "RDM";
+		return true;
 	}
 
 	/**
 	 * Обрабатывает денежные операции по монетам
 	 * 
-	 * @param modul
 	 * @param in
 	 * @param out
 	 */
@@ -260,7 +198,6 @@ public class ReceptionDataFromModule {
 	/**
 	 * Фиксация отказа купюрника от купюры
 	 * 
-	 * @param modul
 	 * @param bond
 	 */
 	private void saveCashNotReception(Integer bond) {
@@ -274,8 +211,6 @@ public class ReceptionDataFromModule {
 	/**
 	 * Обновляет данные про версию прошивки и номера телефонов
 	 * 
-	 * @param modul
-	 *            - модуль прислaвший данные
 	 * @param version
 	 *            - версия прошивки
 	 * @param mnum
@@ -283,9 +218,9 @@ public class ReceptionDataFromModule {
 	 * @param f01
 	 *            - номер владельца модуля
 	 */
-	private String updateVersionAndTelephon(String version, String mnum, String f01) {
+	private boolean updateVersionAndTelephon(String version, String mnum, String f01) {
 		if (version == null || mnum == null || f01 == null) {
-			return "";
+			return false;
 		}
 
 		modul.setActivenum(f01);
@@ -294,19 +229,12 @@ public class ReceptionDataFromModule {
 
 		modulService.saveOrUpdate(modul);
 
-		String returnVal = "RDM" + modul.getCommandString();
-
-		// Удалим отправленные команды
-		modulService.deleteAll(modul.getCommand());
-
-		return returnVal;
+		return true;
 	}
 
 	/**
 	 * Установка параметров настройки, которые модуль прислал
 	 * 
-	 * @param modul
-	 *            - модуль которому предназначаются настройки
 	 * @param settings
 	 *            - строка настроек
 	 */
@@ -363,44 +291,38 @@ public class ReceptionDataFromModule {
 	/**
 	 * Регистрация модуля за пользователем/организацией
 	 * 
-	 * @param modul
-	 *            - регистрируемый модуль за владельцем
 	 * @param code
 	 *            - секретный код, полученный при регистрации через сайт
 	 * @return - результат регистрации
 	 */
-	private String registrationModule(String code) {
+	private boolean registrationModule(String code) {
 		if (code == null) {
-			return "";
+			return false;
 		}
 
 		TempRegModule tmp = tempRegModuleService.findBySecretCode(code);
 		if (tmp == null) {
 			// отобразим, что время регистрации истекло 5-ть мин, или
 			// предоставленный код не найден
-
-			return "Код не найден, либо время истекло";
+			return false;//"Код не найден, либо время истекло";
 		}
 
 		if (modul.isActive()) {
-			return "Модуль занят";
+			return false;//"Модуль занят";
 		}
 
 		// Установим пустые настройки для модуля
 		modul.setCurentSettings(new CurentSettingsModule(modul));
-
 		modul.setCompany(tmp.getCompany());
 		modul.setActive(true);
 		modulService.saveOrUpdate(modul);
-		return "RDM";
+		return true;
 
 	}
 
 	/**
 	 * Сохранение данных про финансовую активность модуля
 	 * 
-	 * @param modul
-	 *            - модуль, по которому прошло фин. событие
 	 * @param cash
 	 *            - всего сумма, которая числится в автомате
 	 * @param bond
@@ -411,14 +333,14 @@ public class ReceptionDataFromModule {
 	 *            - количество купюр
 	 * @return
 	 */
-	private String saveCashModule(Integer cash, Integer bond, Integer sell, Integer bs) {
+	private boolean saveCashModule(Integer cash, Integer bond, Integer sell, Integer bs) {
 
 		if (bond < 0) {
-			return "";
+			return false;
 		}
 
 		if (cash == 0 && bond == 0 && sell == null) { // к нам ничего не пришло
-			return "";
+			return false;
 		}
 
 		cashModuleService.saveCashModule(new CashModule(modul, Calendar.getInstance(), cash, bond, sell, bs));
@@ -429,7 +351,7 @@ public class ReceptionDataFromModule {
 			modulService.setCollection(modul);
 		}
 
-		return "RDM";
+		return true;
 	}
 
 }

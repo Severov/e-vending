@@ -1,5 +1,7 @@
 package com.web.controller;
 
+import java.util.HashSet;
+
 import javax.annotation.Resource;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.dao.UserDAO;
+import com.model.Company;
 import com.model.User;
 
 @Controller
@@ -28,7 +31,7 @@ public class RegistrationController {
 	}
 
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public String registrationsdaf(@ModelAttribute("user") @Validated User user, BindingResult result, String password_confirm, ModelMap model) {
+	public String registration(@ModelAttribute("user") @Validated User user, BindingResult result, String password_confirm, ModelMap model) {
 
 		if (result.hasErrors()) {
 			return "enroll";
@@ -43,12 +46,21 @@ public class RegistrationController {
 			model.addAttribute("error", "Пароли не совпадают!");
 			return "registration";
 		}
+		
+		Company company = new Company(user.getFullname());
+		company.setUser(new HashSet<>());
 
 		user.setAccountNonExpired(true);
 		user.setAccountNonLocked(true);
 		user.setCredentialsNonExpired(true);
+		user.setEnabled(true);
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+		user.setCompany(company);
 		userService.save(user);
+		
+		company.getUser().add(user);	
+		userService.save(company);
+		
 		return "redirect:/login";
 	}
 }

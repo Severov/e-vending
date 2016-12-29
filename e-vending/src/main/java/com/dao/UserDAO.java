@@ -13,6 +13,9 @@ public interface UserDAO {
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	void save(User user);
+	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	void save(Company company);
 
 	@Transactional(readOnly = false)
 	public String getRandomUid(Company company);

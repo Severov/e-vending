@@ -30,7 +30,7 @@
     	<jsp:include page="left-menu.jsp" />
         <div id="worcspace">
         	<table id="tt" class="easyui-datagrid" style="width:100%; height:100%; font-size:10px;"
-            url="${pageContext.request.contextPath}/ws/table"
+            url="${pageContext.request.contextPath}/private/ws/table"
             title="Все модули пользователя"
 			iconCls="icon-modules"
             rownumbers="true"

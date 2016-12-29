@@ -40,6 +40,10 @@ public class CollectionModule {
 
 	@Column(name = "fakt")
 	private double		fakt;
+	
+	//Количество купюр инкассации
+	@Column(name = "bs")
+	private double		bs;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "modul_id")
@@ -113,6 +117,14 @@ public class CollectionModule {
 
 	public void setModul(Modul modul) {
 		this.modul = modul;
+	}
+
+	public double getBs() {
+		return bs;
+	}
+
+	public void setBs(double bs) {
+		this.bs = bs;
 	}
 
 }

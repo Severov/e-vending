@@ -15,15 +15,50 @@
  */
 package com.web.controller;
 
-import org.springframework.stereotype.Controller;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.dao.PrivateRoomDAO;
 
 
 /**
  *
  * @author mishka
  */
-@Controller
+@RestController
+@RequestMapping(value = "/private/ws")
 public class PrivateRoomController {
+	
+	@Autowired
+	private PrivateRoomDAO privateRoomService;
 
+	@RequestMapping(value = "/table", method = RequestMethod.GET)
+	private Map<Object, Object> getTable() {
+		List<?> data =  privateRoomService.getMainTable();
+
+		ArrayList<Object> footer = new ArrayList<>();
+		footer.add(new HashMap<String, String>() {
+			{
+				put("place", "<b>ИТОГО</b>");
+				put("max_sell", "<b>" + ((Map<String,Object>)data.get(0)).get("sum_max_sell") + "</b>");
+			}
+
+		});
+
+		Map<Object, Object> map = new HashMap<Object, Object>();
+
+		map.put("rows",   data);
+		map.put("total",  data.size());
+		map.put("footer", footer);
+
+		return map;
+	}
 
 }

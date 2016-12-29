@@ -6,7 +6,8 @@ SELECT
 	modul.telephon,
 	modul.trademark,
     tbl_cash.max_cash,
-    tbl_cash.max_sell
+    tbl_cash.max_sell,
+    SUM(tbl_cash.max_sell) as `sum_max_sell`
 FROM
 	company, modul
 -- выборка суммы и продаж с последней реализации
@@ -64,7 +65,7 @@ LEFT JOIN (
 	FROM
 		cashModule
 	WHERE
-		cashModule.timeStamp BETWEEN '2016-08-09 00:00:00' AND '2016-08-09 23:00:00' 
+		cashModule.timeStamp BETWEEN '2016-08-09 00:00:00' AND :endDay 
 		AND bond = 0
 		AND cash = 0
 		AND sell IS NOT NULL
@@ -112,6 +113,9 @@ LEFT JOIN (
 WHERE
 	company.company_id = 1 
     AND company.company_id = modul.company_id	
+GROUP BY
+	modul.uin
+	
     
     
     	

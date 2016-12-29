@@ -54,6 +54,10 @@ public class UserService extends HibernateDaoSupport implements UserDAO {
 	public void save(User user) {
 		getHibernateTemplate().saveOrUpdate(user);
 	}
+	
+	public void save(Company company) {
+		getHibernateTemplate().save(company);
+	}
 
 	@Override
 	public User getAuthenticationUser() {

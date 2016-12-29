@@ -17,7 +17,9 @@ package com.service;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
@@ -39,6 +41,8 @@ import com.model.TempCollection;
 @Service("modulService")
 @SuppressWarnings("unchecked")
 public class ModulService extends HibernateDaoSupport implements ModuleDAO {
+	
+	private static Map<String, Modul> cacheModule = new HashMap<String, Modul>();
 
 	@Autowired
 	private MySQLQuery mySQLQuery;
@@ -100,10 +104,16 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 		getHibernateTemplate().saveOrUpdate(entity);
 	}
 
-	public Modul getModul(String idDevice) {
+	public Modul getModul(String idDevice) {	
+		Modul cachemodul = cacheModule.get(idDevice);
+		if (cachemodul != null){
+			return cachemodul;
+		}
+		
 		List<Modul> modul = (List<Modul>) getHibernateTemplate().findByNamedParam("from Modul where id_device = :id", "id", idDevice);
 
 		if (modul.size() > 0) {
+			cacheModule.put(idDevice, modul.get(0));
 			return modul.get(0);
 		} else {
 			return null;

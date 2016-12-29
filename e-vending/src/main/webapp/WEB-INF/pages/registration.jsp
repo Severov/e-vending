@@ -20,11 +20,11 @@
 					<div class="error">${error}</div>
 				</c:if>
 
-				<form:input path="username" type="text" placeholder="Имя"
+				<form:input path="username" type="email" placeholder="E-mail"
 					name="username" />
-				<form:input path="fullname" type="text" placeholder="Фамилия"
+				<form:input path="fullname" type="text" placeholder="Наименование компании"
 					name="fullname" />
-				<form:input path="email" type="email" placeholder="E-mail"
+				<form:input path="email" type="test" placeholder="Ваше имя"
 					name="email" />
 				<form:input path="password" type="password" placeholder="Пароль"
 					name="password" />

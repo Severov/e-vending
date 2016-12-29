@@ -3,6 +3,7 @@ package com.model;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +23,7 @@ public class Company {
 	private Long				id;
 
 	@Column(name = "name")
-	private Integer				name;
+	private String				name;
 
 	@Column(name = "description")
 	private String				description;
@@ -33,11 +34,17 @@ public class Company {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
 	private List<Modul>			modul;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
-	private List<TempRegModule>	tempRegModul;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "company")
+	private Set<TempRegModule>	tempRegModul;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "company")
 	private Set<User>			user;
+	
+	public Company(){}
+	
+	public Company(String name){
+		this.name = name;
+	}
 
 	public Long getId() {
 		return id;
@@ -47,11 +54,11 @@ public class Company {
 		this.id = id;
 	}
 
-	public Integer getName() {
+	public String getName() {
 		return name;
 	}
 
-	public void setName(Integer name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
@@ -79,11 +86,11 @@ public class Company {
 		this.modul = modul;
 	}
 
-	public List<TempRegModule> getTempRegModul() {
+	public Set<TempRegModule> getTempRegModul() {
 		return tempRegModul;
 	}
 
-	public void setTempRegModul(List<TempRegModule> tempRegModul) {
+	public void setTempRegModul(Set<TempRegModule> tempRegModul) {
 		this.tempRegModul = tempRegModul;
 	}
 
