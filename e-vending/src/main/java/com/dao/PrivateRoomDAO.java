@@ -7,6 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PrivateRoomDAO {
 	
 	@Transactional(readOnly = true)
-	List<?> getMainTable();
+	List<?> getMainTable(String order, String sort);
 
 }

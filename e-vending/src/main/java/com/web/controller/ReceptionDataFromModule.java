@@ -12,7 +12,6 @@ import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
-import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -74,6 +73,8 @@ public class ReceptionDataFromModule {
 	 * @param mnum
 	 * @param f01
 	 * @param k
+	 * @param lat
+	 * @param lng
 	 *            - состояние положения дверей
 	 * @param sett
 	 *            - строка настроек модуля
@@ -100,12 +101,17 @@ public class ReceptionDataFromModule {
 		@RequestParam(value = "t2", defaultValue = "-1000", required = false) Integer temp2, @RequestParam(value = "ALARM", required = false) String ALARM,
 		@RequestParam(value = "cash", defaultValue = "0", required = false) Integer cash,
 		@RequestParam(value = "collect", required = false) Integer collect,
+		@RequestParam(value = "lat", required = false) String lat, @RequestParam(value = "lng", required = false) String lng,
 		@RequestParam(value = "bond", defaultValue = "0", required = false) Integer bond, @RequestParam(value = "sell", required = false) Integer sell,
 		@RequestParam(value = "bs", required = false) Integer bs) {
-		
+			
 		if (d == null) {
 			return null;
 		}
+		
+		logger.info(d.toString() + "    t   -> " + temp.toString());
+		logger.info(d.toString() + "    lat -> " + lat);
+		logger.info(d.toString() + "    lng -> " + lng);
 
 		modul = modulService.getModul(d);
 		if (modul == null) {
@@ -117,6 +123,7 @@ public class ReceptionDataFromModule {
 		saveCurentSettingsModule(sett);
 		saveDataDoor(k);
 		setCollect(collect);
+		setLatLng(lat, lng);
 
 		String returnVal = "";
 		if (saveCashModule(cash, bond, sell, bs) ||
@@ -132,6 +139,17 @@ public class ReceptionDataFromModule {
 		}
 		
 		return returnVal;
+	}
+	
+	private void setLatLng(String lat, String lng){
+		if (lat == null || lng == null){
+			return;
+		}
+		
+		modul.setLat(lat);
+		modul.setLng(lng);
+		
+		modulService.saveOrUpdate(modul);
 	}
 
 	private void setCollect(Integer collect) {
@@ -201,7 +219,7 @@ public class ReceptionDataFromModule {
 	 * @param bond
 	 */
 	private void saveCashNotReception(Integer bond) {
-		if (bond > 0) {
+		if (bond >= 0) {
 			return;
 		}
 

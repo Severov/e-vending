@@ -21,7 +21,8 @@
     	<link rel="stylesheet" type="text/css" href="${context}/resources/easyui/demo/demo.css">
 		<link rel="stylesheet" type="text/css" href="${context}/resources/easyui/themes/default/easyui.css">
 		
-   
+   		<script type="text/javascript" src="${context}/resources/js/privateRoomTable.js"></script>
+   		
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Личный кабинет</title>
     </head>
@@ -46,22 +47,22 @@
 		<thead frozen="true">
         	<tr>
             	<th field="ck" checkbox="true"></th>
-                <th field="uin" width="80">ID модуля</th>
+                <th field="uin" width="80" formatter="formatUin">ID модуля</th>
                 <th field="place" auto="true">Расположение</th>
         	</tr>
     	</thead>
         <thead>
             <tr>
 				<th field="temp2" auto="true" align="center" sortable="true" rowspan="2" >Датчик,<br>°C</th>
-				<th field="time_off" align="left" rowspan="2" auto="true">Time-off</th>
-				<th field="time_sell" auto="true" align="left" sortable="true" rowspan="2">Простой</th>
-				<th field="status"  align="center" sortable="true" rowspan="2" auto="true">Статус</th>
+				<th field="time_off" align="left" rowspan="2" formatter="formatTimeOff" styler="stylerTimeOff" auto="true">Time-off</th>
+				<th field="time_sell" auto="true" align="left" sortable="true" rowspan="2" formatter="formatTime_sell" styler="stylerTime_sell" >Простой</th>
+				<th field="status"  align="center" rowspan="2" auto="true" formatter="formatStatus">Статус</th>
 				<th colspan="2">Сумма, грн</th>
 				<th colspan="2">Продажи, шт</th>
 				<th field="count_bond" auto="true" align="center" rowspan="2" sortable="true">Банкнот,<br>шт.</th>
-				<th field="progress" width="120" align="center" rowspan="2" >Принятo, %</th>
-				<th field="door" width="50" align="center" rowspan="2" >Дверь</th>
-				<th field="Level" auto="true" align="center" rowspan="2" >Сигнал</th>
+				<th field="progress" width="120" align="center" rowspan="2" formatter="progressFormatter" >Принятo, %</th>
+				<th field="door" width="50" align="center" rowspan="2" formatter="formatDoor" styler="stylerDoor">Дверь</th>
+				<th field="Level" auto="true" align="center" rowspan="2" styler="formatLevel">Сигнал</th>
 				<th field="Volt" auto="true" rowspan="2" align="center">MDB, V</th>
 				<th field="temp" auto="true" rowspan="2" align="center" sortable="true">Т-ра,<br>°C</th>
 				<th field="version" width="120" rowspan="2" align="center" >Версия</th>

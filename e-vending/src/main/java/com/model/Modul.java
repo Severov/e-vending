@@ -48,6 +48,12 @@ public class Modul {
 
 	@Column(name = "activenum", nullable = false, length = 50)
 	private String					activenum;
+	
+	@Column(name = "lat", length = 50)
+	private String					lat;
+	
+	@Column(name = "lng", length = 50)
+	private String					lng;
 
 	@Column(name = "uin", unique = true, nullable = false, length = 50)
 	private String					uin;
@@ -111,6 +117,10 @@ public class Modul {
 	@JsonIgnore
 	private List<CashNotReception>	cashNotReception;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
+	@JsonIgnore
+	private Set<ResetKup>	resetKup;
+	
 	public Long getId() {
 		return id;
 	}
@@ -304,5 +314,29 @@ public class Modul {
 
 	public void setPlace(String place) {
 		this.place = place;
+	}
+
+	public String getLat() {
+		return lat;
+	}
+
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+
+	public String getLng() {
+		return lng;
+	}
+
+	public void setLng(String lng) {
+		this.lng = lng;
+	}
+
+	public Set<ResetKup> getResetKup() {
+		return resetKup;
+	}
+
+	public void setResetKup(Set<ResetKup> resetKup) {
+		this.resetKup = resetKup;
 	}
 }

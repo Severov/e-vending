@@ -24,9 +24,17 @@ public class PrivateRoomService extends HibernateDaoSupport implements PrivateRo
 	}
 
 	@Override
-	public List<?> getMainTable() {
+	public List<?> getMainTable(String order, String sort) {
+		String orderBy = " ORDER BY modul.modul_id ";
+		
+		if(!(order == null || sort == null)){
+			orderBy = " ORDER BY " + sort + " " + order + " ";
+		}
+		
 		SQLQuery result = (SQLQuery) getHibernateTemplate().getSessionFactory().getCurrentSession()
-				.createSQLQuery(mySQLQuery.getSQL("tableRoom.sql")).setParameter("endDay", getEndOfDay());
+				.createSQLQuery(mySQLQuery.getSQL("tableRoom.sql") + orderBy).setParameter("endDay", getEndOfDay())
+				.setParameter("startDay", getStartOfDay())
+				.setParameter("nowTime", Calendar.getInstance());
 		result.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return result.list();
 	}
