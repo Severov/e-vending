@@ -61,10 +61,10 @@ public class Modul {
 	@Column(name = "id_device", nullable = false, length = 50)
 	private String					idDevice;
 
-	@Column(name = "trademark", length = 50)
+	@Column(name = "trademark", nullable = true, length = 50)
 	private String					trademark;
 
-	@Column(name = "place", length = 50)
+	@Column(name = "place", nullable = true, length = 50)
 	private String					place;
 
 	@Column(name = "active", nullable = false, length = 50)

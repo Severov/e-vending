@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.Index;
 
 @Entity
 @Table(name = "cashModule")
@@ -39,6 +40,7 @@ public class CashModule {
 
 	@Column(name = "timeStamp", columnDefinition = "DATETIME")
 	@Temporal(TemporalType.TIMESTAMP)
+	@Index(name = "timeStampIndex")
 	private Calendar	timeStamp;
 
 	@ManyToOne(fetch = FetchType.LAZY)

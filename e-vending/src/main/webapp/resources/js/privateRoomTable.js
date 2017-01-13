@@ -177,7 +177,152 @@ function reloadTable(){
 	})
 }
 
+// Регистрация нового модуля
+function getFormRegModule(){
+	$.ajax({
+  		url: '../private/ws/registerModul',
+  		type: 'GET',
+  		dataType: "json",
+  		success: function(code){
+								document.getElementById('UID').value = 'REG'+code;
+								$('#panel-registration-module-main').dialog('open');
+								$('#panel-registration-module-main').dialog('center');
+								},
+		error: function() {throw_message("Не удалось получить код.<br>Проверьте подключение к интернету!");}
+	})
+}
+
+//Отобразить форму информации о модуле
+function show_info_module(){
+	var row = $('#tt').datagrid('getSelected');
+	if (row){
+		document.getElementById('place').value = row.place;
+		document.getElementById('trademark').value = row.trademark;
+		
+		$('#panel-edit-module-main').dialog('open');
+		$('#panel-edit-module-main').dialog('center');
+	}
+}
+
+//Сохраним информацию о модуле
+function save_info_module(){
+	var row = $('#tt').datagrid('getSelected');
+	if (row){
+			$.ajax({
+				url: '../private/ws/saveInfoModul?uin=' + row.uin + '&trademark=' + document.getElementById('trademark').value + '&place=' + document.getElementById('place').value,
+				type: 'GET',
+				dataType: 'json',
+				success: function(){
+							$("#info-module-form").fadeOut(500);
+							reloadTable();
+							throw_message('Данные успешно сохранены!');
+							  },
+				error: function() {throw_message("Не удалось отправить команду!");}
+			});
+	}
+}
+
+//Всплывающие уведомления
+function throw_message(str, fadein, latency, fadeof) {
+		// Установим значение по умолчанию
+		if (typeof(fadein)==='undefined')   fadein  = 500;
+  		if (typeof(latency)==='undefined')  latency = 3000;
+		if (typeof(fadeof)==='undefined')   fadeof  = 500;
+
+        $.messager.show({
+                title:'Уведомление',
+                msg:str,
+                timeout:latency,
+                showType:'slide',
+				style:{
+                    left:'',
+                    right:0,
+                    top:document.body.scrollTop+document.documentElement.scrollTop,
+                    bottom:''
+                }
+            });
+}
+
+// подтверждение на удаление модуля из учетной записи
+function confirmDeleteModule(){
+    $.messager.confirm('Удаление модуля', 'Вы действительно хотите удалить выбранный модуль ?', function(r){
+        if (r){
+            delete_module();
+        }
+    });
+}
+
+//удалим модуль по просьбе пользователя
+function delete_module(){
+	var row = $('#tt').datagrid('getSelected');
+	if (!row){
+		return;
+	}
+
+	$.ajax({
+  		url: '../private/ws/deleteModul?uin=' + row.uin,
+  		type: 'GET',
+		dataType: 'json',
+  		success: function(mes){
+								if(!mes){
+									throw_message("Не удалось удалить модуль! <br> Попробуйте еще раз!");
+									return;
+								}
+								
+								reloadTable();
+								throw_message("Модуль успешно удален!");
+
+							  },
+		error: function() {throw_message("Не удалось отправить команду!");}
+	});
+}
+
+// открывает панель инкассации
+function open_Collect(){
+
+	var row = $('#tt').datagrid('getSelected');
+	if (!row){
+		throw_message("Выберите модуль!");
+		return;
+	}
+	
+	if (row.time_off != '0 м' && row.time_off != ''){ // модуль выкл
+		$.messager.alert('Предупреждение', 'Модуль не в сети. Проведение операций с модулем невозможно!','error');
+		return;
+	}
+
+	//$('#panel-collect-fakt').focus();
+	$('#panel-collect').dialog('open');
+	$('#panel-collect').dialog('center');
+
+	$("#panel-collect-fakt").numberbox('setValue', row.max_cash);
+	$("#panel-collect-plan").numberbox('setValue', row.max_cash);
+	document.getElementById('panel-collect-info').innerHTML = 'Вы действительно хотите произвести инкассацию модуля ' + row.uin + ' (' + row.place + ') ?';
+
+}
+
+// собственно - сама инкассация
+function Send_Comand_Collect_New(){
+	var row = $('#tt').datagrid('getSelected');
+	if (!row){
+		return;
+	}
+	
+	 $.ajax({
+ 				url: "index.php?id=12",
+ 				type: "POST",
+ 				data: "comand=sendComand&uin=" + nameSelectedModule + '&comm=' +  'collect' + '&plan=' + document.getElementById('panel-collect-plan').value + '&fakt=' +  document.getElementById('panel-collect-fakt').value,
+				dataType: "json",
+ 				success: function(mes){
+								throw_message(mes['error']);
+							  },
+				error: function() {throw_message("Не удалось отправить команду!");}
+	});
+
+	$('#panel-collect').dialog('close');
+}
 // *** END MAIN FUNCTION ***
+
 
 
 $(document).ready(function () {
@@ -214,7 +359,6 @@ $(document).ready(function () {
 				$('#tt').datagrid('resize');
         }
 	});
-
 
 	// Добавим дополнительные кнопки управления
 	var pager = $('#tt').datagrid('getPager');

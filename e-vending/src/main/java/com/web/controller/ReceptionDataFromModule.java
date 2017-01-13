@@ -25,6 +25,7 @@ import com.dao.TempRegModulDAO;
 import com.model.CashCoin;
 import com.model.CashModule;
 import com.model.CashNotReception;
+import com.model.CollectionModule;
 import com.model.CurentSettingsModule;
 import com.model.DataDoor;
 import com.model.DataModule;
@@ -103,15 +104,13 @@ public class ReceptionDataFromModule {
 		@RequestParam(value = "collect", required = false) Integer collect,
 		@RequestParam(value = "lat", required = false) String lat, @RequestParam(value = "lng", required = false) String lng,
 		@RequestParam(value = "bond", defaultValue = "0", required = false) Integer bond, @RequestParam(value = "sell", required = false) Integer sell,
-		@RequestParam(value = "bs", required = false) Integer bs) {
+		@RequestParam(value = "bs", required = false) Integer bs,
+		@RequestParam(value = "collect2", required = false) String collect2, @RequestParam(value = "plan", required = false) Double plan,
+		@RequestParam(value = "fakt",  required = false) Double fakt, @RequestParam(value = "countbs",  required = false) Integer countbs) {
 			
-		if (d == null) {
-			return null;
-		}
+		if (d == null) return null;
 		
 		logger.info(d.toString() + "    t   -> " + temp.toString());
-		logger.info(d.toString() + "    lat -> " + lat);
-		logger.info(d.toString() + "    lng -> " + lng);
 
 		modul = modulService.getModul(d);
 		if (modul == null) {
@@ -124,6 +123,9 @@ public class ReceptionDataFromModule {
 		saveDataDoor(k);
 		setCollect(collect);
 		setLatLng(lat, lng);
+		
+		// для получения данных по инкассациям в переходной период
+		setCollect2(collect2, plan, fakt, countbs);
 
 		String returnVal = "";
 		if (saveCashModule(cash, bond, sell, bs) ||
@@ -141,10 +143,15 @@ public class ReceptionDataFromModule {
 		return returnVal;
 	}
 	
+	private void setCollect2(String collect2, Double plan, Double fakt, Integer countBS){
+		if (collect2 == null) return;
+		
+		logger.info("COLLECT 2");
+		modulService.save(new CollectionModule(modul, plan, fakt, countBS));
+	}
+	
 	private void setLatLng(String lat, String lng){
-		if (lat == null || lng == null){
-			return;
-		}
+		if (lat == null || lng == null)	return;
 		
 		modul.setLat(lat);
 		modul.setLng(lng);
@@ -153,9 +160,7 @@ public class ReceptionDataFromModule {
 	}
 
 	private void setCollect(Integer collect) {
-		if (collect == null) {
-			return;
-		}
+		if (collect == null) return;
 
 		modulService.setCollection(modul);
 	}
@@ -175,17 +180,13 @@ public class ReceptionDataFromModule {
 	 * @param k
 	 */
 	private void saveDataDoor(Integer k) {
-		if (k == null) {
-			return;
-		}
+		if (k == null) return;
 
 		modulService.save(new DataDoor(k, Calendar.getInstance(), modul));
 	}
 
 	private boolean saveErrorModule(String alarm) {
-		if (alarm == null) {
-			return false;
-		}
+		if (alarm == null) return false;
 
 		modulService.save(new ErrorModule(modul, alarm, Calendar.getInstance()));
 		return true;
@@ -219,9 +220,7 @@ public class ReceptionDataFromModule {
 	 * @param bond
 	 */
 	private void saveCashNotReception(Integer bond) {
-		if (bond >= 0) {
-			return;
-		}
+		if (bond >= 0) return;
 
 		modulService.save(new CashNotReception(modul, Calendar.getInstance()));
 	}
@@ -237,9 +236,7 @@ public class ReceptionDataFromModule {
 	 *            - номер владельца модуля
 	 */
 	private boolean updateVersionAndTelephon(String version, String mnum, String f01) {
-		if (version == null || mnum == null || f01 == null) {
-			return false;
-		}
+		if (version == null || mnum == null || f01 == null) return false;
 
 		modul.setActivenum(f01);
 		modul.setTelephon(mnum);
@@ -257,9 +254,7 @@ public class ReceptionDataFromModule {
 	 *            - строка настроек
 	 */
 	private void saveCurentSettingsModule(String settings) {
-		if (settings == null) {
-			return;
-		}
+		if (settings == null) return;
 
 		// Время установим сразу
 		if (settings.indexOf("time") != -1) {
@@ -314,9 +309,7 @@ public class ReceptionDataFromModule {
 	 * @return - результат регистрации
 	 */
 	private boolean registrationModule(String code) {
-		if (code == null) {
-			return false;
-		}
+		if (code == null) return false;
 
 		TempRegModule tmp = tempRegModuleService.findBySecretCode(code);
 		if (tmp == null) {
@@ -334,8 +327,11 @@ public class ReceptionDataFromModule {
 		modul.setCompany(tmp.getCompany());
 		modul.setActive(true);
 		modulService.saveOrUpdate(modul);
+		
+		// Добавим первую инкассацию модуля
+		modulService.save(new CollectionModule(modul, 0.0, 0.0, 0));
+				
 		return true;
-
 	}
 
 	/**
@@ -346,16 +342,13 @@ public class ReceptionDataFromModule {
 	 * @param bond
 	 *            - номинал купюры
 	 * @param sell
-	 *            - прошло событие продажи
+	 *            - пришло событие продажи
 	 * @param bs
 	 *            - количество купюр
 	 * @return
 	 */
 	private boolean saveCashModule(Integer cash, Integer bond, Integer sell, Integer bs) {
-
-		if (bond < 0) {
-			return false;
-		}
+		if (bond < 0) return false;
 
 		if (cash == 0 && bond == 0 && sell == null) { // к нам ничего не пришло
 			return false;

@@ -20,7 +20,7 @@
 		<property name="url" value="jdbc:mysql://localhost/e_vending" />
 		<property name="username" value="root" />
 		<property name="password" value="GjgfPzas07KTU" />
-		<property name="connectionProperties" value="useUnicode=yes;characterEncoding=utf8;"/>	
+		<property name="connectionProperties" value="CharSet=utf8;useUnicode=yes;characterEncoding=utf8;"/>	
 	</bean>
 
 	<bean id="sessionFactory"

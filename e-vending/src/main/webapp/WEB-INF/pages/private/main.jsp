@@ -86,9 +86,9 @@
 
 	<a href="#" title="Икасация выбранного модуля" class="easyui-tooltip easyui-linkbutton" iconCls="icon-inkasso" plain="true" onclick="open_Collect(); return false;">Инкассация</a>
 
-    <a href="#" title="Зарегистрировать в системе новый модуль" class="easyui-tooltip easyui-linkbutton" iconCls="icon-add" plain="true" onclick="getFormRegModule(); $('#panel-registration-module-main').dialog('open'); $('#panel-registration-module-main').dialog('center'); return false">Добавить модуль</a>
+    <a href="#" title="Зарегистрировать в системе новый модуль" class="easyui-tooltip easyui-linkbutton" iconCls="icon-add" plain="true" onclick="getFormRegModule(); return false">Добавить модуль</a>
 
-	<a href="#" title="Редактировать выбранный модуль" class="easyui-tooltip easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="$('#panel-edit-module-main').dialog('open'); $('#panel-edit-module-main').dialog('center'); show_info_module(); return false">Редактировать</a>
+	<a href="#" title="Редактировать выбранный модуль" class="easyui-tooltip easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="show_info_module(); return false">Редактировать</a>
 
 	<a href="#" title="Проверить состояние мобильного счета" class="easyui-tooltip easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="sendComand_Balance(); return false">Состояние счета</a>
 
@@ -97,6 +97,88 @@
 	</div>
 
 	</div>
+	
+	<!--ПАНЕЛЬ РЕГИСТРАЦИИ МОДУЛЯ-->
+<div id="panel-registration-module-main" class="easyui-dialog" style="padding:5px;width:auto;height:auto;line-height: 1.4;"
+	title="  Регистрация нового модуля"
+	iconCls="icon-add"
+	closed="true"
+	modal="true"
+    buttons="#panel-registration-module">
+
+	<span class="sp">
+		Отправьте на регистрируемый</br> модуль SMS с текстом:
+	</span></br>
+	<input class="input" id='UID' name="keyModule" type="text" readonly style="text-align:center;font-weight:bold;" /></br>
+	<span class="rr">
+		(!) Модуль должен быть включен</br> и подготовлен к работе
+	</span>
+</div>
+
+<div id="panel-registration-module">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="javascript:$('#panel-registration-module-main').dialog('close'); return false;">Ок</a>
+</div>
+
+<!--КОНЕЦ ПАНЕЛИ РЕГИСТРАЦИИ МОДУЛЯ-->
+
+<!--ПАНЕЛЬ ИНФОРМАЦИИ О МОДУЛЕ-->
+<div id="panel-edit-module-main" class="easyui-dialog" style="padding:5px;width:auto;height:auto;line-height: 1.4;"
+	title="Информация о модуле"
+	iconCls="icon-edit"
+	closed="true"
+	modal="true"
+    buttons="#panel-edit-module">
+
+	<table>
+        <tr>
+            <td>Марка:</td>
+            <td><input class="input" name="username" id="trademark" placeholder="Марка, модель" value="" type="text"></input></td>
+        </tr>
+        <tr>
+            <td>Расположение:</td>
+            <td><input class="input" name="fullname" id="place" placeholder="Адрес или описание" value="" type="text"></input></td>
+        </tr>
+	</table>
+</div>
+
+<div id="panel-edit-module">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="save_info_module(); $('#panel-edit-module-main').dialog('close'); return false;">Ок</a>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#panel-edit-module-main').dialog('close'); return false;">Отмена</a>
+</div>
+<!--КОНЕЦ ПАНЕЛИ ИНФОРМАЦИИ О МОДУЛЕ-->
+
+<!--Панель инкасации-->
+	<div id="panel-collect" class="easyui-dialog" style="padding:5px;width:auto;height:auto;"
+        title="Инкасcация"
+		iconCls="icon-inkasso"
+		closed="true"
+		modal="true"
+        buttons="#panel-collect-buttons">
+    	<div id="panel-collect-info" style="line-height: 1.4"></div>
+    <table>
+	<tr>
+       <td></td>
+    </tr>
+        <tr>
+            <td>План:</td>
+            <td><input id="panel-collect-plan" class="easyui-numberbox" data-options="precision:2,groupSeparator:' ',decimalSeparator:'.', disabled:true"></input></td>
+			<td> грн.</td>
+        </tr>
+        <tr>
+            <td>Факт:</td>
+            <td><input id="panel-collect-fakt" class="easyui-numberbox" data-options="precision:2,groupSeparator:' ',decimalSeparator:'.'"></input></td>
+			<td> грн.</td>
+        </tr>
+	</table>
+	</div>
+
+
+<div id="panel-collect-buttons">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="Send_Comand_Collect_New(); return false;">Ок</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#panel-collect').dialog('close'); return false;">Отмена</a>
+</div>
+
+<!--КОНЕЦ ПАНЕЛИ ИНКАСАЦИИ-->
  
     </body>
 </html>

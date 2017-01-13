@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,8 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dao.ModuleDAO;
 import com.dao.PrivateRoomDAO;
+import com.dao.TempRegModulDAO;
+import com.dao.UserDAO;
 import com.model.Modul;
 import com.model.ResetKup;
+import com.model.TempRegModule;
 
 /**
  *
@@ -39,9 +43,17 @@ import com.model.ResetKup;
 @RestController
 @RequestMapping(value = "/private/ws")
 public class PrivateRoomController {
+	
+	private static final Logger logger = Logger.getLogger(PrivateRoomController.class);
 
 	@Autowired
 	private PrivateRoomDAO privateRoomService;
+	
+	@Autowired
+	private TempRegModulDAO tempRegModulService;
+	
+	@Autowired
+	private UserDAO		userService;
 
 	@Autowired
 	private ModuleDAO modulService;
@@ -86,18 +98,58 @@ public class PrivateRoomController {
 		return map;
 	}
 
+	/**
+	 * Сброс статистики купюрника
+	 * @param uin - уин модуля
+	 * @return
+	 */
 	@RequestMapping(value = "/resetKup", method = RequestMethod.GET)
 	private Boolean resetKup(@RequestParam(value = "uin", required = false) String uin) {
-		if (uin == null) {
-			return false;
-		}
-
 		Modul modul = modulService.getModulByUin(uin);
-		if (modul == null) {
-			return false;
-		}
+		if (modul == null) return false;
 
 		modulService.save(new ResetKup(modul, Calendar.getInstance()));
+		return true;
+	}
+	
+	/**
+	 * Сохраняет в БД и возвращает секретный код для регистрации нового модуля
+	 * @return
+	 */
+	@RequestMapping(value = "/registerModul", method = RequestMethod.GET)
+	private String registerModul(){
+		String code = tempRegModulService.generateSecretCode(5);
+		modulService.save(new TempRegModule(userService.getAuthenticationUser().getCompany(), code));
+		return code;	
+	}
+	
+	@RequestMapping(value = "/saveInfoModul", method = RequestMethod.GET)
+	private Boolean saveInfoModul(@RequestParam(value = "uin", required = false) String uin,
+			@RequestParam(value = "place", defaultValue="", required = false) String place,
+			@RequestParam(value = "trademark", defaultValue = "", required = false) String trademark) {
+
+		Modul modul = modulService.getModulByUin(uin);
+		if (modul == null) return false;
+
+		modul.setPlace(place);
+		modul.setTrademark(trademark);
+
+		modulService.saveOrUpdate(modul);
+		return true;
+	}
+	
+	
+	@RequestMapping(value = "/deleteModul", method = RequestMethod.GET)
+	private Boolean deleteModul(@RequestParam(value = "uin", required = false) String uin){
+		Modul modul = modulService.getModulByUin(uin);
+		if (modul == null) return false;
+		
+		modul.setActive(false);
+		modul.setCompany(null);
+		modul.setTrademark("");
+		modul.setPlace("");
+		modulService.saveOrUpdate(modul);
+		
 		return true;
 	}
 

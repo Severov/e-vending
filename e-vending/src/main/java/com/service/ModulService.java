@@ -179,6 +179,10 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 
 	@Override
 	public Modul getModulByUin(String uin) {
+		if(uin == null){
+			return null;
+		}
+		
 		Modul cachemodul = cacheModule.get(uin);
 		if (cachemodul != null){
 			return cachemodul;
@@ -193,5 +197,4 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 			return null;
 		}
 	}
-
 }

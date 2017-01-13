@@ -36,14 +36,14 @@ public class CollectionModule {
 	private Calendar	timeStamp;
 
 	@Column(name = "plan")
-	private double		plan;
+	private Double		plan;
 
 	@Column(name = "fakt")
-	private double		fakt;
+	private Double		fakt;
 	
 	//Количество купюр инкассации
 	@Column(name = "bs")
-	private double		bs;
+	private Integer		bs;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "modul_id")
@@ -60,10 +60,11 @@ public class CollectionModule {
 		this.timeStamp = timeStamp;
 	}
 
-	public CollectionModule(Modul modul, double plan, double fakt) {
+	public CollectionModule(Modul modul, Double plan, Double fakt, Integer countBS) {
 		this.modul = modul;
 		this.plan = plan;
 		this.fakt = fakt;
+		this.bs   = countBS;
 		this.timeStamp = Calendar.getInstance();
 	}
 
@@ -95,19 +96,19 @@ public class CollectionModule {
 		this.timeStamp = timeStamp;
 	}
 
-	public double getPlan() {
+	public Double getPlan() {
 		return plan;
 	}
 
-	public void setPlan(double plan) {
+	public void setPlan(Double plan) {
 		this.plan = plan;
 	}
 
-	public double getFakt() {
+	public Double getFakt() {
 		return fakt;
 	}
 
-	public void setFakt(double fakt) {
+	public void setFakt(Double fakt) {
 		this.fakt = fakt;
 	}
 
@@ -119,11 +120,11 @@ public class CollectionModule {
 		this.modul = modul;
 	}
 
-	public double getBs() {
+	public Integer getBs() {
 		return bs;
 	}
 
-	public void setBs(double bs) {
+	public void setBs(Integer bs) {
 		this.bs = bs;
 	}
 

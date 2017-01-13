@@ -2,6 +2,7 @@ package com.service;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,17 @@ public class TempRegModuleService extends HibernateDaoSupport implements TempReg
 	public void init(SessionFactory sessionFactory) {
 		setSessionFactory(sessionFactory);
 	}
+	
+	@Override
+	public String generateSecretCode(int length) {
+		Random rnd = new Random();
+		StringBuilder builder = new StringBuilder();
 
-	public String getRandomUid() {
-		return "xi-xi"; // думаю, это достаточно случайно
+		for (int i = 0; i < length; ++i) {
+			builder.append(rnd.nextInt(9));
+		}
+
+		return builder.toString();
 	}
 
 	@Override

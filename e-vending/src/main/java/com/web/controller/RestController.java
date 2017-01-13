@@ -104,15 +104,6 @@ public class RestController {
 		return "Успешно";
 	}
 
-	@RequestMapping(value = "/getRandomUid")
-	public String getRandomUid() {
-		if (!isAccess()) {
-			return null;
-		}
-
-		return userService.getRandomUid(user.getCompany());
-	}
-
 	@RequestMapping(value = "/getVersion")
 	public Modul getVersion(@PathVariable("uin") String uin) {
 		if (!isAccess(uin)) {

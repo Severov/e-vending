@@ -84,4 +84,5 @@ public interface ModuleDAO {
 
 	@Transactional(readOnly = false)
 	public void deleteAllTempCollection(Modul modul);
+	
 }
