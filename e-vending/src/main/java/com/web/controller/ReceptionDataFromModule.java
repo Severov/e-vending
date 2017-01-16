@@ -134,10 +134,10 @@ public class ReceptionDataFromModule {
 		    saveErrorModule(ALARM) ||
 		    saveDataModule(u, l, temp, temp2)){
 	
-			returnVal = "RDM" + modul.getCommandString();
+			returnVal = "RDM" + modulService.getCommandString(modul);
 
 			// Удалим отправленные команды
-			modulService.deleteAll(modul.getCommand());
+			modulService.deleteAllCommand(modul);
 		}
 		
 		return returnVal;
@@ -162,7 +162,7 @@ public class ReceptionDataFromModule {
 	private void setCollect(Integer collect) {
 		if (collect == null) return;
 
-		modulService.setCollection(modul);
+		cashModuleService.setCollection(modul);
 	}
 
 	private boolean saveDataModule(Integer u, Integer l, Integer temp, Integer temp2) {
@@ -359,7 +359,7 @@ public class ReceptionDataFromModule {
 		// TODO для совместимости со старой версией
 		// инкассация прошла через веб
 		if (cash != 0 && sell != 0 && bs != 0) {
-			modulService.setCollection(modul);
+			cashModuleService.setCollection(modul);
 		}
 
 		return true;

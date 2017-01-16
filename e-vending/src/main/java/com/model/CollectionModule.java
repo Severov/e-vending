@@ -53,10 +53,11 @@ public class CollectionModule {
 	public CollectionModule() {
 	}
 
-	public CollectionModule(Modul modul, Calendar timeStamp, double plan, double fakt) {
+	public CollectionModule(Modul modul, Calendar timeStamp, Double plan, Double fakt, Integer countBond) {
 		this.modul = modul;
 		this.plan = plan;
 		this.fakt = fakt;
+		this.bs   = countBond;
 		this.timeStamp = timeStamp;
 	}
 

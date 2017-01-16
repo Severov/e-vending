@@ -253,25 +253,6 @@ public class Modul {
 		return command;
 	}
 
-	/**
-	 * Возвращает собранную строку с командами вида [command[param1][param2]]
-	 * 
-	 * @return
-	 */
-	@JsonIgnore
-	public String getCommandString() {
-		if (getCommand() == null || getCommand().size() == 0) {
-			return "";
-		}
-
-		String buf = "";
-		for (CommandToModule command : getCommand()) {
-			buf += " " + command.getCommand();
-		}
-
-		return buf;
-	}
-
 	public void setCommand(Set<CommandToModule> command) {
 		this.command = command;
 	}

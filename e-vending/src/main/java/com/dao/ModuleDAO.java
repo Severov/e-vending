@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.model.Company;
 import com.model.Modul;
-import com.model.TempCollection;
 
 /**
  *
@@ -48,12 +47,12 @@ public interface ModuleDAO {
 
 	@Transactional(readOnly = true)
 	Modul findModul(String uin, Company company);
+	
+	@Transactional(readOnly = false)
+	void update(Object entity);
 
 	@Transactional(readOnly = false)
 	void saveOrUpdate(Object entity);
-
-	@Transactional(readOnly = true)
-	List<?> test(String id);
 
 	@Transactional(readOnly = false)
 	void save(Object entity);
@@ -66,23 +65,10 @@ public interface ModuleDAO {
 
 	@Transactional(readOnly = false)
 	void saveAll(Collection<?> collection);
-
-	@Transactional(readOnly = false)
-	void setCollection(Modul modul, Double plan, Double fakt);
-
-	@Transactional(readOnly = false)
-	void setCollection(Modul modul);
-
-	@Transactional(readOnly = false)
-	void setTempCollection(Modul modul, Double plan, Double fakt);
-
-	@Transactional(readOnly = true)
-	TempCollection getLastTempCollection(Modul modul);
-
-	@Transactional(readOnly = true)
-	public Double getSumm(Modul modul);
-
-	@Transactional(readOnly = false)
-	public void deleteAllTempCollection(Modul modul);
 	
+	@Transactional(readOnly = true)
+	String getCommandString(Modul modul);
+	
+	@Transactional(readOnly = false)
+	void deleteAllCommand(Modul modul);
 }

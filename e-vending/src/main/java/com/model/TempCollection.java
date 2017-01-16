@@ -43,9 +43,11 @@ public class TempCollection {
 	public TempCollection() {
 	}
 
-	public TempCollection(Double plan, Double fakt) {
+	public TempCollection(Modul modul, Double plan, Double fakt) {
 		setPlan(plan);
 		setFakt(fakt);
+		this.modul = modul;
+		this.timeStamp = Calendar.getInstance();
 	}
 
 	public Long getId() {

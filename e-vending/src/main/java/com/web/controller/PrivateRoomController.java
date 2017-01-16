@@ -28,12 +28,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dao.CashModuleDAO;
 import com.dao.ModuleDAO;
 import com.dao.PrivateRoomDAO;
 import com.dao.TempRegModulDAO;
 import com.dao.UserDAO;
+import com.model.CommandToModule;
 import com.model.Modul;
 import com.model.ResetKup;
+import com.model.TempCollection;
 import com.model.TempRegModule;
 
 /**
@@ -57,6 +60,9 @@ public class PrivateRoomController {
 
 	@Autowired
 	private ModuleDAO modulService;
+	
+	@Autowired
+	private CashModuleDAO cashModulService;
 
 	@RequestMapping(value = "/table", method = RequestMethod.GET)
 	private Map<Object, Object> getTable(@RequestParam(value = "order", required = false) String order,
@@ -112,6 +118,31 @@ public class PrivateRoomController {
 		return true;
 	}
 	
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	private Double test(@RequestParam(value = "uin", required = false) String uin){
+		Modul modul = modulService.getModulByUin(uin);
+		if (modul == null) return null;
+		
+		return cashModulService.getSummCollection(modul);
+	}
+	
+	@RequestMapping(value = "/setCollection", method = RequestMethod.GET)
+	private Boolean setCollection(@RequestParam(value = "uin", required = false) String uin,
+			@RequestParam(value = "plan", required = false) Double plan,
+			@RequestParam(value = "fakt", required = false) Double fakt) {
+		Modul modul = modulService.getModulByUin(uin);
+		if (modul == null)
+			return null;
+
+		CommandToModule comand = new CommandToModule(modul, "collect");
+		TempCollection tmpCollection = new TempCollection(modul, plan, fakt);
+		
+		modulService.save(comand);
+		modulService.save(tmpCollection);
+		
+		return true;
+	}
+		
 	/**
 	 * Сохраняет в БД и возвращает секретный код для регистрации нового модуля
 	 * @return

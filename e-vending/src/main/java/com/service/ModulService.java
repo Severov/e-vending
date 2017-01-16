@@ -15,24 +15,20 @@
  */
 package com.service;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
 import com.dao.ModuleDAO;
-import com.model.CollectionModule;
+import com.model.CommandToModule;
 import com.model.Company;
 import com.model.Modul;
-import com.model.TempCollection;
 
 /**
  *
@@ -45,23 +41,12 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 	private static Map<String, Modul> cacheModule = new HashMap<String, Modul>();
 
 	@Autowired
-	private MySQLQuery mySQLQuery;
-
-	@Autowired
 	public void init(SessionFactory sessionFactory) {
 		setSessionFactory(sessionFactory);
 	}
 
 	public List<Modul> getAllModul() {
 		return (List<Modul>) getHibernateTemplate().find("from Modul");
-	}
-
-	public List<?> test(String id) {
-		SQLQuery result = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(mySQLQuery.getSQL("tableRoom.sql"));
-		System.out.println("**************************************************************************");
-		result.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		return result.list();
-		// return list;
 	}
 
 	@Override
@@ -89,6 +74,8 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 
 	@Override
 	public void deleteAll(Collection<?> collection) {
+		if (collection.isEmpty()) return;
+		
 		getHibernateTemplate().deleteAll(collection);
 	}
 
@@ -102,6 +89,11 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 	@Override
 	public void saveOrUpdate(Object entity) {
 		getHibernateTemplate().saveOrUpdate(entity);
+	}
+	
+	@Override
+	public void update(Object entity){
+		getHibernateTemplate().update(entity);
 	}
 
 	public Modul getModul(String idDevice) {	
@@ -118,63 +110,6 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 		} else {
 			return null;
 		}
-	}
-
-	public void setTempCollection(Modul modul, Double plan, Double fakt) {
-		getHibernateTemplate().save(new TempCollection(plan, fakt));
-	}
-
-	/**
-	 * установка факта инкассации
-	 */
-	@Override
-	public void setCollection(Modul modul, Double plan, Double fakt) {
-		CollectionModule collection = new CollectionModule(modul, Calendar.getInstance(), plan, fakt);
-		getHibernateTemplate().save(collection);
-	}
-
-	@Override
-	public void setCollection(Modul modul) {
-		TempCollection buf = getLastTempCollection(modul);
-		Double plan = 0.0;
-		Double fakt = 0.0;
-
-		if (buf == null) {
-			plan = getSumm(modul);
-			fakt = plan;
-		} else {
-			plan = buf.getPlan();
-			fakt = buf.getFakt();
-			deleteAllTempCollection(modul);
-		}
-
-		setCollection(modul, plan, fakt);
-	}
-
-	@Override
-	public TempCollection getLastTempCollection(Modul modul) {
-		SessionFactory session = getHibernateTemplate().getSessionFactory();
-		List<TempCollection> buf = session.getCurrentSession().createQuery("from TempCollection where modul_id = :id order by temp_id DESC")
-			.setParameter("id", modul.getId()).setMaxResults(1).list();
-
-		if (!buf.isEmpty()) {
-			return buf.get(0);
-		}
-
-		return null;
-	}
-
-	@Override
-	public Double getSumm(Modul modul) {
-		// TODO Обязательно реализовать данный метод
-		return 777.0;
-	}
-
-	@Override
-	public void deleteAllTempCollection(Modul modul) {
-		SessionFactory session = getHibernateTemplate().getSessionFactory();
-		String deleteQuery = "delete from TempCollection where modul_id= :id";
-		session.getCurrentSession().createQuery(deleteQuery).setParameter("id", modul.getId()).executeUpdate();
 	}
 
 	@Override
@@ -197,4 +132,34 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 			return null;
 		}
 	}
+	
+	/**
+	 * Возвращает накопившиеся команды модуля
+	 */
+	@Override
+	public String getCommandString(Modul modul){
+		
+		List<CommandToModule> command = (List<CommandToModule>) getHibernateTemplate().findByNamedParam("from CommandToModule where modul_id = :id", "id", modul.getId());
+
+		if (command.isEmpty()) {
+			return "";
+		}
+
+		StringBuilder builder = new StringBuilder();
+		for (CommandToModule entity : command) {
+			builder.append(" ");
+			builder.append(entity.getCommand());
+		}
+
+		return builder.toString();
+	}
+	
+	@Override
+	public void deleteAllCommand(Modul modul){
+		SessionFactory session = getHibernateTemplate().getSessionFactory();
+		String deleteQuery = "delete from CommandToModule where modul_id= :id";
+		session.getCurrentSession().createQuery(deleteQuery).setParameter("id", modul.getId()).executeUpdate();
+	}
+	
+	
 }

@@ -30,13 +30,17 @@ function stylerTime_sell(value,rowData,rowIndex){
 		return;
 	}
 	
+	var style = '';
+	
 	if (delta >= 14400){
-		return 'background-color: #ffb098;';
+		style = 'background-color: #ffb098;';
 	}
 	
 	if(delta >= 50400){
-		return 'background-color: #ff75a2;';
+		style = 'background-color: #ff75a2;';
 	}
+	
+	return style;
 }
 
 function formatTime_sell(value,rowData,rowIndex){
@@ -309,12 +313,15 @@ function Send_Comand_Collect_New(){
 	}
 	
 	 $.ajax({
- 				url: "index.php?id=12",
- 				type: "POST",
- 				data: "comand=sendComand&uin=" + nameSelectedModule + '&comm=' +  'collect' + '&plan=' + document.getElementById('panel-collect-plan').value + '&fakt=' +  document.getElementById('panel-collect-fakt').value,
+ 				url: '../private/ws/setCollection?uin=' + row.uin + '&plan=' + document.getElementById('panel-collect-plan').value + '&fakt=' +  document.getElementById('panel-collect-fakt').value,
+ 				type: 'GET',
 				dataType: "json",
  				success: function(mes){
-								throw_message(mes['error']);
+ 								if (mes){
+ 									throw_message('Инкассация прошла успешно!');
+ 								}else{
+ 									throw_message('Возникла ошибка. Повторите попоже!');
+ 								}
 							  },
 				error: function() {throw_message("Не удалось отправить команду!");}
 	});
