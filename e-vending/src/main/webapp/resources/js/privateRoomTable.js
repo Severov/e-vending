@@ -169,13 +169,19 @@ function reloadTable(){
   		url: '../private/ws/table' + sortString,
   		type: 'GET',
   		dataType: 'json',
-  		success: function(param){ 				
-  			if($('#tt').datagrid('getRows').length == 0){
+  		success: function(param){ 	
+  			
+  			var currentLength = $('#tt').datagrid('getRows').length;
+  			if(currentLength == 0){
   				$('#tt').datagrid('reload');
   				return;
   			}
   				
   			$('#tt').datagrid('loadData', param);    // reload the data
+  			
+  			if(currentLength < param.rows.length) {
+  				throw_message('Добавлен новый модуль');
+  			}
   		},
 		error: function() {}
 	})
@@ -192,7 +198,7 @@ function getFormRegModule(){
 								$('#panel-registration-module-main').dialog('open');
 								$('#panel-registration-module-main').dialog('center');
 								},
-		error: function() {throw_message("Не удалось получить код.<br>Проверьте подключение к интернету!");}
+		error: function() {throw_message('Не удалось получить код.<br>Проверьте подключение к интернету!');}
 	})
 }
 
@@ -213,7 +219,7 @@ function save_info_module(){
 	var row = $('#tt').datagrid('getSelected');
 	if (row){
 			$.ajax({
-				url: '../private/ws/saveInfoModul?uin=' + row.uin + '&trademark=' + document.getElementById('trademark').value + '&place=' + document.getElementById('place').value,
+				url: '../private/ws/' + row.uin + '/saveInfoModul?trademark=' + document.getElementById('trademark').value + '&place=' + document.getElementById('place').value,
 				type: 'GET',
 				dataType: 'json',
 				success: function(){
@@ -221,9 +227,106 @@ function save_info_module(){
 							reloadTable();
 							throw_message('Данные успешно сохранены!');
 							  },
-				error: function() {throw_message("Не удалось отправить команду!");}
+				error: function() {throw_message('Не удалось отправить команду!');}
 			});
 	}
+}
+
+//Отправка команды модулю
+function send_Comand(){	
+	var row = $('#tt').datagrid('getSelected');
+	if (!row){
+		throw_message('Модуль не выбран');
+		return;
+	}
+
+	$.ajax({
+  		url: '../private/ws/' + row.uin + '/sendCommand?command=' +  $('input[name=comm]:checked').val(),
+  		type: 'GET',
+		dataType: 'json',
+  		success: function(mes){  								
+  								if (!mes){
+  									throw_message('Произошел сбой при отправке команды. Повторите попытку позже!');
+  								}else{
+  									throw_message('Команда отправлена успешно');
+  								}
+  								
+							  },
+		error: function() {throw_message('Не удалось отправить команду!');}
+});
+	
+	$('#panel-settings-module-main').dialog('close');
+}
+
+//Отправка запроса настроек модуля
+function query_settings_module(){
+	var row = $('#tt').datagrid('getSelected');
+	if (!row){
+		throw_message('Модуль не выбран');
+		return;
+	}
+	
+	$.ajax({
+  		url: '../private/ws/' + row.uin + '/sendCommand?command=isett',
+  		type: 'GET',
+  		data: "comand=sendComand&uin=" + nameSelectedModule + "&comm=isett",
+		dataType: 'json',
+  		success: function(mes){
+								$('#podlogka').fadeIn(500);
+								$('#balanceForm').fadeIn(500);
+								startAnimation();
+								setTimeout(get_current_settings_module, 20000);
+							  },
+		error: function() {
+			$('#podlogka').fadeOut(500);
+			$('#balanceForm').fadeOut(500);
+			stopAnimation();
+			throw_message('Не удалось отправить команду!');
+		}
+});
+}
+
+//Установим настройки модуля
+function get_current_settings_module(){
+	var row = $('#tt').datagrid('getSelected');
+	if (!row){
+		throw_message('Модуль не выбран');
+		return;
+	}
+	
+	$.ajax({
+		url: '../private/ws/' + row.uin + '/getCurrentSettings',
+  		type: 'GET',
+  		dataType: 'json',
+  		success: function(param){
+
+			$('#panel-graph').panel('collapse'); // свернем панель с графиками
+
+			$("#podlogka").fadeOut(500);
+			$("#balanceForm").fadeOut(500);
+			stopAnimation();
+
+			$('#strequest').switchbutton(param.request == '1' ? 'check' : 'uncheck');
+			$('#stsilent').switchbutton(param.silent == '1' ? 'check' : 'uncheck'); 
+			$('#stvoice').switchbutton(param.voice == '1' ? 'check' : 'uncheck');
+			$('#stigprs').switchbutton('check');
+
+			document.getElementById('sthours').options[parseInt(param.hours, 10)].selected     = true;
+			document.getElementById('stminutes').options[parseInt(param.minutes, 10)].selected = true;
+			document.getElementById('stprofile').options[parseInt(param.profile, 10)-1].selected = true;
+			document.getElementById('stbalance').options[parseInt(param.balance, 10)].selected = true;
+
+			$('#panel-setings-module-main').dialog('open');
+			$('#panel-setings-module-main').dialog('center');
+
+		},
+		error: function() {
+			$("#podlogka").fadeOut(500);
+			$("#balanceForm").fadeOut(500);
+			$('#popup-setings-module').fadeOut(500);
+			stopAnimation();
+			throw_message('Не удалось получить настройки модуля!');}
+})
 }
 
 //Всплывающие уведомления
@@ -269,15 +372,15 @@ function delete_module(){
 		dataType: 'json',
   		success: function(mes){
 								if(!mes){
-									throw_message("Не удалось удалить модуль! <br> Попробуйте еще раз!");
+									throw_message('Не удалось удалить модуль! <br> Попробуйте еще раз!');
 									return;
 								}
 								
 								reloadTable();
-								throw_message("Модуль успешно удален!");
+								throw_message('Модуль успешно удален!');
 
 							  },
-		error: function() {throw_message("Не удалось отправить команду!");}
+		error: function() {throw_message('Не удалось отправить команду!');}
 	});
 }
 
@@ -313,7 +416,7 @@ function Send_Comand_Collect_New(){
 	}
 	
 	 $.ajax({
- 				url: '../private/ws/setCollection?uin=' + row.uin + '&plan=' + document.getElementById('panel-collect-plan').value + '&fakt=' +  document.getElementById('panel-collect-fakt').value,
+ 				url: '../private/ws/' + row.uin + '/setCollection?plan=' + document.getElementById('panel-collect-plan').value + '&fakt=' +  document.getElementById('panel-collect-fakt').value,
  				type: 'GET',
 				dataType: "json",
  				success: function(mes){
@@ -323,11 +426,13 @@ function Send_Comand_Collect_New(){
  									throw_message('Возникла ошибка. Повторите попоже!');
  								}
 							  },
-				error: function() {throw_message("Не удалось отправить команду!");}
+				error: function() {throw_message('Не удалось отправить команду!');}
 	});
 
 	$('#panel-collect').dialog('close');
 }
+
+
 // *** END MAIN FUNCTION ***
 
 
@@ -337,7 +442,7 @@ $(document).ready(function () {
 	setInterval(reloadTable, 60000);
 
 	$('#tt').datagrid({
-		rowStyler:function(index,row){
+		rowStyler:function(index, row){
 			if ((row.status + '').charAt(0) == 'E' ){
 				return 'background-color:#FC6441;color:blue;font-weight:bold;';
 			}
@@ -362,7 +467,7 @@ $(document).ready(function () {
 					$(this).datagrid('checkRow', i);
 					// break;
 			}
-			document.getElementById("tt").style.height = ($('#tt').datagrid('getRows').length +1) * 25 + 110;
+			document.getElementById('tt').style.height = ($('#tt').datagrid('getRows').length +1) * 25 + 110;
 				$('#tt').datagrid('resize');
         }
 	});

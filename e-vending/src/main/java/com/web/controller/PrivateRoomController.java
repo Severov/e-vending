@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +35,7 @@ import com.dao.PrivateRoomDAO;
 import com.dao.TempRegModulDAO;
 import com.dao.UserDAO;
 import com.model.CommandToModule;
+import com.model.CurrentSettingsModule;
 import com.model.Modul;
 import com.model.ResetKup;
 import com.model.TempCollection;
@@ -112,27 +114,36 @@ public class PrivateRoomController {
 	@RequestMapping(value = "/resetKup", method = RequestMethod.GET)
 	private Boolean resetKup(@RequestParam(value = "uin", required = false) String uin) {
 		Modul modul = modulService.getModulByUin(uin);
-		if (modul == null) return false;
+		if (modul == null)
+			return false;
 
 		modulService.save(new ResetKup(modul, Calendar.getInstance()));
 		return true;
 	}
 	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	private Double test(@RequestParam(value = "uin", required = false) String uin){
+	private Double test(@RequestParam(value = "uin", required = false) String uin) {
 		Modul modul = modulService.getModulByUin(uin);
-		if (modul == null) return null;
-		
+		if (modul == null)
+			return null;
+
 		return cashModulService.getSummCollection(modul);
 	}
 	
-	@RequestMapping(value = "/setCollection", method = RequestMethod.GET)
-	private Boolean setCollection(@RequestParam(value = "uin", required = false) String uin,
+	/**
+	 * 
+	 * @param uin
+	 * @param plan
+	 * @param fakt
+	 * @return
+	 */
+	@RequestMapping(value = "{uin}/setCollection", method = RequestMethod.GET)
+	private Boolean setCollection(@PathVariable("uin") String uin,
 			@RequestParam(value = "plan", required = false) Double plan,
 			@RequestParam(value = "fakt", required = false) Double fakt) {
 		Modul modul = modulService.getModulByUin(uin);
 		if (modul == null)
-			return null;
+			return false;
 
 		CommandToModule comand = new CommandToModule(modul, "collect");
 		TempCollection tmpCollection = new TempCollection(modul, plan, fakt);
@@ -142,25 +153,77 @@ public class PrivateRoomController {
 		
 		return true;
 	}
+	
+	/**
+	 * Отправка команды модулю
+	 * @param uin
+	 * @param command
+	 * @param param1
+	 * @param param2
+	 * @return
+	 */
+	@RequestMapping(value = "{uin}/sendCommand", method = RequestMethod.GET)
+	private Boolean sendCommand(@PathVariable("uin") String uin,
+			@RequestParam(value = "command", required = false) String command,
+			@RequestParam(value = "param1", defaultValue = "", required = false) String param1,
+			@RequestParam(value = "param2", defaultValue = "", required = false) String param2) {
+		
+		Modul modul = modulService.getModulByUin(uin);
+		if (modul == null || command == null)
+			return false;
+
+		modulService.save(new CommandToModule(modul, command + param1 + param2));
+
+		return true;
+	}
 		
 	/**
 	 * Сохраняет в БД и возвращает секретный код для регистрации нового модуля
 	 * @return
 	 */
 	@RequestMapping(value = "/registerModul", method = RequestMethod.GET)
-	private String registerModul(){
+	private String registerModul() {
 		String code = tempRegModulService.generateSecretCode(5);
 		modulService.save(new TempRegModule(userService.getAuthenticationUser().getCompany(), code));
-		return code;	
+		return code;
 	}
 	
-	@RequestMapping(value = "/saveInfoModul", method = RequestMethod.GET)
-	private Boolean saveInfoModul(@RequestParam(value = "uin", required = false) String uin,
-			@RequestParam(value = "place", defaultValue="", required = false) String place,
+	/**
+	 * 
+	 * @param uin
+	 * @return
+	 */
+	@RequestMapping(value = "{uin}/getCurrentSettings", method = RequestMethod.GET)
+	private CurrentSettingsModule getCurrentSettings(@PathVariable("uin") String uin) {
+
+		Modul modul = modulService.getModulByUin(uin);
+		if (modul == null)
+			return null;
+		
+		CurrentSettingsModule settings = modul.getCurrentSettings();
+		
+		if (settings == null)
+			settings = new CurrentSettingsModule().resetAllSettings();
+
+		return settings;
+	}
+	
+	
+	/**
+	 * Обновим информацию про модуль
+	 * @param uin
+	 * @param place
+	 * @param trademark
+	 * @return
+	 */
+	@RequestMapping(value = "{uin}/saveInfoModul", method = RequestMethod.GET)
+	private Boolean saveInfoModul(@PathVariable("uin") String uin,
+			@RequestParam(value = "place", defaultValue = "", required = false) String place,
 			@RequestParam(value = "trademark", defaultValue = "", required = false) String trademark) {
 
 		Modul modul = modulService.getModulByUin(uin);
-		if (modul == null) return false;
+		if (modul == null)
+			return false;
 
 		modul.setPlace(place);
 		modul.setTrademark(trademark);
@@ -171,9 +234,10 @@ public class PrivateRoomController {
 	
 	
 	@RequestMapping(value = "/deleteModul", method = RequestMethod.GET)
-	private Boolean deleteModul(@RequestParam(value = "uin", required = false) String uin){
+	private Boolean deleteModul(@RequestParam(value = "uin", required = false) String uin) {
 		Modul modul = modulService.getModulByUin(uin);
-		if (modul == null) return false;
+		if (modul == null)
+			return false;
 		
 		modul.setActive(false);
 		modul.setCompany(null);

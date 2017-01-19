@@ -33,6 +33,11 @@ public class MainController {
 	public String privateMain() {
 		return "private/main";
 	}
+	
+	@RequestMapping(value = "/private/map", method = RequestMethod.GET)
+	public String privateMap() {
+		return "private/googleMap";
+	}
 
 	@RequestMapping(value = "/private/admin", method = RequestMethod.GET)
 	public ModelAndView adminPage() {

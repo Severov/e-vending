@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.dao.ModuleDAO;
 import com.dao.UserDAO;
 import com.model.CommandToModule;
-import com.model.CurentSettingsModule;
+import com.model.CurrentSettingsModule;
 import com.model.Modul;
 import com.model.User;
 
@@ -82,7 +82,7 @@ public class RestController {
 	}
 
 	@RequestMapping(value = "/getSettingsModule")
-	public CurentSettingsModule getSettingsModule(@PathVariable("uin") String uin) {
+	public CurrentSettingsModule getSettingsModule(@PathVariable("uin") String uin) {
 		if (!isAccess(uin)) {
 			return null;
 		}

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<link rel="stylesheet" type="text/css" href="${context}/resources/css/leftMenu.css" />
 <div id="left_menu">
 	<a href="main"><img id="home-icon" title="Домой" class="easyui-tooltip" position="right" alt="Home" src="${pageContext.request.contextPath}/resources/images/room/home.png"> </a>
     <a href="#"><img id="chrt-icon" title="Аналитика" class="easyui-tooltip" position="right" alt="Chart" src="${pageContext.request.contextPath}/resources/images/room/chart.png"></a>

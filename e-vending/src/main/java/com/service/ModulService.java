@@ -38,8 +38,6 @@ import com.model.Modul;
 @SuppressWarnings("unchecked")
 public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 	
-	private static Map<String, Modul> cacheModule = new HashMap<String, Modul>();
-
 	@Autowired
 	public void init(SessionFactory sessionFactory) {
 		setSessionFactory(sessionFactory);
@@ -74,7 +72,7 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 
 	@Override
 	public void deleteAll(Collection<?> collection) {
-		if (collection.isEmpty()) return;
+		if (collection == null || collection.isEmpty()) return;
 		
 		getHibernateTemplate().deleteAll(collection);
 	}
@@ -97,15 +95,10 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 	}
 
 	public Modul getModul(String idDevice) {	
-		Modul cachemodul = cacheModule.get(idDevice);
-		if (cachemodul != null){
-			return cachemodul;
-		}
 		
 		List<Modul> modul = (List<Modul>) getHibernateTemplate().findByNamedParam("from Modul where id_device = :id", "id", idDevice);
 
 		if (modul.size() > 0) {
-			cacheModule.put(idDevice, modul.get(0));
 			return modul.get(0);
 		} else {
 			return null;
@@ -117,17 +110,11 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 		if(uin == null){
 			return null;
 		}
-		
-		Modul cachemodul = cacheModule.get(uin);
-		if (cachemodul != null){
-			return cachemodul;
-		}
-		
-		List<Modul> modul = (List<Modul>) getHibernateTemplate().findByNamedParam("from Modul where uin = :id", "id", uin);
+				
+		List<Modul> modulList = (List<Modul>) getHibernateTemplate().findByNamedParam("from Modul where uin = :id", "id", uin);
 
-		if (modul.size() > 0) {
-			cacheModule.put(uin, modul.get(0));
-			return modul.get(0);
+		if (modulList.size() > 0) {
+			return modulList.get(0);
 		} else {
 			return null;
 		}

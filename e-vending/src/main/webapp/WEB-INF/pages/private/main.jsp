@@ -29,6 +29,7 @@
     <body>  
     	
     	<jsp:include page="left-menu.jsp" />
+    	
         <div id="worcspace">
         	<table id="tt" class="easyui-datagrid" style="width:100%; height:100%; font-size:10px;"
             url="${pageContext.request.contextPath}/private/ws/table"
@@ -79,26 +80,19 @@
         </div>
         
         <!-- Панель управления табличкой -->
-        	<div id="tb">
-	<a href="#" title="Управление выбранным модулем" class="easyui-tooltip easyui-linkbutton" iconCls="icon-control" plain="true" onclick="$('#panel-graph').panel('collapse'); $('#panel-settings-module-main').dialog('open'); $('#panel-settings-module-main').dialog('center'); return false;">Управление</a>
-
+<div id="tb">
+	<a href="#" title="Управление выбранным модулем" class="easyui-tooltip easyui-linkbutton" iconCls="icon-control" plain="true" onclick="$('#panel-settings-module-main').dialog('open'); $('#panel-settings-module-main').dialog('center'); return false;">Управление</a>
 	<a href="#" title="Настройки выбранного модуля" class="easyui-tooltip easyui-linkbutton" iconCls="icon-settings" plain="true" onclick="query_settings_module(); return false;">Настройки</a>
-
 	<a href="#" title="Икасация выбранного модуля" class="easyui-tooltip easyui-linkbutton" iconCls="icon-inkasso" plain="true" onclick="open_Collect(); return false;">Инкассация</a>
-
     <a href="#" title="Зарегистрировать в системе новый модуль" class="easyui-tooltip easyui-linkbutton" iconCls="icon-add" plain="true" onclick="getFormRegModule(); return false">Добавить модуль</a>
-
 	<a href="#" title="Редактировать выбранный модуль" class="easyui-tooltip easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="show_info_module(); return false">Редактировать</a>
-
 	<a href="#" title="Проверить состояние мобильного счета" class="easyui-tooltip easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="sendComand_Balance(); return false">Состояние счета</a>
-
 	<div style="float:right;">
 		<a href="#" title="Удалить выбранный модуль" class="easyui-tooltip easyui-linkbutton" iconCls="icon-cancel" plain="true" onclick="confirmDeleteModule(); return false">Удалить выбранный модуль</a>
 	</div>
-
-	</div>
+</div>
 	
-	<!--ПАНЕЛЬ РЕГИСТРАЦИИ МОДУЛЯ-->
+<!--ПАНЕЛЬ РЕГИСТРАЦИИ МОДУЛЯ-->
 <div id="panel-registration-module-main" class="easyui-dialog" style="padding:5px;width:auto;height:auto;line-height: 1.4;"
 	title="  Регистрация нового модуля"
 	iconCls="icon-add"
@@ -177,8 +171,44 @@
     <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="Send_Comand_Collect_New(); return false;">Ок</a>
     <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#panel-collect').dialog('close'); return false;">Отмена</a>
 </div>
-
 <!--КОНЕЦ ПАНЕЛИ ИНКАСАЦИИ-->
+
+<!--ПАНЕЛЬ УПРАВЛЕНИЯ МОДУЛЕМ-->
+<div id="panel-settings-module-main" class="easyui-dialog" style="padding:5px;width:auto;height:auto;line-height: 1.4;"
+	title="Управление модулем"
+	iconCls="icon-control"
+	closed="true"
+	modal="true"
+    buttons="#panel-settings-module">
+
+	<table>
+        <tr>
+            <td>
+				<span class="sp">
+				<!--<input tabindex="1" id="c01" name="comm" value="collect"    type="radio"> Инкассация <Br> -->
+				<input tabindex="2" id="c02" name="comm" value="formatcard" type="radio"> Форматировать карту памяти <Br>
+ 				<input tabindex="3" id="c03" name="comm" value="dlfirmware" type="radio"> Обновить прошивку<Br>
+  				<input tabindex="4" id="c04" name="comm" value="default"    type="radio"> Сброс всех настроек<Br>
+  				<input tabindex="5" id="c05" name="comm" value="reset"      type="radio"> Перезагрузка<Br>
+				</span>
+			</td>
+        </tr>
+        [[!root_comand]]
+	</table>
+</div>
+
+<div id="panel-settings-module">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="send_Comand(); return false;">Ок</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#panel-settings-module-main').dialog('close'); return false;">Отмена</a>
+</div>
+<!--КОНЕЦ ПАНЕЛИ УПРАВЛЕНИЯ МОДУЛЕМ-->
+
+<!-- ЗАПРОС БАЛАНСА -->
+<div class="loginForm-balance" id="balanceForm" style='display: none; position: fixed; width: 70px; height: 70px; top: 50%; left: 50%; margin-top: -135px; margin-left: 0px; z-index: 1010;'>
+	<div id="loaderImage"></div>
+</div>
+<!-- КОНЕЦ ЗАПРОС БАЛАНСА -->
  
+<div id='podlogka' style='position: fixed; display: none; top: 0; left: 0; width: 100%; height: 100%; background: #000; opacity: 0.6; z-index: 1000;'></div>
     </body>
 </html>

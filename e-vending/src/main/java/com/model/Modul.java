@@ -58,7 +58,7 @@ public class Modul {
 	@Column(name = "uin", unique = true, nullable = false, length = 50)
 	private String					uin;
 
-	@Column(name = "id_device", nullable = false, length = 50)
+	@Column(name = "id_device", unique = true, nullable = false, length = 50)
 	private String					idDevice;
 
 	@Column(name = "trademark", nullable = true, length = 50)
@@ -82,7 +82,7 @@ public class Modul {
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "modul")
 	@Cascade({ CascadeType.ALL })
 	@JsonIgnore
-	private CurentSettingsModule	curentSettings;
+	private CurrentSettingsModule	currentSettings;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
@@ -225,12 +225,12 @@ public class Modul {
 		this.cashModule = cashModule;
 	}
 
-	public CurentSettingsModule getCurentSettings() {
-		return curentSettings;
+	public CurrentSettingsModule getCurrentSettings() {			
+		return currentSettings;
 	}
 
-	public void setCurentSettings(CurentSettingsModule curentSettings) {
-		this.curentSettings = curentSettings;
+	public void setCurrentSettings(CurrentSettingsModule currentSettings) {
+		this.currentSettings = currentSettings;
 	}
 
 	public List<CashNotReception> getCashNotReception() {
@@ -247,6 +247,20 @@ public class Modul {
 
 	public void setCashCoin(Set<CashCoin> cashCoin) {
 		this.cashCoin = cashCoin;
+	}
+	
+	public String getCommandString(){
+		if (command == null || command.isEmpty()) {
+			return "";
+		}
+
+		StringBuilder builder = new StringBuilder();
+		for (CommandToModule entity : command) {
+			builder.append(" ");
+			builder.append(entity.getCommand());
+		}
+
+		return builder.toString();
 	}
 
 	public Set<CommandToModule> getCommand() {

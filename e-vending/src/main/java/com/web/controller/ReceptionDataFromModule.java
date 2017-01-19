@@ -1,6 +1,7 @@
 /**
- * 
+ * Приём данных с модуля
  */
+
 package com.web.controller;
 
 import java.lang.reflect.Field;
@@ -26,7 +27,7 @@ import com.model.CashCoin;
 import com.model.CashModule;
 import com.model.CashNotReception;
 import com.model.CollectionModule;
-import com.model.CurentSettingsModule;
+import com.model.CurrentSettingsModule;
 import com.model.DataDoor;
 import com.model.DataModule;
 import com.model.ErrorModule;
@@ -44,6 +45,10 @@ import com.model.TempRegModule;
 public class ReceptionDataFromModule {
 
 	private static final Logger logger = Logger.getLogger(ReceptionDataFromModule.class);
+	
+	private static Integer yes = 0;
+	private static Integer no = 0;
+	
 
 	@Autowired
 	ServletContext			context;
@@ -92,22 +97,33 @@ public class ReceptionDataFromModule {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/company")
-	public String receptionData(@RequestParam(value = "d", required = false) String d, @RequestParam(value = "r", required = false) String r,
-		@RequestParam(value = "version", required = false) String version, @RequestParam(value = "MNUM", required = false) String mnum,
-		@RequestParam(value = "F01", required = false) String f01, @RequestParam(value = "k", required = false) Integer k,
-		@RequestParam(value = "sett", required = false) String sett, @RequestParam(value = "code", required = false) String code,
-		@RequestParam(value = "incoin", required = false) String incoin, @RequestParam(value = "outcoin", required = false) String outcoin,
-		@RequestParam(value = "l", defaultValue = "0", required = false) Integer l, @RequestParam(value = "u", defaultValue = "0", required = false) Integer u,
-		@RequestParam(value = "t", defaultValue = "-1000", required = false) Integer temp,
-		@RequestParam(value = "t2", defaultValue = "-1000", required = false) Integer temp2, @RequestParam(value = "ALARM", required = false) String ALARM,
-		@RequestParam(value = "cash", defaultValue = "0", required = false) Integer cash,
-		@RequestParam(value = "collect", required = false) Integer collect,
-		@RequestParam(value = "lat", required = false) String lat, @RequestParam(value = "lng", required = false) String lng,
-		@RequestParam(value = "bond", defaultValue = "0", required = false) Integer bond, @RequestParam(value = "sell", required = false) Integer sell,
-		@RequestParam(value = "bs", required = false) Integer bs,
-		@RequestParam(value = "collect2", required = false) String collect2, @RequestParam(value = "plan", required = false) Double plan,
-		@RequestParam(value = "fakt",  required = false) Double fakt, @RequestParam(value = "countbs",  required = false) Integer countbs) {
-			
+	public String receptionData(@RequestParam(value = "d", required = false) String d,
+			@RequestParam(value = "r", required = false) String r,
+			@RequestParam(value = "version", required = false) String version,
+			@RequestParam(value = "MNUM", defaultValue = "", required = false) String mnum,
+			@RequestParam(value = "F01", defaultValue = "", required = false) String f01,
+			@RequestParam(value = "k", required = false) Integer k,
+			@RequestParam(value = "sett", required = false) String sett,
+			@RequestParam(value = "code", required = false) String code,
+			@RequestParam(value = "incoin", required = false) String incoin,
+			@RequestParam(value = "outcoin", required = false) String outcoin,
+			@RequestParam(value = "l", defaultValue = "0", required = false) Integer l,
+			@RequestParam(value = "u", defaultValue = "0", required = false) Integer u,
+			@RequestParam(value = "t", defaultValue = "-1000", required = false) Integer temp,
+			@RequestParam(value = "t2", defaultValue = "-1000", required = false) Integer temp2,
+			@RequestParam(value = "ALARM", required = false) String ALARM,
+			@RequestParam(value = "cash", defaultValue = "0", required = false) Integer cash,
+			@RequestParam(value = "collect", required = false) Integer collect,
+			@RequestParam(value = "lat", required = false) String lat,
+			@RequestParam(value = "lng", required = false) String lng,
+			@RequestParam(value = "bond", defaultValue = "0", required = false) Integer bond,
+			@RequestParam(value = "sell", required = false) Integer sell,
+			@RequestParam(value = "bs", required = false) Integer bs,
+			@RequestParam(value = "collect2", required = false) String collect2,
+			@RequestParam(value = "plan", required = false) Double plan,
+			@RequestParam(value = "fakt", required = false) Double fakt,
+			@RequestParam(value = "countbs", required = false) Integer countbs) {
+	
 		if (d == null) return null;
 		
 		logger.info(d.toString() + "    t   -> " + temp.toString());
@@ -119,7 +135,7 @@ public class ReceptionDataFromModule {
 
 		saveCashCoin(incoin, outcoin);
 		saveCashNotReception(bond);
-		saveCurentSettingsModule(sett);
+		saveCurrentSettingsModule(sett);
 		saveDataDoor(k);
 		setCollect(collect);
 		setLatLng(lat, lng);
@@ -134,11 +150,14 @@ public class ReceptionDataFromModule {
 		    saveErrorModule(ALARM) ||
 		    saveDataModule(u, l, temp, temp2)){
 	
-			returnVal = "RDM" + modulService.getCommandString(modul);
+			returnVal = "RDM" + modul.getCommandString();
 
 			// Удалим отправленные команды
-			modulService.deleteAllCommand(modul);
-		}
+			modulService.deleteAll(modul.getCommand());
+			yes++;
+		}else no++;
+		
+		logger.info("YES = " + yes.toString() + "      NO = " + no.toString());
 		
 		return returnVal;
 	}
@@ -156,7 +175,7 @@ public class ReceptionDataFromModule {
 		modul.setLat(lat);
 		modul.setLng(lng);
 		
-		modulService.saveOrUpdate(modul);
+		modulService.update(modul);
 	}
 
 	private void setCollect(Integer collect) {
@@ -236,7 +255,7 @@ public class ReceptionDataFromModule {
 	 *            - номер владельца модуля
 	 */
 	private boolean updateVersionAndTelephon(String version, String mnum, String f01) {
-		if (version == null || mnum == null || f01 == null) return false;
+		if (version == null) return false;
 
 		modul.setActivenum(f01);
 		modul.setTelephon(mnum);
@@ -253,19 +272,23 @@ public class ReceptionDataFromModule {
 	 * @param settings
 	 *            - строка настроек
 	 */
-	private void saveCurentSettingsModule(String settings) {
-		if (settings == null) return;
+	private void saveCurrentSettingsModule(String settings) {
+		if (settings == null)
+			return;
+		
+		if(modul.getCurrentSettings() == null)
+			modul.setCurrentSettings(new CurrentSettingsModule().resetAllSettings());
 
 		// Время установим сразу
 		if (settings.indexOf("time") != -1) {
 			int len = settings.indexOf("time") + "time".length();
 			String value = settings.substring(len, len + 4);
 
-			modul.getCurentSettings().setHours(value.substring(0, 2));
-			modul.getCurentSettings().setMinutes(value.substring(2, 4));
+			modul.getCurrentSettings().setHours(value.substring(0, 2));
+			modul.getCurrentSettings().setMinutes(value.substring(2, 4));
 		}
 
-		Class classSettings = new CurentSettingsModule().getClass();
+		Class<? extends CurrentSettingsModule> classSettings = new CurrentSettingsModule().getClass();
 
 		SortedSet<String> continuesSet = new TreeSet<String>();
 		continuesSet.add("id");
@@ -282,7 +305,7 @@ public class ReceptionDataFromModule {
 			}
 
 			// значение настройки по умолчанию
-			String value = "1";
+			String value = "0";
 
 			// если к нам пришла настройка с другим значением
 			if (settings.indexOf(stn) != -1) {
@@ -292,7 +315,7 @@ public class ReceptionDataFromModule {
 
 			try {
 				field.setAccessible(true);
-				field.set(modul.getCurentSettings(), value);
+				field.set(modul.getCurrentSettings(), value);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
@@ -323,7 +346,7 @@ public class ReceptionDataFromModule {
 		}
 
 		// Установим пустые настройки для модуля
-		modul.setCurentSettings(new CurentSettingsModule(modul));
+		modul.setCurrentSettings(new CurrentSettingsModule(modul).resetAllSettings());
 		modul.setCompany(tmp.getCompany());
 		modul.setActive(true);
 		modulService.saveOrUpdate(modul);

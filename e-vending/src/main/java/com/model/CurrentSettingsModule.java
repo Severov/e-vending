@@ -14,7 +14,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "curentSettingsModule")
-public class CurentSettingsModule {
+public class CurrentSettingsModule {
 
 	@Id
 	@Column(name = "settings_id", unique = true, nullable = false)
@@ -50,10 +50,10 @@ public class CurentSettingsModule {
 	@JsonIgnore
 	private Modul	modul;
 
-	public CurentSettingsModule() {
+	public CurrentSettingsModule() {
 	}
 
-	public CurentSettingsModule(Modul modul) {
+	public CurrentSettingsModule(Modul modul) {
 		this.modul = modul;
 	}
 
@@ -135,6 +135,19 @@ public class CurentSettingsModule {
 
 	public void setHours(String hours) {
 		this.hours = hours;
+	}
+	
+	public CurrentSettingsModule resetAllSettings(){
+		setBalance("0");
+		setProfile("0");
+		setMinutes("0");
+		setHours("0");
+		setRequest("0");
+		setSilent("0");
+		setVoice("0");
+		setIgprs("0");
+		
+		return this;
 	}
 
 }
