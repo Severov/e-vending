@@ -193,7 +193,16 @@
 				</span>
 			</td>
         </tr>
-        [[!root_comand]]
+        <c:if test="${root_user == 1}">
+			<tr>
+            	<td>
+            		<input title="Произвольная команда" id="randComand" class="easyui-tooltip" type="edit" placeholder="команда">
+				</td>
+            	<td>
+            		<input title="Отправить команду" class="easyui-tooltip" value=">>" type="button" onclick="send_random_comand(); return false;">
+				</td>
+        	</tr>
+		</c:if>
 	</table>
 </div>
 

@@ -87,7 +87,7 @@ public class RestController {
 			return null;
 		}
 
-		return modul.getCurentSettings();
+		return modul.getCurrentSettings();
 	}
 
 	@RequestMapping(value = "/saveUserCommand")

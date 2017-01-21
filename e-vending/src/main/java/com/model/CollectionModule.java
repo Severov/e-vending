@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.Index;
 
 /**
  * Содержит подтвержденные инкассации модуля
@@ -24,6 +25,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  */
 @Entity
 @Table(name = "collectionModule")
+@org.hibernate.annotations.Table(appliesTo = "collectionModule",
+	indexes = {
+	      @Index(name="modul_timeStamp_index", columnNames = {"modul_id", "timeStamp"}),
+	   })
 public class CollectionModule {
 
 	@Id

@@ -32,9 +32,9 @@ public class PrivateRoomService extends HibernateDaoSupport implements PrivateRo
 		}
 		
 		SQLQuery result = (SQLQuery) getHibernateTemplate().getSessionFactory().getCurrentSession()
-				.createSQLQuery(mySQLQuery.getSQL("tableRoom.sql") + orderBy).setParameter("endDay", getEndOfDay())
-				.setParameter("startDay", getStartOfDay())
-				.setParameter("nowTime", Calendar.getInstance());
+				.createSQLQuery(mySQLQuery.getSQL("tableRoom.sql") + orderBy)
+				.setParameter("endDay", getEndOfDay())
+				.setParameter("startDay", getStartOfDay());
 		result.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return result.list();
 	}

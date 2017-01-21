@@ -19,6 +19,11 @@ import org.hibernate.annotations.Index;
 
 @Entity
 @Table(name = "cashModule")
+@org.hibernate.annotations.Table(appliesTo = "cashModule",
+indexes = {
+	  @Index(name="timeStamp_index", columnNames = "timeStamp"),	
+      @Index(name="bond_modul_timeStamp_index", columnNames = {"bond", "modul_id", "timeStamp"}),
+   })
 public class CashModule {
 
 	@Id
@@ -40,7 +45,6 @@ public class CashModule {
 
 	@Column(name = "timeStamp", columnDefinition = "DATETIME")
 	@Temporal(TemporalType.TIMESTAMP)
-	@Index(name = "timeStampIndex")
 	private Calendar	timeStamp;
 
 	@ManyToOne(fetch = FetchType.LAZY)

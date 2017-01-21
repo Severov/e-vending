@@ -10,14 +10,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.Index;
+import org.hibernate.annotations.Table;
 
 @Entity
-@Table(name = "dataModule")
+@javax.persistence.Table(name = "dataModule")
+@Table(appliesTo = "dataModule", indexes = {
+	      @Index(name="timeStamp_index", columnNames = "timeStamp"),
+	      @Index(name="modul_timeStamp_index", columnNames = {"modul_id", "timeStamp"}),
+	   })
 public class DataModule {
 
 	@Id

@@ -16,9 +16,7 @@
 package com.service;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,6 @@ import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Service;
 
 import com.dao.ModuleDAO;
-import com.model.CommandToModule;
 import com.model.Company;
 import com.model.Modul;
 
@@ -118,35 +115,5 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 		} else {
 			return null;
 		}
-	}
-	
-	/**
-	 * Возвращает накопившиеся команды модуля
-	 */
-	@Override
-	public String getCommandString(Modul modul){
-		
-		List<CommandToModule> command = (List<CommandToModule>) getHibernateTemplate().findByNamedParam("from CommandToModule where modul_id = :id", "id", modul.getId());
-
-		if (command.isEmpty()) {
-			return "";
-		}
-
-		StringBuilder builder = new StringBuilder();
-		for (CommandToModule entity : command) {
-			builder.append(" ");
-			builder.append(entity.getCommand());
-		}
-
-		return builder.toString();
-	}
-	
-	@Override
-	public void deleteAllCommand(Modul modul){
-		SessionFactory session = getHibernateTemplate().getSessionFactory();
-		String deleteQuery = "delete from CommandToModule where modul_id= :id";
-		session.getCurrentSession().createQuery(deleteQuery).setParameter("id", modul.getId()).executeUpdate();
-	}
-	
-	
+	}	
 }

@@ -65,10 +65,4 @@ public interface ModuleDAO {
 
 	@Transactional(readOnly = false)
 	void saveAll(Collection<?> collection);
-	
-	@Transactional(readOnly = true)
-	String getCommandString(Modul modul);
-	
-	@Transactional(readOnly = false)
-	void deleteAllCommand(Modul modul);
 }

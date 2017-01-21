@@ -55,6 +55,8 @@ LEFT JOIN (
         dataModule.modul_id AS `modul_id`
     FROM
         dataModule
+    WHERE 
+    	timeStamp between ADDDATE(now(), INTERVAL -7 DAY) AND now()
     GROUP BY
         dataModule.modul_id
 ) AS `time_off` ON time_off.modul_id = modul.modul_id
@@ -67,15 +69,15 @@ LEFT JOIN (
         cashModule
     INNER JOIN (
         SELECT
-            MAX(cashModule.cashModule_id) as `tm`,
+            MAX(cashModule.timeStamp) as `tm`,
             cashModule.modul_id AS `modul_id`
         FROM
             cashModule
         WHERE
-			bs IS NOT NULL
+			bond > 0
         GROUP BY
             cashModule.modul_id
-    ) AS `tmp` ON tmp.modul_id = cashModule.modul_id AND tmp.tm = cashModule.cashModule_id
+    ) AS `tmp` ON tmp.modul_id = cashModule.modul_id AND tmp.tm = cashModule.timeStamp
 ) AS `bs` ON modul.modul_id = bs.modul_id
 -- КОЛИЧЕСТВО ПРОДАЖ ПОЛУЧЕННЫХ ЗА ПОСЛЕДНИЕ СУТКИ
 LEFT JOIN (
@@ -85,7 +87,7 @@ LEFT JOIN (
     FROM
         cashModule
     WHERE
-        cashModule.timeStamp BETWEEN :startDay AND :nowTime 
+        cashModule.timeStamp BETWEEN :startDay AND now() 
         AND bond = 0
         AND cash = 0
         AND sell IS NOT NULL
@@ -111,7 +113,7 @@ LEFT JOIN (
                 FROM
                     dataModule
                 WHERE
-                    dataModule.timeStamp BETWEEN ADDDATE( :nowTime, INTERVAL -310 SECOND) AND :nowTime
+                    dataModule.timeStamp BETWEEN ADDDATE( now(), INTERVAL -310 SECOND) AND now()
                 GROUP BY
                     dataModule.modul_id
             ) AS `tmp` ON tmp.modul_id = dataModule.modul_id AND tmp.tm = dataModule.dataModul_id   
@@ -124,7 +126,7 @@ LEFT JOIN (
     FROM
         dataDoor
     WHERE
-        dataDoor.timeStamp BETWEEN ADDDATE( :nowTime , INTERVAL -30 SECOND) AND :nowTime
+        dataDoor.timeStamp BETWEEN ADDDATE( now() , INTERVAL -30 SECOND) AND now()
     ORDER BY
         dataDoor.dataDoor_id DESC
     LIMIT 1
@@ -156,7 +158,7 @@ LEFT JOIN (
             FROM
                 cashModule
             WHERE 
-                timeStamp BETWEEN ADDDATE( :nowTime , INTERVAL -7 DAY) AND  :nowTime
+                timeStamp BETWEEN ADDDATE(now() , INTERVAL -7 DAY) AND  now()
                 AND bond > 0 
             GROUP BY
                 modul_id
@@ -177,12 +179,12 @@ LEFT JOIN (
                     FROM 
                         resetKup 
                     WHERE 
-                        timeStamp BETWEEN ADDDATE( :nowTime , INTERVAL -7 DAY) AND  :nowTime
+                        timeStamp BETWEEN ADDDATE(now(), INTERVAL -7 DAY) AND  now()
                     GROUP BY 
                         modul_id
                 ) as `reset` ON reset.modul_id = cashNotReception.modul_id
             WHERE
-                timeStamp BETWEEN IF (reset.time_reset IS NULL, ADDDATE( :nowTime , INTERVAL -7 DAY), reset.time_reset) AND  :nowTime
+                timeStamp BETWEEN IF (reset.time_reset IS NULL, ADDDATE( now() , INTERVAL -7 DAY), reset.time_reset) AND  now()
             GROUP BY
                 cashNotReception.modul_id
 
@@ -198,7 +200,7 @@ LEFT JOIN (
     FROM 
         cashModule
     WHERE
-        NOT bs IS NULL
+       bond > 0
     GROUP BY
         modul_id             
 ) as `last_sell` ON last_sell.modul_id = modul.modul_id

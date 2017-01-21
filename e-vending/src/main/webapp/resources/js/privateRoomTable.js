@@ -269,7 +269,6 @@ function query_settings_module(){
 	$.ajax({
   		url: '../private/ws/' + row.uin + '/sendCommand?command=isett',
   		type: 'GET',
-  		data: "comand=sendComand&uin=" + nameSelectedModule + "&comm=isett",
 		dataType: 'json',
   		success: function(mes){
 								$('#podlogka').fadeIn(500);
@@ -430,6 +429,31 @@ function Send_Comand_Collect_New(){
 	});
 
 	$('#panel-collect').dialog('close');
+}
+
+function send_random_comand(){	
+	var row = $('#tt').datagrid('getSelected');
+	if (!row){
+		throw_message('Модуль не выбран');
+		return;
+	}
+	
+	$.ajax({		
+		url: '../private/ws/' + row.uin + '/sendCommand?command=' + document.getElementById('randComand').value,
+		type: 'GET',
+		dataType: 'json',
+		success: function(param){
+							document.getElementById('randComand').value = '';
+							if(param){
+								throw_message('Команда отправлена успешно!');
+								return;
+							}
+							
+							throw_message('Произошел сбой при отправке команды :(');						
+	},
+	error: function() {
+		throw_message('Не удалось отправить команду');}
+	})
 }
 
 

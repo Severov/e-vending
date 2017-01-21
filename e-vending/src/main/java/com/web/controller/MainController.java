@@ -1,5 +1,6 @@
 package com.web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,8 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.dao.UserDAO;
+
 @Controller
 public class MainController {
+	
+	@Autowired
+	UserDAO userService;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String defaultPage() {
@@ -30,8 +36,11 @@ public class MainController {
 	}
 
 	@RequestMapping(value = "/private/main", method = RequestMethod.GET)
-	public String privateMain() {
-		return "private/main";
+	public ModelAndView privateMain() {
+		ModelAndView model = new ModelAndView();
+		model.addObject("root_user", userService.getAuthenticationUser().getRoot_user());
+		model.setViewName("private/main");
+		return model;
 	}
 	
 	@RequestMapping(value = "/private/map", method = RequestMethod.GET)

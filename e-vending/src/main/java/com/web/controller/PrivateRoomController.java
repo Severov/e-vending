@@ -69,7 +69,12 @@ public class PrivateRoomController {
 	@RequestMapping(value = "/table", method = RequestMethod.GET)
 	private Map<Object, Object> getTable(@RequestParam(value = "order", required = false) String order,
 			@RequestParam(value = "sort", required = false) String sort) {
+		
+		long start = System.currentTimeMillis();
+		
+		
 		List<?> data = privateRoomService.getMainTable(order, sort);
+		logger.info("QUERY  -> " + (System.currentTimeMillis() - start));
 		
 		ArrayList<Object> footer = new ArrayList<>();
 		footer.add(new HashMap<String, String>() { // начинается говнокод (
@@ -102,6 +107,8 @@ public class PrivateRoomController {
 		map.put("rows", data);
 		map.put("total", data.size());
 		map.put("footer", footer);
+		
+		logger.info("END  -> " + (System.currentTimeMillis() - start));
 
 		return map;
 	}
@@ -111,8 +118,8 @@ public class PrivateRoomController {
 	 * @param uin - уин модуля
 	 * @return
 	 */
-	@RequestMapping(value = "/resetKup", method = RequestMethod.GET)
-	private Boolean resetKup(@RequestParam(value = "uin", required = false) String uin) {
+	@RequestMapping(value = "{uin}/resetKup", method = RequestMethod.GET)
+	private Boolean resetKup(@PathVariable("uin") String uin) {
 		Modul modul = modulService.getModulByUin(uin);
 		if (modul == null)
 			return false;
@@ -228,7 +235,7 @@ public class PrivateRoomController {
 		modul.setPlace(place);
 		modul.setTrademark(trademark);
 
-		modulService.saveOrUpdate(modul);
+		modulService.update(modul);
 		return true;
 	}
 	
@@ -243,7 +250,7 @@ public class PrivateRoomController {
 		modul.setCompany(null);
 		modul.setTrademark("");
 		modul.setPlace("");
-		modulService.saveOrUpdate(modul);
+		modulService.update(modul);
 		
 		return true;
 	}

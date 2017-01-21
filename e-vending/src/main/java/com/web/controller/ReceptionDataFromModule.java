@@ -276,16 +276,17 @@ public class ReceptionDataFromModule {
 		if (settings == null)
 			return;
 		
-		if(modul.getCurrentSettings() == null)
-			modul.setCurrentSettings(new CurrentSettingsModule().resetAllSettings());
+		CurrentSettingsModule currentSettings = modul.getCurrentSettings();
+		if(currentSettings == null)
+			currentSettings = new CurrentSettingsModule(modul).resetAllSettings();
 
 		// Время установим сразу
 		if (settings.indexOf("time") != -1) {
 			int len = settings.indexOf("time") + "time".length();
 			String value = settings.substring(len, len + 4);
 
-			modul.getCurrentSettings().setHours(value.substring(0, 2));
-			modul.getCurrentSettings().setMinutes(value.substring(2, 4));
+			currentSettings.setHours(value.substring(0, 2));
+			currentSettings.setMinutes(value.substring(2, 4));
 		}
 
 		Class<? extends CurrentSettingsModule> classSettings = new CurrentSettingsModule().getClass();
@@ -315,13 +316,13 @@ public class ReceptionDataFromModule {
 
 			try {
 				field.setAccessible(true);
-				field.set(modul.getCurrentSettings(), value);
+				field.set(currentSettings, value);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 		}
 
-		modulService.saveOrUpdate(modul);
+		modulService.saveOrUpdate(currentSettings);
 	}
 
 	/**
@@ -361,7 +362,7 @@ public class ReceptionDataFromModule {
 	 * Сохранение данных про финансовую активность модуля
 	 * 
 	 * @param cash
-	 *            - всего сумма, которая числится в автомате
+	 *             - всего сумма, которая числится в автомате
 	 * @param bond
 	 *            - номинал купюры
 	 * @param sell

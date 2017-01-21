@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
-@Table(name = "curentSettingsModule")
+@Table(name = "currentSettingsModule")
 public class CurrentSettingsModule {
 
 	@Id
