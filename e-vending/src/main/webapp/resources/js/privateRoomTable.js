@@ -299,8 +299,6 @@ function get_current_settings_module(){
   		dataType: 'json',
   		success: function(param){
 
-			$('#panel-graph').panel('collapse'); // свернем панель с графиками
-
 			$("#podlogka").fadeOut(500);
 			$("#balanceForm").fadeOut(500);
 			stopAnimation();
@@ -312,7 +310,7 @@ function get_current_settings_module(){
 
 			document.getElementById('sthours').options[parseInt(param.hours, 10)].selected     = true;
 			document.getElementById('stminutes').options[parseInt(param.minutes, 10)].selected = true;
-			document.getElementById('stprofile').options[parseInt(param.profile, 10)-1].selected = true;
+			document.getElementById('stprofile').options[parseInt(param.profile, 10)].selected = true;
 			document.getElementById('stbalance').options[parseInt(param.balance, 10)].selected = true;
 
 			$('#panel-setings-module-main').dialog('open');
@@ -325,6 +323,37 @@ function get_current_settings_module(){
 			$('#popup-setings-module').fadeOut(500);
 			stopAnimation();
 			throw_message('Не удалось получить настройки модуля!');}
+})
+}
+
+//отправим на сервер настройки модуля
+function save_current_settings_module(){
+	var row = $('#tt').datagrid('getSelected');
+	if (!row){
+		throw_message('Модуль не выбран');
+		return;
+	}
+	var minute = (document.getElementById('stminutes').value <= 9 ? '0' : '' ) + document.getElementById('stminutes').value;
+	var hour = (document.getElementById('sthours').value <= 9 ? '0' : '') + document.getElementById('sthours').value;
+	
+	var commandStr = 'time' + hour + minute + 'profile' + document.getElementById('stprofile').value + 'balance' + document.getElementById('stbalance').value + 'request' + (document.getElementById('strequest').checked ? '1' : '0') + 'silent' + (document.getElementById('stsilent').checked ? '1' : '0' )+ 'voice' + (document.getElementById('stvoice').checked ? '1' : '0' )+ 'igprs' + (document.getElementById('stigprs').checked ? '1' : '0');
+	
+	$.ajax({
+		url: '../private/ws/' + row.uin + '/sendCommand?command=' + commandStr,
+  		type: 'GET',
+  		dataType: 'json',
+  		success: function(param){
+
+			$('#popup-setings-module').fadeOut(500);
+			stopAnimation();
+
+			throw_message('Настройки успешно применены!');
+		},
+		error: function() {
+			$("#podlogka").fadeOut(500);
+			$('#popup-setings-module').fadeOut(500);
+			stopAnimation();
+			throw_message('Не удалось отправить команду модулю!');}
 })
 }
 

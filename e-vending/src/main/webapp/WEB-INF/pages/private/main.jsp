@@ -22,6 +22,7 @@
 		<link rel="stylesheet" type="text/css" href="${context}/resources/easyui/themes/default/easyui.css">
 		
    		<script type="text/javascript" src="${context}/resources/js/privateRoomTable.js"></script>
+   		<script type="text/javascript" src="${context}/resources/js/preloader.js"></script>
    		
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Личный кабинет</title>
@@ -217,6 +218,138 @@
 	<div id="loaderImage"></div>
 </div>
 <!-- КОНЕЦ ЗАПРОС БАЛАНСА -->
+
+<!--ПАНЕЛЬ НАСТРОЙКИ МОДУЛЯ-->
+<div id="panel-setings-module-main" class="easyui-dialog" style="padding:5px;width:auto;height:auto;line-height: 1.4;"
+	title="Настройка модуля"
+	iconCls="icon-settings"
+	closed="true"
+	modal="true"
+    buttons="#panel-setings-module">
+
+	<select id="sthours" name="sthours" tabindex="1">
+		<option value=0>00</option>
+		<option value=1>01</option>
+		<option value=2>02</option>
+		<option value=3>03</option>
+		<option value=4>04</option>
+		<option value=5>05</option>
+		<option value=6>06</option>
+		<option value=7>07</option>
+		<option value=8>08</option>
+		<option value=9>09</option>
+		<option value=10>10</option>
+      	<option value=11>11</option>
+		<option value=12>12</option>
+		<option value=13>13</option>
+		<option value=14>14</option>
+		<option value=15>15</option>
+		<option value=16>16</option>
+		<option value=17>17</option>
+		<option value=18>18</option>
+		<option value=19>19</option>
+		<option value=20>20</option>
+     	<option value=21>21</option>
+		<option value=22>22</option>
+		<option value=23>23</option>
+     </select>ч
+
+	<select id="stminutes" name="stminutes" tabindex="2">
+		<option value=0>00</option>
+		<option value=1>01</option>
+		<option value=2>02</option>
+		<option value=3>03</option>
+		<option value=4>04</option>
+		<option value=5>05</option>
+		<option value=6>06</option>
+		<option value=7>07</option>
+		<option value=8>08</option>
+		<option value=9>09</option>
+		<option value=10>10</option>
+        <option value=11>11</option>
+		<option value=12>12</option>
+		<option value=13>13</option>
+		<option value=14>14</option>
+		<option value=15>15</option>
+		<option value=16>16</option>
+		<option value=17>17</option>
+		<option value=18>18</option>
+		<option value=19>19</option>
+		<option value=20>20</option>
+		<option value=21>21</option>
+		<option value=22>22</option>
+		<option value=23>23</option>
+		<option value=24>24</option>
+		<option value=25>25</option>
+		<option value=26>26</option>
+		<option value=27>27</option>
+		<option value=28>28</option>
+		<option value=29>29</option>
+		<option value=30>30</option>
+        <option value=31>31</option>
+		<option value=32>32</option>
+		<option value=33>33</option>
+		<option value=34>34</option>
+		<option value=35>35</option>
+		<option value=36>36</option>
+		<option value=37>37</option>
+		<option value=38>38</option>
+		<option value=39>39</option>
+		<option value=40>40</option>
+        <option value=41>41</option>
+		<option value=42>42</option>
+		<option value=43>43</option>
+		<option value=44>44</option>
+		<option value=45>45</option>
+		<option value=46>46</option>
+		<option value=47>47</option>
+		<option value=48>48</option>
+		<option value=49>49</option>
+		<option value=50>50</option>
+        <option value=51>51</option>
+		<option value=52>52</option>
+		<option value=53>53</option>
+		<option value=54>54</option>
+		<option value=55>55</option>
+		<option value=56>56</option>
+		<option value=57>57</option>
+		<option value=58>58</option>
+		<option value=59>59</option>
+	</select>м Время RTC
+
+	<p>
+		<label for="c01">
+			<select id="stprofile" name="stprofile" tabindex="3">
+				<option value="1">ПР1</option>
+				<option value="2">ПР2</option>
+				<option value="3">ПР3</option>
+				</select> Профиль пользователя
+		</label>
+	</p>
+
+	<p>
+		<label for="c06">
+			<select id="stbalance" name="stbalance" tabindex="4">
+				<option value="2">*101#</option>
+				<option value="1">*111#</option>
+				<option value="3">*112#</option>
+				<option value="4">*119#</option>
+				<option value="5">*121#</option>
+			</select> Баланс для sms-отчета
+		</label>
+	</p>
+
+	<p><label for="c02"><input name="strequest" id="strequest" data-options="onText:'Вкл.',offText:'Выкл.'" tabindex="5" class="easyui-switchbutton"> Режим запроса</label></p>
+	<p><label for="c03"><input name="stsilent" id="stsilent" data-options="onText:'Вкл.',offText:'Выкл.'" tabindex="6" class="easyui-switchbutton"> Бесшумный режим</label></p>
+	<p><label for="c04"><input id="stvoice" data-options="onText:'Вкл.',offText:'Выкл.'" name="stvoice"  tabindex="7" class="easyui-switchbutton"> Голосовой режим</label></p>
+	<p><label for="c05"><input id="stigprs" data-options="onText:'Вкл.',offText:'Выкл.'" name="stigprs"  tabindex="8" class="easyui-switchbutton"> GPRS соединение</label></p>
+</div>
+
+<div id="panel-setings-module">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="stopAnimation(); save_current_settings_module(); $('#panel-setings-module-main').dialog('close'); return false;">Ок</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="stopAnimation(); $('#panel-setings-module-main').dialog('close'); return false;">Отмена</a>
+</div>
+<!--КОНЕЦ ПАНЕЛИ НАСТРОЙКИ МОДУЛЯ-->
  
 <div id='podlogka' style='position: fixed; display: none; top: 0; left: 0; width: 100%; height: 100%; background: #000; opacity: 0.6; z-index: 1000;'></div>
     </body>
