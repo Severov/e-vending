@@ -2,6 +2,8 @@ package com.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,8 +32,9 @@ public class CurrentSettingsModule {
 	@Column(name = "profile", length = 10)
 	private String	profile;
 
-	@Column(name = "balance", length = 10)
-	private String	balance;
+	@Column(name = "balance")
+	@Enumerated(EnumType.ORDINAL)
+	private UssdComand	balance;
 
 	@Column(name = "request", length = 10)
 	private String	request;
@@ -81,11 +84,11 @@ public class CurrentSettingsModule {
 		this.profile = profile;
 	}
 
-	public String getBalance() {
+	public UssdComand getBalance() {
 		return balance;
 	}
 
-	public void setBalance(String balance) {
+	public void setBalance(UssdComand balance) {
 		this.balance = balance;
 	}
 
@@ -138,7 +141,7 @@ public class CurrentSettingsModule {
 	}
 	
 	public CurrentSettingsModule resetAllSettings(){
-		setBalance("0");
+		setBalance(UssdComand.EMPTY);
 		setProfile("0");
 		setMinutes("0");
 		setHours("0");

@@ -239,6 +239,28 @@ public class PrivateRoomController {
 		return true;
 	}
 	
+	@RequestMapping(value = "{uin}/updateBalance", method = RequestMethod.GET)
+	private Boolean updateBalance(@PathVariable("uin") String uin) {
+
+		Modul modul = modulService.getModulByUin(uin);
+		if (modul == null)
+			return false;
+		
+		modulService.save(new CommandToModule(modul, "cusd" + modul.getCurrentSettings().getBalance().getDescription()));
+		
+		return true;
+	}
+	
+	@RequestMapping(value = "{uin}/getBalance", method = RequestMethod.GET)
+	private String getBalance(@PathVariable("uin") String uin) {
+
+		Modul modul = modulService.getModulByUin(uin);
+		if (modul == null)
+			return null;
+
+		return modul.getLastBalance();
+	}
+	
 	
 	@RequestMapping(value = "/deleteModul", method = RequestMethod.GET)
 	private Boolean deleteModul(@RequestParam(value = "uin", required = false) String uin) {

@@ -66,6 +66,9 @@ public class Modul {
 
 	@Column(name = "place", nullable = true, length = 50)
 	private String					place;
+	
+	@Column(name = "last_balance", nullable = true)
+	private String					lastBalance;
 
 	@Column(name = "active", nullable = false, length = 50)
 	private boolean					active;
@@ -225,7 +228,10 @@ public class Modul {
 		this.cashModule = cashModule;
 	}
 
-	public CurrentSettingsModule getCurrentSettings() {			
+	public CurrentSettingsModule getCurrentSettings() {	
+		if(currentSettings == null)
+			return new CurrentSettingsModule(this).resetAllSettings();
+		
 		return currentSettings;
 	}
 
@@ -333,5 +339,13 @@ public class Modul {
 
 	public void setResetKup(Set<ResetKup> resetKup) {
 		this.resetKup = resetKup;
+	}
+
+	public String getLastBalance() {
+		return lastBalance;
+	}
+
+	public void setLastBalance(String lastBalance) {
+		this.lastBalance = lastBalance;
 	}
 }

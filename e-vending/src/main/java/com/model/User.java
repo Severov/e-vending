@@ -49,6 +49,9 @@ public class User implements UserDetails {
 
 	@Column(name = "email")
 	private String				email;
+	
+	@Column(name = "apiKey", unique = true)
+	private String				apiKey;
 
 	@Column(name = "accountNonExpired")
 	private boolean				accountNonExpired;
@@ -200,6 +203,14 @@ public class User implements UserDetails {
 
 	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
 		this.credentialsNonExpired = credentialsNonExpired;
+	}
+
+	public String getApiKey() {
+		return apiKey;
+	}
+
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
 	}
 
 }

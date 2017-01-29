@@ -37,6 +37,22 @@ public class UserService extends HibernateDaoSupport implements UserDAO {
 		}
 
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public User getUserByApiKey(String apiKey) {
+
+		List<User> users = new ArrayList<User>();
+
+		users = (List<User>) getHibernateTemplate().findByNamedParam("from User where apiKey = :apiKey", "apiKey", apiKey);
+
+		if (users.size() > 0) {
+			return users.get(0);
+		} else {
+			return null;
+		}
+
+	}
 
 	public void save(User user) {
 		getHibernateTemplate().saveOrUpdate(user);

@@ -311,7 +311,7 @@ function get_current_settings_module(){
 			document.getElementById('sthours').options[parseInt(param.hours, 10)].selected     = true;
 			document.getElementById('stminutes').options[parseInt(param.minutes, 10)].selected = true;
 			document.getElementById('stprofile').options[parseInt(param.profile, 10)].selected = true;
-			document.getElementById('stbalance').options[parseInt(param.balance, 10)].selected = true;
+			document.getElementById('stbalance').options[parseInt(param.balance.charAt(1), 10)].selected = true;
 
 			$('#panel-setings-module-main').dialog('open');
 			$('#panel-setings-module-main').dialog('center');
@@ -485,6 +485,51 @@ function send_random_comand(){
 	})
 }
 
+//запросим у модуля состояние его счета
+function sendComand_Balance(){
+	var row = $('#tt').datagrid('getSelected');
+	if (!row){
+		throw_message('Модуль не выбран');
+		return;
+	}
+	
+	$.ajax({
+		url: '../private/ws/' + row.uin + '/updateBalance',
+  		type: 'GET',
+		dataType: 'json',
+  		success: function(mes){
+								$("#podlogka").fadeIn(500);
+								$("#balanceForm").fadeIn(500);
+								startAnimation();
+								setTimeout(updateBalance(row.uin), 25000);
+							  },
+		error: function() {
+			$("#podlogka").fadeOut(500);
+			$("#balanceForm").fadeOut(500);
+			stopAnimation();
+			throw_message("Не удалось отправить команду!");}
+});
+}
+
+function updateBalance(uin){
+	$.ajax({
+			url: '../private/ws/' + uin + '/getBalance',
+	  		type: 'GET',
+	  		dataType: 'json',
+	  		success: function(param){
+									$("#podlogka").fadeOut(500);
+									$("#balanceForm").fadeOut(500);
+									stopAnimation();
+									throw_message(param, 500, 6000, 500);
+			},
+			error: function() {
+				$("#podlogka").fadeOut(500);
+				$("#balanceForm").fadeOut(500);
+				stopAnimation();
+				throw_message('Не удалось получить данные.<br>Проверьте подключение к интернету!');}
+	})
+	}
+
 
 // *** END MAIN FUNCTION ***
 
@@ -520,8 +565,9 @@ $(document).ready(function () {
 					$(this).datagrid('checkRow', i);
 					// break;
 			}
+			
 			document.getElementById('tt').style.height = ($('#tt').datagrid('getRows').length +1) * 25 + 110;
-				$('#tt').datagrid('resize');
+			$('#tt').datagrid('resize');
         }
 	});
 

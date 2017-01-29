@@ -49,7 +49,6 @@ public class ReceptionDataFromModule {
 	private static Integer yes = 0;
 	private static Integer no = 0;
 	
-
 	@Autowired
 	ServletContext			context;
 
@@ -120,6 +119,7 @@ public class ReceptionDataFromModule {
 			@RequestParam(value = "sell", required = false) Integer sell,
 			@RequestParam(value = "bs", required = false) Integer bs,
 			@RequestParam(value = "collect2", required = false) String collect2,
+			@RequestParam(value = "cusd", required = false) String cusd,
 			@RequestParam(value = "plan", required = false) Double plan,
 			@RequestParam(value = "fakt", required = false) Double fakt,
 			@RequestParam(value = "countbs", required = false) Integer countbs) {
@@ -139,6 +139,7 @@ public class ReceptionDataFromModule {
 		saveDataDoor(k);
 		setCollect(collect);
 		setLatLng(lat, lng);
+		setLastBalance(cusd);
 		
 		// для получения данных по инкассациям в переходной период
 		setCollect2(collect2, plan, fakt, countbs);
@@ -160,6 +161,16 @@ public class ReceptionDataFromModule {
 		logger.info("YES = " + yes.toString() + "      NO = " + no.toString());
 		
 		return returnVal;
+	}
+	
+	private void setLastBalance(String cusd){
+		if(cusd == null)
+			return;
+		
+		logger.info("    CUSD   -> " + cusd);
+		modul.setLastBalance(cusd);
+		
+		modulService.update(modul);
 	}
 	
 	private void setCollect2(String collect2, Double plan, Double fakt, Integer countBS){

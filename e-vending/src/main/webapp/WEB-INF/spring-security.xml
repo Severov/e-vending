@@ -18,11 +18,13 @@
 			password-parameter="password" />
 		<logout logout-success-url="/login?logout" />
 		<!-- enable csrf protection -->
-		<csrf />
+		<csrf disabled="true"/>
 		
-		<!-- время сессии истекло -->
-		<session-management invalid-session-url="/login" />
+		<!-- время сессии истекло 
+		<session-management invalid-session-url="/login" />-->
+		
 	</http>
+	
 
 	<authentication-manager>
 		<authentication-provider user-service-ref="myUserDetailsService">

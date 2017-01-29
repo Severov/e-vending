@@ -20,4 +20,5 @@ public class MyUserDetailsService implements UserDetailsService {
 		com.model.User user = userService.findByUserName(username);
 		return user;
 	}
+	
 }
