@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dao.CashModuleDAO;
 import com.dao.ModuleDAO;
 import com.dao.PrivateRoomDAO;
 import com.dao.TempRegModulDAO;
@@ -62,22 +61,21 @@ public class PrivateRoomController {
 
 	@Autowired
 	private ModuleDAO modulService;
-	
-	@Autowired
-	private CashModuleDAO cashModulService;
 
 	@RequestMapping(value = "/table", method = RequestMethod.GET)
+	@SuppressWarnings("unchecked")
 	private Map<Object, Object> getTable(@RequestParam(value = "order", required = false) String order,
 			@RequestParam(value = "sort", required = false) String sort) {
 		
 		long start = System.currentTimeMillis();
-		
 		
 		List<?> data = privateRoomService.getMainTable(order, sort);
 		logger.info("QUERY  -> " + (System.currentTimeMillis() - start));
 		
 		ArrayList<Object> footer = new ArrayList<>();
 		footer.add(new HashMap<String, String>() { // начинается говнокод (
+			private static final long serialVersionUID = -1816496417849487462L;
+
 			{
 			
 				Integer sell = 0;
@@ -128,15 +126,6 @@ public class PrivateRoomController {
 		return true;
 	}
 	
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	private Double test(@RequestParam(value = "uin", required = false) String uin) {
-		Modul modul = modulService.getModulByUin(uin);
-		if (modul == null)
-			return null;
-
-		return cashModulService.getSummCollection(modul);
-	}
-	
 	/**
 	 * 
 	 * @param uin
@@ -162,6 +151,25 @@ public class PrivateRoomController {
 	}
 	
 	/**
+	 * 
+	 * @param uin - идентификатор модуля
+	 * @param cinq - периодичность поступления данных от модуля ( в сек. )
+	 * @return
+	 */
+	@RequestMapping(value = "{uin}/setMode", method = RequestMethod.GET)
+	private Boolean setMode(@PathVariable("uin") String uin,
+			@RequestParam(value = "economMode", required = true) Boolean economMode) {
+		Modul modul = modulService.getModulByUin(uin);
+		if (modul == null)
+			return false;
+
+		modul.setEconomMode(economMode);
+		modulService.update(modul);
+		
+		return true;
+	}
+	
+	/**
 	 * Отправка команды модулю
 	 * @param uin
 	 * @param command
@@ -171,7 +179,7 @@ public class PrivateRoomController {
 	 */
 	@RequestMapping(value = "{uin}/sendCommand", method = RequestMethod.GET)
 	private Boolean sendCommand(@PathVariable("uin") String uin,
-			@RequestParam(value = "command", required = false) String command,
+			@RequestParam(value = "command", required = true) String command,
 			@RequestParam(value = "param1", defaultValue = "", required = false) String param1,
 			@RequestParam(value = "param2", defaultValue = "", required = false) String param2) {
 		
@@ -213,8 +221,7 @@ public class PrivateRoomController {
 			settings = new CurrentSettingsModule().resetAllSettings();
 
 		return settings;
-	}
-	
+	}	
 	
 	/**
 	 * Обновим информацию про модуль
@@ -260,10 +267,9 @@ public class PrivateRoomController {
 
 		return modul.getLastBalance();
 	}
-	
-	
+		
 	@RequestMapping(value = "/deleteModul", method = RequestMethod.GET)
-	private Boolean deleteModul(@RequestParam(value = "uin", required = false) String uin) {
+	private Boolean deleteModul(@RequestParam(value = "uin", required = true) String uin) {
 		Modul modul = modulService.getModulByUin(uin);
 		if (modul == null)
 			return false;

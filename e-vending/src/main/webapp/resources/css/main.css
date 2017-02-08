@@ -250,18 +250,19 @@ input#UID.input[name="keyModule"] {
 	-webkit-animation: slideOut 0.5s ease-in-out 0.3s backwards;
 }
 
-.Panel-left {
+#Panel-left {
 	overflow: auto;
 	line-height: 24px;
-	width: 190px;
+	width: 210px;
 	height: 95%;
 	background: rgba(0, 0, 0, 0.08);
+	margin-left:50px;
 	z-index: 9;
 	position: fixed;
-	top: 30px;
-	left: 0px;
+	top:0px;
+	left:0px;
 	font-family: calibri;
-	box-shadow: 1px 0px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: 1px 0px 2px rgba(0,0,0,0.2);
 	border-radius: 0px 5px 5px 0px;
 	-webkit-animation: slideOutLeft 0.5s ease-in-out 0.3s backwards;
 }
@@ -277,8 +278,6 @@ input#UID.input[name="keyModule"] {
 	display: block;
 	color: #333;
 	width: 94%;
-	font-size: 250%;
-	color: lime;
 	height: 85px;
 	background: rgba(0, 0, 0, 0.08);
 	margin: 5px auto;

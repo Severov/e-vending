@@ -47,6 +47,11 @@ public class MainController {
 	public String privateMap() {
 		return "private/googleMap";
 	}
+	
+	@RequestMapping(value = "/charts", method = RequestMethod.GET)
+	public String charts() {
+		return "charts";
+	}
 
 	@RequestMapping(value = "/private/admin", method = RequestMethod.GET)
 	public ModelAndView adminPage() {

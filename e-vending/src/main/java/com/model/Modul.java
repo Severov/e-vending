@@ -32,98 +32,101 @@ public class Modul {
 	@Id
 	@Column(name = "modul_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long					id;
+	private Long id;
 
 	@Column(name = "imai", nullable = false, length = 50)
-	private String					imai;
+	private String imai;
 
 	@Column(name = "serial_number", nullable = false, length = 50)
-	private String					serialNumber;
+	private String serialNumber;
 
 	@Column(name = "version", nullable = false, length = 50)
-	private String					version;
+	private String version;
 
 	@Column(name = "telephon", nullable = false, length = 50)
-	private String					telephon;
+	private String telephon;
 
 	@Column(name = "activenum", nullable = false, length = 50)
-	private String					activenum;
-	
+	private String activenum;
+
 	@Column(name = "lat", length = 50)
-	private String					lat;
-	
+	private String lat;
+
 	@Column(name = "lng", length = 50)
-	private String					lng;
+	private String lng;
 
 	@Column(name = "uin", unique = true, nullable = false, length = 50)
-	private String					uin;
+	private String uin;
 
 	@Column(name = "id_device", unique = true, nullable = false, length = 50)
-	private String					idDevice;
+	private String idDevice;
 
 	@Column(name = "trademark", nullable = true, length = 50)
-	private String					trademark;
+	private String trademark;
 
 	@Column(name = "place", nullable = true, length = 50)
-	private String					place;
-	
-	@Column(name = "last_balance", nullable = true)
-	private String					lastBalance;
+	private String place;
 
-	@Column(name = "active", nullable = false, length = 50)
-	private boolean					active;
+	@Column(name = "last_balance", nullable = true)
+	private String lastBalance;
+
+	@Column(name = "active")
+	private boolean active;
+
+	@Column(name = "economMode")
+	private Boolean economMode;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "company_id")
 	@JsonIgnore
-	private Company					company;
+	private Company company;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private List<DataDoor>			dataDoor;
+	private List<DataDoor> dataDoor;
 
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "modul")
 	@Cascade({ CascadeType.ALL })
 	@JsonIgnore
-	private CurrentSettingsModule	currentSettings;
+	private CurrentSettingsModule currentSettings;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private List<CollectionModule>	collection;
+	private List<CollectionModule> collection;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private List<TempCollection>	tempCollection;
+	private List<TempCollection> tempCollection;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private Set<CashCoin>			cashCoin;
+	private Set<CashCoin> cashCoin;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "modul")
 	@Cascade({ CascadeType.ALL })
 	@JsonIgnore
-	private Set<CommandToModule>	command;
+	private Set<CommandToModule> command;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private List<CashModule>		cashModule;
+	private List<CashModule> cashModule;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private List<ErrorModule>		error;
+	private List<ErrorModule> error;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private Set<DataModule>			dataModul;
+	private Set<DataModule> dataModul;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private List<CashNotReception>	cashNotReception;
+	private List<CashNotReception> cashNotReception;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	@JsonIgnore
-	private Set<ResetKup>	resetKup;
-	
+	private Set<ResetKup> resetKup;
+
 	public Long getId() {
 		return id;
 	}
@@ -228,10 +231,10 @@ public class Modul {
 		this.cashModule = cashModule;
 	}
 
-	public CurrentSettingsModule getCurrentSettings() {	
-		if(currentSettings == null)
+	public CurrentSettingsModule getCurrentSettings() {
+		if (currentSettings == null)
 			return new CurrentSettingsModule(this).resetAllSettings();
-		
+
 		return currentSettings;
 	}
 
@@ -254,8 +257,8 @@ public class Modul {
 	public void setCashCoin(Set<CashCoin> cashCoin) {
 		this.cashCoin = cashCoin;
 	}
-	
-	public String getCommandString(){
+
+	public String getCommandString() {
 		if (command == null || command.isEmpty()) {
 			return "";
 		}
@@ -348,4 +351,20 @@ public class Modul {
 	public void setLastBalance(String lastBalance) {
 		this.lastBalance = lastBalance;
 	}
+
+	public Boolean isEconomMode() {
+		return economMode;
+	}
+	
+	public String getEconomModeString(){
+		if (economMode != null && economMode)
+			return " cinq270";
+		
+		return "";
+	}
+
+	public void setEconomMode(Boolean economMode) {
+		this.economMode = economMode;
+	}
+
 }

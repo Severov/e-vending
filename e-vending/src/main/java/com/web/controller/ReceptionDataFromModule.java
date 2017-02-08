@@ -151,7 +151,7 @@ public class ReceptionDataFromModule {
 		    saveErrorModule(ALARM) ||
 		    saveDataModule(u, l, temp, temp2)){
 	
-			returnVal = "RDM" + modul.getCommandString();
+			returnVal = "RDM" + modul.getCommandString() + modul.getEconomModeString();
 
 			// Удалим отправленные команды
 			modulService.deleteAll(modul.getCommand());

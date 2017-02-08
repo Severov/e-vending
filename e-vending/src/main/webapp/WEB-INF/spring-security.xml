@@ -18,7 +18,7 @@
 			password-parameter="password" />
 		<logout logout-success-url="/login?logout" />
 		<!-- enable csrf protection -->
-		<csrf disabled="true"/>
+		<csrf />
 		
 		<!-- время сессии истекло 
 		<session-management invalid-session-url="/login" />-->
