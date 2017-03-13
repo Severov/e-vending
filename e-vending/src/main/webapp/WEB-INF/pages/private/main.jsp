@@ -21,6 +21,7 @@
     	<link rel="stylesheet" type="text/css" href="${context}/resources/easyui/demo/demo.css">
 		<link rel="stylesheet" type="text/css" href="${context}/resources/easyui/themes/default/easyui.css">
 		
+		<script type="text/javascript" src="${context}/resources/js/general.js"></script>
    		<script type="text/javascript" src="${context}/resources/js/privateRoomTable.js"></script>
    		<script type="text/javascript" src="${context}/resources/js/preloader.js"></script>
    		

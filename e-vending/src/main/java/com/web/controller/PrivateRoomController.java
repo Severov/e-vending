@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dao.ChartsDAO;
 import com.dao.ModuleDAO;
 import com.dao.PrivateRoomDAO;
 import com.dao.TempRegModulDAO;
@@ -61,6 +62,9 @@ public class PrivateRoomController {
 
 	@Autowired
 	private ModuleDAO modulService;
+	
+	@Autowired
+	private ChartsDAO chartsService;
 
 	@RequestMapping(value = "/table", method = RequestMethod.GET)
 	@SuppressWarnings("unchecked")
@@ -282,5 +286,26 @@ public class PrivateRoomController {
 		
 		return true;
 	}
+	
+	// -------------------  CHARTS ----------------------------
+	@RequestMapping(value = "{uin}/getChartBond", method = RequestMethod.GET)
+	private List<?> getChartBond(@PathVariable("uin") String uin){
+		Modul modul = modulService.getModulByUin(uin);
+		if (modul == null)
+			return null;
+		
+		return chartsService.getChartBond(modul);
+	}
+	
+	
+	@RequestMapping(value = "{uin}/getCollectionChart", method = RequestMethod.GET)
+	private List<?> getCollectionChart(@PathVariable("uin") String uin){
+		Modul modul = modulService.getModulByUin(uin);
+		if (modul == null)
+			return null;
+		
+		return chartsService.getChartCollection(modul);
+	}
+	
 
 }

@@ -25,6 +25,7 @@ import com.dao.ModuleDAO;
 import com.dao.TempRegModulDAO;
 import com.model.CashCoin;
 import com.model.CashModule;
+import com.model.CashModuleExtra;
 import com.model.CashNotReception;
 import com.model.CollectionModule;
 import com.model.CurrentSettingsModule;
@@ -116,7 +117,7 @@ public class ReceptionDataFromModule {
 			@RequestParam(value = "lat", required = false) String lat,
 			@RequestParam(value = "lng", required = false) String lng,
 			@RequestParam(value = "bond", defaultValue = "0", required = false) Integer bond,
-			@RequestParam(value = "sell", required = false) Integer sell,
+			@RequestParam(value = "sell", required = false) String sell,
 			@RequestParam(value = "bs", required = false) Integer bs,
 			@RequestParam(value = "collect2", required = false) String collect2,
 			@RequestParam(value = "cusd", required = false) String cusd,
@@ -382,19 +383,28 @@ public class ReceptionDataFromModule {
 	 *            - количество купюр
 	 * @return
 	 */
-	private boolean saveCashModule(Integer cash, Integer bond, Integer sell, Integer bs) {
-		if (bond < 0) return false;
+	private boolean saveCashModule(Integer cash, Integer bond, String sell, Integer bs) {
+		if (bond < 0) return false;		
 
 		if (cash == 0 && bond == 0 && sell == null) { // к нам ничего не пришло
 			return false;
 		}
-
-		cashModuleService.saveCashModule(new CashModule(modul, Calendar.getInstance(), cash, bond, sell, bs));
+		
+		String[] explode = sell.split(";");
+		Integer countSell = Integer.valueOf(explode[0]);
+		
+		CashModule cashModule = new CashModule(modul, Calendar.getInstance(), cash, bond, countSell, bs);
+		cashModuleService.saveCashModule(cashModule);
 
 		// TODO для совместимости со старой версией
 		// инкассация прошла через веб
-		if (cash != 0 && sell != 0 && bs != 0) {
+		if (cash != 0 && countSell != 0 && bs != 0) {
 			cashModuleService.setCollection(modul);
+		}
+		
+		// Для новых автоматов
+		if(explode.length > 1){
+			modulService.save(new CashModuleExtra(explode[1], Integer.valueOf(explode[2]), Long.valueOf(explode[3]), cashModule));
 		}
 
 		return true;

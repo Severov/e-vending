@@ -104,11 +104,11 @@ public class ModulService extends HibernateDaoSupport implements ModuleDAO {
 
 	@Override
 	public Modul getModulByUin(String uin) {
-		if(uin == null){
+		if (uin == null)
 			return null;
-		}
-				
-		List<Modul> modulList = (List<Modul>) getHibernateTemplate().findByNamedParam("from Modul where uin = :id", "id", uin);
+
+		List<Modul> modulList = (List<Modul>) getHibernateTemplate().findByNamedParam("from Modul where uin = :id",
+				"id", uin);
 
 		if (modulList.size() > 0) {
 			return modulList.get(0);
