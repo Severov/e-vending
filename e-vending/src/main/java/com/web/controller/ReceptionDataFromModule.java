@@ -386,12 +386,19 @@ public class ReceptionDataFromModule {
 	private boolean saveCashModule(Integer cash, Integer bond, String sell, Integer bs) {
 		if (bond < 0) return false;		
 
+		logger.info("bond -> " + bond.toString() + "    cash   -> " + cash.toString()  + "    sell   -> " + sell);
+		
 		if (cash == 0 && bond == 0 && sell == null) { // к нам ничего не пришло
 			return false;
 		}
 		
-		String[] explode = sell.split(";");
-		Integer countSell = Integer.valueOf(explode[0]);
+		String[] explode = {};
+		Integer countSell = null;
+		
+		if(sell != null){
+			explode = sell.split(";");
+			countSell = Integer.valueOf(explode[0]);
+		}
 		
 		CashModule cashModule = new CashModule(modul, Calendar.getInstance(), cash, bond, countSell, bs);
 		cashModuleService.saveCashModule(cashModule);
